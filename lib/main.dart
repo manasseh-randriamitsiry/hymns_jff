@@ -38,6 +38,7 @@ class MyApp extends StatelessWidget {
       future: apiService.getToken(),
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
+          connectivityController.startPeriodicCheck();
           return Center(
             child: LoadingAnimationWidget.fallingDot(
                 color: Colors.black, size: 50),

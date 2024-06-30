@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
@@ -21,6 +22,8 @@ class _SplashScreen0State extends State<SplashScreen0>
   late AnimationController _controller;
   late Future<void> _preloadFuture;
   final ApiService apiService = ApiService();
+  late Timer _timer;
+  bool _isConnected = false;
 
   @override
   void initState() {
@@ -29,9 +32,30 @@ class _SplashScreen0State extends State<SplashScreen0>
       duration: const Duration(seconds: 2),
       vsync: this,
     )..repeat();
+    // Start periodic connectivity checks
+    _startPeriodicConnectivityCheck();
+  }
 
-    // Start preloading data and checking the next screen
-    _preloadFuture = _preloadData();
+  @override
+  void dispose() {
+    _controller.dispose();
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _startPeriodicConnectivityCheck() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) async {
+      var connectivityResult = await Connectivity().checkConnectivity();
+      setState(() {
+        _isConnected = connectivityResult != ConnectivityResult.none;
+      });
+
+      if (_isConnected) {
+        // If connected, stop the timer and preload data
+        _timer.cancel();
+        _preloadData();
+      }
+    });
   }
 
   Future<void> _preloadData() async {
@@ -46,7 +70,6 @@ class _SplashScreen0State extends State<SplashScreen0>
 
     // Pre-load necessary data (e.g., user details, settings)
     if (!isFirstUse) {
-      // Simulate loading data, e.g., user info, preferences
       await ApiService().fetchMembers(); // Example: pre-loading members
     }
 
@@ -61,60 +84,76 @@ class _SplashScreen0State extends State<SplashScreen0>
   }
 
   @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
-    return Container(
-      child: Scaffold(
-        body: FutureBuilder<void>(
-          future: _preloadFuture,
-          builder: (context, snapshot) {
-            return SizedBox(
-              width: double.infinity,
-              height: double.infinity,
-              child: Stack(
-                children: [
-                  Container(
-                    decoration: const BoxDecoration(
-                      image: DecorationImage(
-                        image: AssetImage('assets/images/splash.png'),
-                        fit: BoxFit.fitWidth,
-                      ),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.topCenter,
-                    child: Container(
-                      padding: const EdgeInsets.only(top: 200),
-                      child: RotationTransition(
-                          turns: _controller,
-                          child: Image.asset(
-                            'assets/images/img_1.png',
-                            width: 200,
-                            height: 200,
-                          )),
-                    ),
-                  ),
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Container(
-                      height: 400,
-                      padding: const EdgeInsets.only(bottom: 50),
-                      child: LoadingAnimationWidget.staggeredDotsWave(
-                        color: Colors.black,
-                        // Customize the color as needed
-                        size: 100, // Adjust the size as needed
-                      ),
-                    ),
-                  ),
-                ],
+    return Scaffold(
+      body: SizedBox(
+        width: double.infinity,
+        height: double.infinity,
+        child: Stack(
+          children: [
+            Container(
+              decoration: const BoxDecoration(
+                image: DecorationImage(
+                  image: AssetImage('assets/images/splash.png'),
+                  fit: BoxFit.fitWidth,
+                ),
               ),
-            );
-          },
+            ),
+            Align(
+              alignment: Alignment.topCenter,
+              child: Container(
+                padding: const EdgeInsets.only(top: 200),
+                child: RotationTransition(
+                    turns: _controller,
+                    child: Image.asset(
+                      'assets/images/img_1.png',
+                      width: 200,
+                      height: 200,
+                    )),
+              ),
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                height: 400,
+                padding: const EdgeInsets.only(bottom: 50),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    // Always show the loading animation
+                    LoadingAnimationWidget.staggeredDotsWave(
+                      color: Colors.black,
+                      size: 100,
+                    ),
+                    // Show different text based on connection status
+                    if (!_isConnected) ...[
+                      SizedBox(height: 20),
+                      // Add some space between animation and text
+                      Text(
+                        'Pas de connexion internet.\nEn attente de connexion ...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.red,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ] else ...[
+                      SizedBox(height: 20),
+                      // Add some space between animation and text
+                      Text(
+                        'Veuillez patientez ...',
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: Colors.black,
+                          fontSize: 18,
+                        ),
+                      ),
+                    ],
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

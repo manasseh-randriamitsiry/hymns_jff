@@ -12,8 +12,8 @@ class ConnectivityController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    _checkConnectivity(); // Initial check
-    _startPeriodicCheck(); // Start periodic check
+    checkConnectivity(); // Initial check
+    startPeriodicCheck(); // Start periodic check
   }
 
   @override
@@ -22,7 +22,7 @@ class ConnectivityController extends GetxController {
     super.onClose();
   }
 
-  void _checkConnectivity() async {
+  void checkConnectivity() async {
     var connectivityResult = await Connectivity().checkConnectivity();
     isConnected.value = connectivityResult != ConnectivityResult.none;
     if (isConnected.value) {
@@ -30,9 +30,9 @@ class ConnectivityController extends GetxController {
     }
   }
 
-  void _startPeriodicCheck() {
+  void startPeriodicCheck() {
     _timer = Timer.periodic(Duration(seconds: 1), (timer) {
-      _checkConnectivity();
+      checkConnectivity();
     });
   }
 
