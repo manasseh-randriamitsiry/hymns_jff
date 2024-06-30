@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class FetchApi extends StatefulWidget {
-  const FetchApi({Key? key}) : super(key: key);
+  const FetchApi({super.key});
 
   @override
   State<FetchApi> createState() => _FetchApiState();
@@ -15,14 +15,16 @@ class _FetchApiState extends State<FetchApi> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Liste des utilisateurs"),
+        title: const Text("Liste des utilisateurs"),
       ),
-      body: MembersList(),
+      body: const MembersList(),
     );
   }
 }
 
 class MembersList extends StatelessWidget {
+  const MembersList({super.key});
+
   Future<List<dynamic>> fetchMembers() async {
     final response = await http
         .get(Uri.parse('https://www.permah.net/wp-json/buddypress/v1/members'));
@@ -56,7 +58,7 @@ class MembersList extends StatelessWidget {
         } else if (snapshot.hasError) {
           return Center(child: Text('${snapshot.error}'));
         }
-        return Center(child: CircularProgressIndicator());
+        return const Center(child: CircularProgressIndicator());
       },
     );
   }

@@ -9,7 +9,7 @@ class SplashScreen3 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeigh = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery.of(context).size.height;
     Future<void> completeSetup(BuildContext context) async {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setBool('isFirstUse', false);
@@ -35,7 +35,7 @@ class SplashScreen3 extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: screenHeigh - 312),
+                padding: EdgeInsets.only(top: screenHeight - 312),
                 // Padding to prevent overlap with screen edges
                 child: Column(
                   children: [

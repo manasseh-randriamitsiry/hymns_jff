@@ -15,7 +15,7 @@ class MembersScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       key: _scaffoldKey,
-      drawer: DrawerScreen(),
+      drawer: const DrawerScreen(),
       appBar: AppBar(
         title: const Text('Membres'),
         leading: IconButton(
@@ -31,16 +31,16 @@ class MembersScreen extends StatelessWidget {
             child: Column(
               textDirection: TextDirection.ltr,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 100,
                 ),
-                Text(
+                const Text(
                   "En attente de connection ",
                   style: TextStyle(fontSize: 16, color: Colors.black87),
                 ),
                 LoadingAnimationWidget.newtonCradle(
                     color: Colors.orange, size: 100),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
               ],

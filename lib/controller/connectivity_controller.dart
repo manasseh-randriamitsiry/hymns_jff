@@ -31,7 +31,7 @@ class ConnectivityController extends GetxController {
   }
 
   void startPeriodicCheck() {
-    _timer = Timer.periodic(Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       checkConnectivity();
     });
   }

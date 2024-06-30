@@ -1,5 +1,6 @@
 import 'dart:async'; // Import the dart:async package for Timer
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:permah_flutter/screen/auth/home_screen.dart';
@@ -161,7 +162,9 @@ class _VerificationPageState extends State<VerificationPage> {
                   const SizedBox(height: 20),
                   GestureDetector(
                     onTap: () {
-                      print("object");
+                      if (kDebugMode) {
+                        print("object");
+                      }
                       Navigator.pop(context); // Close drawer
                       Navigator.push(
                         context,
@@ -186,21 +189,15 @@ class _VerificationPageState extends State<VerificationPage> {
                   const SizedBox(
                     height: 50,
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Container(
-                          child: const Text("Renvoyer le code dans:"),
-                        ),
-                        Container(
-                          child: Text(
-                            getFormattedTime(), // Display the countdown timer
-                            style: const TextStyle(color: Colors.orange),
-                          ),
-                        ),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      const Text("Renvoyer le code dans:"),
+                      Text(
+                        getFormattedTime(), // Display the countdown timer
+                        style: const TextStyle(color: Colors.orange),
+                      ),
+                    ],
                   ),
                 ],
               ),

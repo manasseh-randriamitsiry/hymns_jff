@@ -7,7 +7,7 @@ import 'package:permah_flutter/services/api_service.dart';
 import 'controller/auth_controller.dart';
 
 class DrawerScreen extends StatefulWidget {
-  DrawerScreen({Key? key}) : super(key: key);
+  const DrawerScreen({super.key});
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -53,7 +53,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
             accountEmail: const Text(
               'this_is_you_email@gmail.com',
-              style: const TextStyle(
+              style: TextStyle(
                   fontWeight: FontWeight.bold, color: Colors.black87),
             ),
             decoration: const BoxDecoration(color: Colors.transparent),

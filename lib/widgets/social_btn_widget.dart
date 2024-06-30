@@ -14,7 +14,7 @@ class SocialBtnWidget extends StatelessWidget {
           Container(
             width: 80,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(15),
               ),
               border: Border.all(
@@ -38,7 +38,7 @@ class SocialBtnWidget extends StatelessWidget {
           Container(
             width: 80,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(15),
               ),
               border: Border.all(
@@ -61,7 +61,7 @@ class SocialBtnWidget extends StatelessWidget {
           Container(
             width: 90,
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.all(
+              borderRadius: const BorderRadius.all(
                 Radius.circular(15),
               ),
               border: Border.all(

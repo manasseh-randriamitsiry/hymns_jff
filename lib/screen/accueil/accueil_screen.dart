@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/screen/sortie/sortie_screen.dart';
 
+import '../../controller/BottomNavController.dart';
+import '../../controller/accueil_controller.dart';
+import '../../controller/horizontalScrollController.dart';
 import '../../widgets/bottom_navigation_widget.dart';
-import '../controllers/BottomNavController.dart';
-import '../controllers/accueil_controller.dart';
-import '../controllers/horizontalScrollController.dart';
 
 class AccueilScreen extends StatelessWidget {
   final AccueilController controller = Get.put(AccueilController());
@@ -122,7 +122,7 @@ class AccueilScreen extends StatelessWidget {
                   child: GestureDetector(
                     onTap: () {
                       Get.to(
-                        () => SortieScreen(),
+                        () => const SortieScreen(),
                       );
                     },
                     child: Image.asset(

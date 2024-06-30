@@ -10,7 +10,6 @@ import 'package:permah_flutter/screen/auth/interest_screen.dart';
 import 'package:permah_flutter/screen/auth/reset_pass_screen.dart';
 import 'package:permah_flutter/screen/auth/signup_screen.dart';
 import 'package:permah_flutter/screen/auth/verification_page.dart';
-import 'package:permah_flutter/screen/controllers/connectivity_controller.dart';
 import 'package:permah_flutter/screen/intro/splash_screen0.dart';
 import 'package:permah_flutter/screen/intro/splash_screen1.dart';
 import 'package:permah_flutter/screen/intro/splash_screen2.dart';
@@ -18,6 +17,7 @@ import 'package:permah_flutter/screen/intro/splash_screen3.dart';
 import 'package:permah_flutter/screen/member/member_screen.dart';
 import 'package:permah_flutter/screen/sortie/sortie_screen.dart';
 
+import 'controller/connectivity_controller.dart';
 import 'services/api_service.dart';
 
 void main() {
@@ -39,6 +39,7 @@ class MyApp extends StatelessWidget {
       builder: (context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           connectivityController.startPeriodicCheck();
+          return _buildApp('/home');
           return Center(
             child: LoadingAnimationWidget.fallingDot(
                 color: Colors.black, size: 50),
@@ -51,8 +52,10 @@ class MyApp extends StatelessWidget {
           }
           return _buildApp('/members');
         } else {
-          print(
-              'Redirecting to home. Token is null or empty: ${snapshot.data}');
+          if (kDebugMode) {
+            print(
+                'Redirecting to home. Token is null or empty: ${snapshot.data}');
+          }
           return _buildApp('/');
         }
       },
@@ -76,7 +79,7 @@ class MyApp extends StatelessWidget {
         darkTheme: darkTheme,
         initialRoute: initialRoute,
         getPages: [
-          GetPage(name: '/', page: () => SplashScreen0()),
+          GetPage(name: '/', page: () => const SplashScreen0()),
           GetPage(name: '/splash1', page: () => const SplashScreen1()),
           GetPage(name: '/splash2', page: () => const SplashScreen2()),
           GetPage(name: '/splash3', page: () => const SplashScreen3()),
@@ -87,7 +90,7 @@ class MyApp extends StatelessWidget {
           GetPage(
               name: '/interest', page: () => const InterestSelectionScreen()),
           GetPage(name: '/members', page: () => MembersScreen()),
-          GetPage(name: '/sortie', page: () => SortieScreen()),
+          GetPage(name: '/sortie', page: () => const SortieScreen()),
         ],
         initialBinding: BindingsBuilder(() {
           Get.put(ApiService());

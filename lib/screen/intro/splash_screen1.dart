@@ -1,21 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:permah_flutter/screen/intro/splash_screen2.dart';
 import 'package:permah_flutter/widgets/start_container1.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 
 import '../auth/home_screen.dart';
 
 class SplashScreen1 extends StatelessWidget {
   const SplashScreen1({super.key});
-
-  Future<void> _completeSetup(BuildContext context) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setBool('isFirstUse', false);
-
-    Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => HomeScreen(),
-    ));
-  }
 
   @override
   Widget build(BuildContext context) {

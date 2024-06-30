@@ -2,11 +2,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
-import '../screen/controllers/BottomNavController.dart';
+import '../controller/BottomNavController.dart';
 
 Widget buildBottomNavigationBar(BottomNavController navController) {
   return Obx(() => BottomNavigationBar(
-        items: [
+        items: const [
           BottomNavigationBarItem(
             icon: Icon(Icons.home),
             label: 'Home',

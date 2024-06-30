@@ -24,7 +24,7 @@ class WeatherScreen extends StatelessWidget {
         actions: [
           GestureDetector(
             child: IconButton(
-                icon: Icon(Icons.refresh),
+                icon: const Icon(Icons.refresh),
               onPressed: (){
                 if (kDebugMode) {
                   print("refreshed");
@@ -49,8 +49,8 @@ class WeatherScreen extends StatelessWidget {
                   ),
                   child: Column(
                     children: [
-                      SizedBox(height: 20,),
-                      Text("24 F",
+                      const SizedBox(height: 20,),
+                      const Text("24 F",
                         style: TextStyle(
                           fontSize: 24,
                           fontWeight: FontWeight.bold,
@@ -59,14 +59,14 @@ class WeatherScreen extends StatelessWidget {
                       ),
                       IconButton(
                           onPressed: (){},
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.cloud_circle_outlined,
                             size: 100,
                             color: Colors.yellow,
                           ),
                       ),
-                      SizedBox(height: 10,),
-                      Text("Rainny",
+                      const SizedBox(height: 10,),
+                      const Text("Rainny",
                         style: TextStyle(
                           fontSize: 20,
                         ),
@@ -81,8 +81,8 @@ class WeatherScreen extends StatelessWidget {
                     children: [
                       Container(
                         width: isDesktop ? 500 : phoneScreenWidth,
-                        padding: EdgeInsets.only(left: 15),
-                        child: Text(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: const Text(
                           "Weather forecast",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -122,8 +122,8 @@ class WeatherScreen extends StatelessWidget {
                     children: [
                       Container(
                         width: isDesktop ? 500 : phoneScreenWidth,
-                        padding: EdgeInsets.only(left: 15),
-                        child: Text(
+                        padding: const EdgeInsets.only(left: 15),
+                        child: const Text(
                           "Additional information",
                           style: TextStyle(
                             fontWeight: FontWeight.bold,
@@ -136,7 +136,7 @@ class WeatherScreen extends StatelessWidget {
                   ),
                 ),
                 const SizedBox(height:20),
-                SingleChildScrollView(
+                const SingleChildScrollView(
                   scrollDirection: Axis.horizontal,
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -174,8 +174,8 @@ class additionalWidget extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     return Container(
       width: screenWidth/4,
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
-      decoration: BoxDecoration(
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      decoration: const BoxDecoration(
         borderRadius: BorderRadius.all(Radius.circular(15)),
       ),
       child: Column(
@@ -190,7 +190,7 @@ class additionalWidget extends StatelessWidget {
           ),
           Text(
             title,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 15,
             ),
           ),
@@ -226,9 +226,9 @@ class forecast_widget extends StatelessWidget {
     return Container(
       width: isDesktop ? screenWidth / 10 : phoneScreenWidth / 5,
       height: isDesktop ? 100 : 100,
-      padding: EdgeInsets.symmetric(vertical: 0, horizontal: 10),
+      padding: const EdgeInsets.symmetric(vertical: 0, horizontal: 10),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.all(Radius.circular(15)),
+        borderRadius: const BorderRadius.all(Radius.circular(15)),
         color: color.withOpacity(0.5),
       ),
       child: Column(
@@ -252,7 +252,7 @@ class forecast_widget extends StatelessWidget {
           ),
           Text(
             lattitude,
-            style: TextStyle(
+            style: const TextStyle(
               fontSize: 10,
             ),
           ),

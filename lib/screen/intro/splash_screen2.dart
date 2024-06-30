@@ -8,7 +8,7 @@ class SplashScreen2 extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    double screenHeigh = MediaQuery.of(context).size.height;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: SizedBox(
@@ -26,7 +26,7 @@ class SplashScreen2 extends StatelessWidget {
             Align(
               alignment: Alignment.bottomCenter,
               child: Padding(
-                padding: EdgeInsets.only(top: screenHeigh - 312),
+                padding: EdgeInsets.only(top: screenHeight - 312),
                 // Padding to prevent overlap with screen edges
                 child: StartContainer1(
                   route1: HomeScreen(),

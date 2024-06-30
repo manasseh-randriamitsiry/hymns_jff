@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/controller/auth_controller.dart';
@@ -39,44 +40,36 @@ class SignupScreen extends StatelessWidget {
               width: containerWidth,
               child: Column(
                 children: [
-                  const SizedBox(height: 20),
+                  SizedBox(height: screenHeight / 40),
                   const Text(
                     "Creer un compte et profiter de tous les services",
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: screenHeight / 40),
                   InputWidget(
-                    inputWidth: containerWidth,
-                    inputHeigh: 60,
                     color: Colors.black45,
                     icon: Icons.person_outline,
-                    text: 'Votre pseudo',
+                    labelText: 'Votre pseudo',
                     controller: _usernameController,
+                    type: TextInputType.text,
                   ),
                   const SizedBox(height: 10),
                   InputWidget(
-                    inputWidth: containerWidth,
-                    inputHeigh: 60,
                     color: Colors.black45,
                     icon: Icons.email_outlined,
-                    text: 'Saisissez votre email',
+                    labelText: 'Saisissez votre email',
                     controller: _emailController,
+                    type: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 10),
                   InputPasswordWidget(
-                    width: containerWidth,
-                    height: 60,
-                    icon: Icons.lock,
-                    text: "Saisissez votre mot de passe",
+                    lblText: "Saisissez votre mot de passe",
                     color: Colors.black45,
                     controller: _passwordController1,
                   ),
                   const SizedBox(height: 10),
                   InputPasswordWidget(
-                    width: containerWidth,
-                    height: 60,
-                    icon: Icons.lock,
-                    text: "Confirmer votre mot de passe",
+                    lblText: "Saisissez votre mot de passe",
                     color: Colors.black45,
                     controller: _passwordController2,
                   ),
@@ -93,40 +86,38 @@ class SignupScreen extends StatelessWidget {
                           _emailController.text,
                         );
                       } catch (e) {
-                        print(e.toString());
+                        if (kDebugMode) {
+                          print(e.toString());
+                        }
                       }
                     },
-                    child: const btnWidget(
-                      inputWidth: 350,
-                      inputHeigh: 60,
+                    child: btnWidget(
+                      inputWidth: containerWidth,
+                      inputHeigh: screenHeight / 12,
                       text: "S'INSCRIRE",
                     ),
                   ),
-                  const SizedBox(
-                    height: 20,
+                  SizedBox(
+                    height: screenHeight / 30,
                   ),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 2 * screenWidth / 8,
-                          color: Colors.black.withOpacity(0.2),
-                          height: 2,
-                        ),
-                        Container(
-                          child: const Text("ou continuer avec"),
-                        ),
-                        Container(
-                          width: 2 * screenWidth / 8,
-                          color: Colors.black.withOpacity(0.2),
-                          height: 2,
-                        ),
-                      ],
-                    ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: 2 * screenWidth / 8,
+                        color: Colors.black.withOpacity(0.2),
+                        height: 2,
+                      ),
+                      const Text("ou continuer avec"),
+                      Container(
+                        width: 2 * screenWidth / 8,
+                        color: Colors.black.withOpacity(0.2),
+                        height: 2,
+                      ),
+                    ],
                   ),
-                  const SizedBox(
-                    height: 50,
+                  SizedBox(
+                    height: screenHeight / 20,
                   ),
                   SizedBox(
                     width: containerWidth - 40,
@@ -142,40 +133,36 @@ class SignupScreen extends StatelessWidget {
               top: screenHeight - 115, // 20 pixels from the top of the screen
               left: 0,
               right: 0,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      child: const Text("J'ai un compte?"),
-                    ),
-                    GestureDetector(
-                      onTap: () {},
-                      child: GestureDetector(
-                        onTap: () {
-                          Navigator.pop(context); // Close drawer
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      HomeScreen(),
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                    opacity: animation, child: child);
-                              },
-                            ),
-                          );
-                        },
-                        child: const Text(
-                          "Connectez-vous",
-                          style: TextStyle(color: Colors.orange),
-                        ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text("J'ai un compte?"),
+                  GestureDetector(
+                    onTap: () {},
+                    child: GestureDetector(
+                      onTap: () {
+                        Navigator.pop(context); // Close drawer
+                        Navigator.push(
+                          context,
+                          PageRouteBuilder(
+                            pageBuilder:
+                                (context, animation, secondaryAnimation) =>
+                                    HomeScreen(),
+                            transitionsBuilder: (context, animation,
+                                secondaryAnimation, child) {
+                              return FadeTransition(
+                                  opacity: animation, child: child);
+                            },
+                          ),
+                        );
+                      },
+                      child: const Text(
+                        "Connectez-vous",
+                        style: TextStyle(color: Colors.orange),
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

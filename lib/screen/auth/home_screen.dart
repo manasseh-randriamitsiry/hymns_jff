@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permah_flutter/screen/auth/reset_pass_screen.dart';
 import 'package:permah_flutter/screen/auth/signup_screen.dart';
 import 'package:permah_flutter/widgets/btn_widget.dart';
 import 'package:permah_flutter/widgets/input_password_widget.dart';
@@ -46,26 +47,22 @@ class HomeScreen extends StatelessWidget {
               width: containerWidth,
               child: Column(
                 children: [
-                  const SizedBox(height: 50),
+                  SizedBox(height: screenHeight / 20),
                   const Text(
                     "Donner vos informations pour vous connecter à votre compte",
                     textAlign: TextAlign.center,
                   ),
-                  const SizedBox(height: 20),
+                  SizedBox(height: screenHeight / 40),
                   InputWidget(
-                    inputWidth: containerWidth,
-                    inputHeigh: 60,
                     color: Colors.black45,
                     icon: Icons.email_outlined,
-                    text: 'Saisissez votre email',
+                    labelText: 'Saisissez votre identifiant',
                     controller: _usernameController,
+                    type: TextInputType.text,
                   ),
                   const SizedBox(height: 15),
                   InputPasswordWidget(
-                    width: containerWidth,
-                    height: 60,
-                    icon: Icons.lock,
-                    text: "Saisissez votre mot de passe",
+                    lblText: "Saisissez votre mot de passe",
                     color: Colors.black45,
                     controller: _passwordController,
                   ),
@@ -87,7 +84,9 @@ class HomeScreen extends StatelessWidget {
                         ],
                       ),
                       TextButton(
-                        onPressed: () {},
+                        onPressed: () {
+                          Get.to(() => const ResetPassScreen());
+                        },
                         child: const Text(
                           "Mot de passe oublié ?",
                           style: TextStyle(color: Colors.orange),
@@ -95,7 +94,7 @@ class HomeScreen extends StatelessWidget {
                       ),
                     ],
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: screenHeight / 20),
                   GestureDetector(
                     onTap: () async {
                       try {
@@ -115,28 +114,24 @@ class HomeScreen extends StatelessWidget {
                       text: "SE CONNECTER",
                     ),
                   ),
-                  const SizedBox(height: 50),
-                  Container(
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                      children: [
-                        Container(
-                          width: 2 * screenWidth / 8,
-                          color: Colors.black.withOpacity(0.2),
-                          height: 2,
-                        ),
-                        Container(
-                          child: const Text("ou continuer avec"),
-                        ),
-                        Container(
-                          width: 2 * screenWidth / 8,
-                          color: Colors.black.withOpacity(0.2),
-                          height: 2,
-                        ),
-                      ],
-                    ),
+                  SizedBox(height: screenHeight / 30),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Container(
+                        width: 2 * screenWidth / 8,
+                        color: Colors.black.withOpacity(0.2),
+                        height: 2,
+                      ),
+                      const Text("ou continuer avec"),
+                      Container(
+                        width: 2 * screenWidth / 8,
+                        color: Colors.black.withOpacity(0.2),
+                        height: 2,
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 50),
+                  SizedBox(height: screenHeight / 30),
                   SizedBox(
                     width: containerWidth - 40,
                     child: const SocialBtnWidget(),
@@ -149,24 +144,20 @@ class HomeScreen extends StatelessWidget {
               top: screenHeight - 115,
               left: 0,
               right: 0,
-              child: Container(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Container(
-                      child: const Text("Vous n'avez pas de compte ?"),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  const Text("Vous n'avez pas de compte ?"),
+                  GestureDetector(
+                    onTap: () {
+                      Get.to(() => SignupScreen());
+                    },
+                    child: const Text(
+                      "Creer un compte",
+                      style: TextStyle(color: Colors.orange),
                     ),
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => SignupScreen());
-                      },
-                      child: const Text(
-                        "Creer un compte",
-                        style: TextStyle(color: Colors.orange),
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                ],
               ),
             ),
           ],

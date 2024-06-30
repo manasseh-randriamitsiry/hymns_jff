@@ -12,7 +12,7 @@ class CustomButton extends StatelessWidget {
   final VoidCallback onPressed;
 
   const CustomButton({
-    Key? key,
+    super.key,
     this.textColor = Colors.black,
     this.backgroundColor = Colors.green,
     this.text = 'Default', // Default text
@@ -22,7 +22,7 @@ class CustomButton extends StatelessWidget {
     this.width = 100.0, // Default width
     this.height = 50.0, // Default height
     required this.onPressed,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -73,7 +73,7 @@ class CustomButton extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             if (icon != null) Icon(icon, color: textColor),
-            if (icon != null) SizedBox(width: 8), // Add some spacing between the icon and the text
+            if (icon != null) const SizedBox(width: 8), // Add some spacing between the icon and the text
             Text(text),
           ],
         ),

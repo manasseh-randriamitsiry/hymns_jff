@@ -65,7 +65,7 @@ class AuthApi {
 }
 
 class FetchApi extends StatefulWidget {
-  const FetchApi({Key? key}) : super(key: key);
+  const FetchApi({super.key});
 
   @override
   State<FetchApi> createState() => _FetchApiState();
@@ -114,7 +114,7 @@ class _FetchApiState extends State<FetchApi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Authentification et API Example')),
+      appBar: AppBar(title: const Text('Authentification et API Example')),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
@@ -122,12 +122,12 @@ class _FetchApiState extends State<FetchApi> {
             if (_token == null)
               ElevatedButton(
                 onPressed: _login,
-                child: Text('Se Connecter'),
+                child: const Text('Se Connecter'),
               )
             else
               ElevatedButton(
                 onPressed: _fetchMembers,
-                child: Text('Charger les Membres'),
+                child: const Text('Charger les Membres'),
               ),
             if (_members != null)
               Expanded(

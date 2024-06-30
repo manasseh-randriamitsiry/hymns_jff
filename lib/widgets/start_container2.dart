@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 
 class ExploreUpcomingAndNearbyEvents extends StatelessWidget {
+  const ExploreUpcomingAndNearbyEvents({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Container(
+        SizedBox(
           width: 327,
           height: 288,
           child: Stack(
@@ -17,7 +19,7 @@ class ExploreUpcomingAndNearbyEvents extends StatelessWidget {
                   width: 327,
                   height: 288,
                   decoration: ShapeDecoration(
-                    color: Color(0xFFFF7E69),
+                    color: const Color(0xFFFF7E69),
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(16),
                     ),
@@ -27,7 +29,7 @@ class ExploreUpcomingAndNearbyEvents extends StatelessWidget {
               Positioned(
                 left: 20,
                 top: 210,
-                child: Container(
+                child: SizedBox(
                   width: 287,
                   height: 58,
                   child: Stack(
@@ -39,7 +41,7 @@ class ExploreUpcomingAndNearbyEvents extends StatelessWidget {
                           width: 287,
                           height: 58,
                           decoration: ShapeDecoration(
-                            gradient: LinearGradient(
+                            gradient: const LinearGradient(
                               begin: Alignment(0.71, -0.71),
                               end: Alignment(-0.71, 0.71),
                               colors: [Color(0xFF20222C), Color(0xDB070708)],
@@ -50,7 +52,7 @@ class ExploreUpcomingAndNearbyEvents extends StatelessWidget {
                           ),
                         ),
                       ),
-                      Positioned(
+                      const Positioned(
                         left: 90,
                         top: 20.68,
                         child: SizedBox(
@@ -73,10 +75,10 @@ class ExploreUpcomingAndNearbyEvents extends StatelessWidget {
                   ),
                 ),
               ),
-              Positioned(
+              const Positioned(
                 left: 24,
                 top: 37.75,
-                child: Container(
+                child: SizedBox(
                   width: 279,
                   height: 128.75,
                   child: Stack(

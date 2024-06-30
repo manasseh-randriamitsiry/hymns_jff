@@ -14,13 +14,12 @@ class SplashScreen0 extends StatefulWidget {
   const SplashScreen0({super.key});
 
   @override
-  _SplashScreen0State createState() => _SplashScreen0State();
+  SplashScreen0State createState() => SplashScreen0State();
 }
 
-class _SplashScreen0State extends State<SplashScreen0>
+class SplashScreen0State extends State<SplashScreen0>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
-  late Future<void> _preloadFuture;
   final ApiService apiService = ApiService();
   late Timer _timer;
   bool _isConnected = false;
@@ -127,9 +126,9 @@ class _SplashScreen0State extends State<SplashScreen0>
                     ),
                     // Show different text based on connection status
                     if (!_isConnected) ...[
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       // Add some space between animation and text
-                      Text(
+                      const Text(
                         'Pas de connexion internet.\nEn attente de connexion ...',
                         textAlign: TextAlign.center,
                         style: TextStyle(
@@ -138,9 +137,9 @@ class _SplashScreen0State extends State<SplashScreen0>
                         ),
                       ),
                     ] else ...[
-                      SizedBox(height: 20),
+                      const SizedBox(height: 20),
                       // Add some space between animation and text
-                      Text(
+                      const Text(
                         'Veuillez patientez ...',
                         textAlign: TextAlign.center,
                         style: TextStyle(

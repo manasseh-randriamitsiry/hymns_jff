@@ -35,7 +35,7 @@ class StartContainer1 extends StatelessWidget {
         Container(
           width: double.infinity,
           height: 312,
-          decoration: BoxDecoration(
+          decoration: const BoxDecoration(
             color: Color(0xFFFF7E69),
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(50),
@@ -44,21 +44,23 @@ class StartContainer1 extends StatelessWidget {
           ),
           child: Column(
             children: [
-              SizedBox(
+              const SizedBox(
                 height: 50,
               ),
-              Container(
+              SizedBox(
+                width: 300,
+                height: 100,
                 child: Center(
                   child: Text(
                     text1,
                     textAlign: TextAlign.center,
-                    style: TextStyle(color: Colors.white, fontSize: 25),
+                    style: const TextStyle(color: Colors.white, fontSize: 25),
                   ),
                 ),
-                width: 300,
-                height: 100,
               ),
-              Container(
+              SizedBox(
+                width: 300,
+                height: 50,
                 child: Center(
                   child: Text(
                     text2,
@@ -67,10 +69,8 @@ class StartContainer1 extends StatelessWidget {
                         color: Colors.white.withOpacity(0.7), fontSize: 14),
                   ),
                 ),
-                width: 300,
-                height: 50,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               Container(
@@ -133,7 +133,7 @@ class StartContainer1 extends StatelessWidget {
                             ),
                           );
                         },
-                        child: Text(
+                        child: const Text(
                           "Suivant",
                           style: TextStyle(color: Colors.white),
                         ),

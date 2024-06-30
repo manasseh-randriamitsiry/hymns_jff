@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../widgets/btn_widget.dart';
@@ -39,11 +40,14 @@ class InterestSelectionScreen extends StatelessWidget {
                 // Récupérer les éléments sélectionnés
                 List<String> selectedInterests =
                     InterestGridState.selectedInterests;
-                print("Éléments sélectionnés : $selectedInterests");
+                if (kDebugMode) {
+                  print("Éléments sélectionnés : $selectedInterests");
+                }
               },
               style: ElevatedButton.styleFrom(
                 backgroundColor: Colors.black,
-                padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 30, vertical: 10),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(10),
                 ),
@@ -125,7 +129,10 @@ class InterestCard extends StatelessWidget {
   final bool isSelected;
 
   const InterestCard(
-      {super.key, required this.icon, required this.label, this.isSelected = false});
+      {super.key,
+      required this.icon,
+      required this.label,
+      this.isSelected = false});
 
   @override
   Widget build(BuildContext context) {

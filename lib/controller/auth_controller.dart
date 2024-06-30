@@ -14,7 +14,7 @@ class AuthController extends GetxController {
   // Reactive variables
   var isAuthenticated = false.obs;
   var token = RxnString();
-  final storage = FlutterSecureStorage();
+  final storage = const FlutterSecureStorage();
 
   Future<bool> checkInternetConnection() async {
     try {
@@ -39,7 +39,7 @@ class AuthController extends GetxController {
           'Raison : mot de passe different',
           backgroundColor: Colors.yellowAccent.withOpacity(0.2),
           colorText: Colors.black,
-          icon: Icon(Icons.warning_amber, color: Colors.black),
+          icon: const Icon(Icons.warning_amber, color: Colors.black),
         );
       } else {
         try {
@@ -49,11 +49,11 @@ class AuthController extends GetxController {
             'Inscription réussie pour $username',
             backgroundColor: Colors.green.withOpacity(0.2),
             colorText: Colors.black,
-            icon: Icon(Icons.check, color: Colors.black),
+            icon: const Icon(Icons.check, color: Colors.black),
           );
           await apiService.login(username, password);
 
-          Get.to(InterestSelectionScreen());
+          Get.to(const InterestSelectionScreen());
         } catch (e) {
           // Affiche un snackbar d'erreur
           Get.snackbar(
@@ -61,7 +61,7 @@ class AuthController extends GetxController {
             'Raison : ${e.toString().replaceFirst('Exception: ', '')}',
             backgroundColor: Colors.red.withOpacity(0.2),
             colorText: Colors.black,
-            icon: Icon(Icons.cancel, color: Colors.black),
+            icon: const Icon(Icons.cancel, color: Colors.black),
             isDismissible: true,
             dismissDirection: DismissDirection.horizontal,
           );
@@ -71,10 +71,10 @@ class AuthController extends GetxController {
     } else {
       Get.snackbar(
         'Internet error',
-        'Salut ' + username + ', verifier votre connection',
+        'Salut $username, verifier votre connection',
         backgroundColor: Colors.green.withOpacity(0.2),
         colorText: Colors.black,
-        icon: Icon(Icons.signal_wifi_connected_no_internet_4),
+        icon: const Icon(Icons.signal_wifi_connected_no_internet_4),
       );
     }
   }
@@ -91,17 +91,17 @@ class AuthController extends GetxController {
         Get.off(MembersScreen());
         Get.snackbar(
           'Success',
-          'Hello ' + username,
+          'Hello $username',
           backgroundColor: Colors.green.withOpacity(0.2),
           colorText: Colors.black,
-          icon: Icon(Icons.check),
+          icon: const Icon(Icons.check),
         );
       } catch (e) {
         Get.snackbar('Erreur connection', 'Verifier les informations',
             backgroundColor: Colors.red.withOpacity(0.2),
             colorText: Colors.black,
             snackPosition: SnackPosition.TOP,
-            icon: Icon(Icons.cancel),
+            icon: const Icon(Icons.cancel),
             isDismissible: true,
             dismissDirection: DismissDirection.horizontal,
             forwardAnimationCurve: Curves.easeInOutCirc);
@@ -110,10 +110,10 @@ class AuthController extends GetxController {
     } else {
       Get.snackbar(
         'Internet error',
-        'Salut ' + username + ', verifier votre connection',
+        'Salut $username, verifier votre connection',
         backgroundColor: Colors.green.withOpacity(0.2),
         colorText: Colors.black,
-        icon: Icon(Icons.signal_wifi_connected_no_internet_4),
+        icon: const Icon(Icons.signal_wifi_connected_no_internet_4),
       );
     }
   }
