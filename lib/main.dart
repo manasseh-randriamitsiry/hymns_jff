@@ -10,6 +10,7 @@ import 'package:permah_flutter/screen/auth/interest_screen.dart';
 import 'package:permah_flutter/screen/auth/reset_pass_screen.dart';
 import 'package:permah_flutter/screen/auth/signup_screen.dart';
 import 'package:permah_flutter/screen/auth/verification_page.dart';
+import 'package:permah_flutter/screen/controllers/connectivity_controller.dart';
 import 'package:permah_flutter/screen/intro/splash_screen0.dart';
 import 'package:permah_flutter/screen/intro/splash_screen1.dart';
 import 'package:permah_flutter/screen/intro/splash_screen2.dart';
@@ -26,6 +27,8 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final ApiService apiService = ApiService();
+  final ConnectivityController connectivityController =
+      Get.put(ConnectivityController());
 
   MyApp({super.key});
 
@@ -60,15 +63,12 @@ class MyApp extends StatelessWidget {
       light: ThemeData(
         brightness: Brightness.light,
         primarySwatch: Colors.blue,
-        // Additional light theme settings
       ),
       dark: ThemeData(
         brightness: Brightness.dark,
         primarySwatch: Colors.blue,
-        // Additional dark theme settings
       ),
       initial: AdaptiveThemeMode.light,
-      // Use AdaptiveThemeMode.system for system default
       builder: (theme, darkTheme) => GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: theme,

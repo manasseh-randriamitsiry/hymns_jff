@@ -91,19 +91,12 @@ class _SplashScreen0State extends State<SplashScreen0>
                     child: Container(
                       padding: const EdgeInsets.only(top: 200),
                       child: RotationTransition(
-                        turns: _controller,
-                        child: Container(
-                          width: 200,
-                          height: 200,
-                          decoration: const BoxDecoration(
-                            borderRadius:
-                                BorderRadius.all(Radius.circular(100)),
-                            color: Colors.black12,
-                          ),
-                          child: CircleAvatar(
-                              child: Image.asset('assets/images/img_1.png')),
-                        ),
-                      ),
+                          turns: _controller,
+                          child: Image.asset(
+                            'assets/images/img_1.png',
+                            width: 200,
+                            height: 200,
+                          )),
                     ),
                   ),
                   Align(

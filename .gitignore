@@ -54,3 +54,5 @@ android/app/profile/
 android/app/release/
 .gradle/
 .metadata
+/assets/prototype/accueil, sortie/Accueil.png:Zone.Identifier:$DATA
+/assets/prototype/accueil, sortie/Accueil – 1.png:Zone.Identifier:$DATA
