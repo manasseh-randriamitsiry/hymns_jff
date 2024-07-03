@@ -7,7 +7,7 @@ import 'package:permah_flutter/services/api_service.dart';
 import 'controller/auth_controller.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({super.key});
+  const DrawerScreen({Key? key}) : super(key: key);
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -17,7 +17,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
   final AuthController _authController = Get.put(AuthController());
   final ApiService apiService = Get.put(ApiService());
 
-  String _username = "Loading..."; // Initial value for username
+  String _username = "Loading...";
 
   @override
   void initState() {
@@ -48,13 +48,17 @@ class _DrawerScreenState extends State<DrawerScreen> {
           UserAccountsDrawerHeader(
             accountName: Text(
               _username,
-              style: const TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.black87),
+              style: TextStyle(
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
             ),
-            accountEmail: const Text(
+            accountEmail: Text(
               'this_is_you_email@gmail.com',
               style: TextStyle(
-                  fontWeight: FontWeight.bold, color: Colors.black87),
+                fontWeight: FontWeight.bold,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
             ),
             decoration: const BoxDecoration(color: Colors.transparent),
             currentAccountPicture: const CircleAvatar(
@@ -62,22 +66,46 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           ),
           ListTile(
-            leading: const Icon(Icons.search),
-            title: const Text('Explorer'),
+            leading: Icon(
+              Icons.search,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
+            title: Text(
+              'Explorer',
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
             onTap: () {
               Get.to(AccueilScreen());
             },
           ),
           ListTile(
-            leading: const Icon(Icons.brightness_6),
-            title: const Text('Changer Theme'),
+            leading: Icon(
+              Icons.brightness_6,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
+            title: Text(
+              'Change Theme',
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
             onTap: () {
               AdaptiveTheme.of(context).toggleThemeMode();
             },
           ),
           ListTile(
-            leading: const Icon(Icons.power_settings_new),
-            title: const Text('Deconnecter'),
+            leading: Icon(
+              Icons.power_settings_new,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
+            title: Text(
+              'Logout',
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
+            ),
             onTap: () {
               _authController.logout();
             },

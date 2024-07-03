@@ -21,9 +21,10 @@ import 'package:permah_flutter/screen/sortie/liste_sortie_screen.dart';
 import 'package:permah_flutter/screen/sortie/sortie_screen.dart';
 import 'package:permah_flutter/screen/user/edit_profile_screen.dart';
 import 'package:permah_flutter/screen/user/profil_page_screen.dart';
+import 'package:permah_flutter/services/api_service.dart';
 
 import 'controller/connectivity_controller.dart';
-import 'services/api_service.dart';
+import 'theme.dart'; // Import your theme definitions here
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -68,14 +69,8 @@ class MyApp extends StatelessWidget {
 
   Widget _buildApp(String initialRoute) {
     return AdaptiveTheme(
-      light: ThemeData(
-        brightness: Brightness.light,
-        primarySwatch: Colors.blue,
-      ),
-      dark: ThemeData(
-        brightness: Brightness.dark,
-        primarySwatch: Colors.blue,
-      ),
+      light: lightTheme,
+      dark: darkTheme,
       initial: AdaptiveThemeMode.light,
       builder: (theme, darkTheme) => GetMaterialApp(
         debugShowCheckedModeBanner: false,

@@ -50,18 +50,18 @@ class AccueilScreen extends StatelessWidget {
         child: Column(
           children: [
             const SizedBox(height: 20),
-            _buildUserInfoSection(),
+            _buildUserInfoSection(context),
             _buildEventCarousel(context),
-            _buildMemberSection(),
-            _buildOnlineMemberSection(),
+            _buildMemberSection(context),
+            _buildOnlineMemberSection(context),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildUserInfoSection() {
-    return const Padding(
+  Widget _buildUserInfoSection(BuildContext context) {
+    return Padding(
       padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 5),
       child: Row(
         children: [
@@ -74,18 +74,34 @@ class AccueilScreen extends StatelessWidget {
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text('Bienvenue', style: TextStyle(fontSize: 12)),
+              Text('Bienvenue',
+                  style: TextStyle(
+                    fontSize: 12,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  )),
               Text(
                 'MADI Ahmed',
-                style: TextStyle(fontSize: 14, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
             ],
           ),
           Spacer(),
           Column(
             children: [
-              Text('Position actuelle'),
-              Text('Mayotte, 97640'),
+              Text(
+                'Position actuelle',
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
+              Text('Mayotte, 97640',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  )),
             ],
           ),
         ],
@@ -140,18 +156,21 @@ class AccueilScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberSection() {
+  Widget _buildMemberSection(BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceAround,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Derniers membres',
-                  style: TextStyle(fontSize: 18, color: Colors.deepOrange)),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  )),
               Icon(Icons.arrow_forward),
             ],
           ),
@@ -166,7 +185,8 @@ class AccueilScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: _buildMemberItem(controller.recentMembers[index]),
+                child:
+                    _buildMemberItem(controller.recentMembers[index], context),
               );
             },
           ),
@@ -175,7 +195,7 @@ class AccueilScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildMemberItem(String name) {
+  Widget _buildMemberItem(String name, BuildContext context) {
     return Column(
       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
       crossAxisAlignment: CrossAxisAlignment.center,
@@ -191,16 +211,19 @@ class AccueilScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildOnlineMemberSection() {
+  Widget _buildOnlineMemberSection(BuildContext context) {
     return Column(
       children: [
-        const Padding(
+        Padding(
           padding: EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text('Membres en ligne',
-                  style: TextStyle(fontSize: 18, color: Colors.deepOrange)),
+                  style: TextStyle(
+                    fontSize: 18,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  )),
               Icon(Icons.arrow_forward),
             ],
           ),
@@ -215,7 +238,8 @@ class AccueilScreen extends StatelessWidget {
             itemBuilder: (context, index) {
               return Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child: _buildMemberItem(controller.onlineMembers[index]),
+                child:
+                    _buildMemberItem(controller.onlineMembers[index], context),
               );
             },
           ),

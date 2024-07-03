@@ -2,9 +2,6 @@ import 'dart:math'; // Add this import for random number generation
 
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-
-import '../../controller/BottomNavController.dart';
 
 class ListeSortieScreen extends StatefulWidget {
   const ListeSortieScreen({super.key});
@@ -99,10 +96,20 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
       }
       return selectedFilters.contains(sortie['category']);
     }).toList();
-    final BottomNavController navController = Get.put(BottomNavController());
+
+    var theme = Theme.of(context);
+    var borderColor =
+        theme.dividerColor.withOpacity(0.5); // Using dividerColor for borders
+    var focusedBorderColor =
+        theme.dividerColor.withOpacity(0.7); // Primary color for focused border
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Evenements'),
+        title: Text(
+          'Evenements',
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
+        ),
         actions: [
           IconButton(
             onPressed: _openFilterDialog,
@@ -120,15 +127,22 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
               height: screenHeight / 10,
               child: TextField(
                 decoration: InputDecoration(
-                  prefixIcon: const Icon(Icons.search),
+                  prefixIcon: Icon(
+                    Icons.search,
+                    color: theme.iconTheme.color, // Dynamic icon color
+                  ),
                   hintText: "Trouver une sortie",
+                  hintStyle: TextStyle(
+                    color: theme.hintColor, // Dynamic hint text color
+                  ),
                   focusedBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.black.withOpacity(0.2)),
+                    borderSide: BorderSide(color: focusedBorderColor),
+                    borderRadius: const BorderRadius.all(
+                      Radius.circular(30),
+                    ),
                   ),
                   enabledBorder: OutlineInputBorder(
-                    borderSide:
-                        BorderSide(color: Colors.black.withOpacity(0.08)),
+                    borderSide: BorderSide(color: borderColor),
                     borderRadius: const BorderRadius.all(
                       Radius.circular(30),
                     ),
@@ -207,29 +221,41 @@ class ListSortieWidget extends StatelessWidget {
             children: [
               Text(
                 title,
-                style: const TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
               Text(
                 time,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(
+                  fontSize: 12,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
               Row(
                 children: [
                   Text(
                     dateLeft,
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
                   ),
                   const SizedBox(width: 5),
                   Text(
                     dateRight,
-                    style: const TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
                   ),
                 ],
               ),
             ],
           ),
           Container(
-            color: Colors.black45,
+            color: Theme.of(context).textTheme.bodyLarge?.color,
             width: 1,
             height: screenHeight / 20,
             margin: const EdgeInsets.all(10),
@@ -239,15 +265,24 @@ class ListSortieWidget extends StatelessWidget {
             children: [
               Text(
                 location,
-                style: const TextStyle(fontSize: 10),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
               Text(
                 occupied,
-                style: const TextStyle(fontSize: 10),
+                style: TextStyle(
+                  fontSize: 10,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
-              const Text(
+              Text(
                 "REJOINDRE",
-                style: TextStyle(fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
             ],
           ),
@@ -264,6 +299,8 @@ class ListItemsTop extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var iconBorderColor = theme.dividerColor.withOpacity(0.2);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -283,7 +320,7 @@ class ListItemsTop extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(100),
               ),
-              color: Colors.black.withOpacity(0.07),
+              color: iconBorderColor,
             ),
             child: const Icon(
               Icons.security,
@@ -299,7 +336,7 @@ class ListItemsTop extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(100),
               ),
-              color: Colors.black.withOpacity(0.07),
+              color: iconBorderColor,
             ),
             child: const Icon(
               Icons.sports_basketball_sharp,
@@ -315,7 +352,7 @@ class ListItemsTop extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(100),
               ),
-              color: Colors.black.withOpacity(0.07),
+              color: iconBorderColor,
             ),
             child: const Icon(
               Icons.music_note_outlined,
@@ -331,7 +368,7 @@ class ListItemsTop extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(100),
               ),
-              color: Colors.black.withOpacity(0.07),
+              color: iconBorderColor,
             ),
             child: const Icon(
               Icons.flight_takeoff_rounded,
@@ -347,7 +384,7 @@ class ListItemsTop extends StatelessWidget {
               borderRadius: const BorderRadius.all(
                 Radius.circular(100),
               ),
-              color: Colors.black.withOpacity(0.07),
+              color: iconBorderColor,
             ),
             child: const Icon(
               Icons.local_dining_outlined,

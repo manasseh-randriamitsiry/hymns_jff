@@ -38,7 +38,12 @@ class _LieuPageState extends State<LieuPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Party Locations'),
+        title: Text(
+          'Party Locations',
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
+        ),
         centerTitle: true,
         actions: [
           IconButton(
@@ -64,20 +69,25 @@ class _LieuPageState extends State<LieuPage> {
         markers: _markers,
       ),
       bottomSheet: Container(
-        color: Colors.white,
+        color: Colors.transparent,
         padding: const EdgeInsets.all(16),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            const Text(
+            Text(
               'Designers Meetup 2022',
-              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
             ),
             ElevatedButton(
               onPressed: () {
                 // Implement join functionality here
               },
-              child: const Text('REJOINDRE'),
+              child: Text(
+                'REJOINDRE',
+              ),
             ),
           ],
         ),

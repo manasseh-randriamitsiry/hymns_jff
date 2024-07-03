@@ -28,12 +28,12 @@ class SortieScreen extends StatelessWidget {
             builder: (context, scrollController) {
               return Container(
                 padding: const EdgeInsets.all(10),
-                decoration: const BoxDecoration(
+                decoration: BoxDecoration(
+                  color: Theme.of(context).dividerColor,
                   borderRadius: BorderRadius.only(
                     topRight: Radius.circular(25),
                     topLeft: Radius.circular(25),
                   ),
-                  color: Colors.white,
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black26,
@@ -85,11 +85,14 @@ class HeaderWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const Text(
+              Text(
                 "International Band Music Concert",
-                style: TextStyle(fontSize: 14),
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
-              const Row(
+              Row(
                 children: [
                   Row(
                     children: [
@@ -102,7 +105,11 @@ class HeaderWidget extends StatelessWidget {
                           ),
                           Text(
                             " Chiconi Mayotte",
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(
+                              fontSize: 10,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                            ),
                           ),
                         ],
                       ),
@@ -118,7 +125,11 @@ class HeaderWidget extends StatelessWidget {
                           ),
                           Text(
                             " 15 Octobre à 12h00",
-                            style: TextStyle(fontSize: 10),
+                            style: TextStyle(
+                              fontSize: 10,
+                              color:
+                                  Theme.of(context).textTheme.bodyLarge?.color,
+                            ),
                           ),
                         ],
                       ),
@@ -128,9 +139,12 @@ class HeaderWidget extends StatelessWidget {
               ),
               Row(
                 children: [
-                  const Text(
+                  Text(
                     "Membres 78/100",
-                    style: TextStyle(fontSize: 10),
+                    style: TextStyle(
+                      fontSize: 10,
+                      color: Theme.of(context).textTheme.bodyLarge?.color,
+                    ),
                   ),
                   const SizedBox(
                     width: 10,
@@ -184,9 +198,13 @@ class HeaderWidget extends StatelessWidget {
               const SizedBox(
                 height: 10,
               ),
-              const Text(
+              Text(
                 'GRATUIT',
-                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                style: TextStyle(
+                  fontSize: 20,
+                  fontWeight: FontWeight.bold,
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
             ],
           ),
@@ -214,9 +232,11 @@ class InformationWidget extends StatelessWidget {
             const SizedBox(
               width: 10,
             ),
-            const Text(
+            Text(
               "Tamim Ikram",
-              style: TextStyle(),
+              style: TextStyle(
+                color: Theme.of(context).textTheme.bodyLarge?.color,
+              ),
             ),
           ],
         ),
@@ -271,9 +291,12 @@ class DescriptionWidget extends StatelessWidget {
       children: [
         Container(
           margin: const EdgeInsets.all(10),
-          child: const Text(
+          child: Text(
             "Le Concert International de Musique de Groupe est un événement annuel rassemblant des groupes du monde entier dans divers genres, de la pop au jazz. Cette année, il se tient dans une salle de concert emblématique, offrant une soirée de performances live, des stands de nourriture internationale, et des expositions d'art.",
             textAlign: TextAlign.justify,
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
           ),
         ),
         Column(
@@ -288,7 +311,9 @@ class DescriptionWidget extends StatelessWidget {
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10),
                 ),
-                border: Border.all(color: Colors.black.withOpacity(0.2)),
+                border: Border.all(
+                  color: Theme.of(context).hintColor.withOpacity(0.5),
+                ),
               ),
               child: const Center(
                 child: TextField(
@@ -306,14 +331,21 @@ class DescriptionWidget extends StatelessWidget {
                 ),
                 color: Colors.black,
               ),
-              child: const Text(
+              child: Text(
                 "Envoyer votre commentaire",
-                style: TextStyle(color: Colors.white),
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
               ),
             ),
             Container(
               margin: const EdgeInsets.all(10),
-              child: const Text("Pas de commentaire pour le moment"),
+              child: Text(
+                "Pas de commentaire pour le moment",
+                style: TextStyle(
+                  color: Theme.of(context).textTheme.bodyLarge?.color,
+                ),
+              ),
             ),
             Container(
               height: screenHeight / 2,

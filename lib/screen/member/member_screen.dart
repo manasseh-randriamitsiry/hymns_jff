@@ -17,7 +17,12 @@ class MembeScreen extends StatelessWidget {
       key: _scaffoldKey,
       drawer: const DrawerScreen(),
       appBar: AppBar(
-        title: const Text('Membres'),
+        title: Text(
+          'Membres',
+          style: TextStyle(
+            color: Theme.of(context).textTheme.bodyLarge?.color,
+          ),
+        ),
         leading: IconButton(
           icon: const Icon(Icons.list_rounded),
           onPressed: () {
@@ -34,9 +39,12 @@ class MembeScreen extends StatelessWidget {
                 const SizedBox(
                   height: 100,
                 ),
-                const Text(
+                Text(
                   "En attente de connection ",
-                  style: TextStyle(fontSize: 16, color: Colors.black87),
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
                 ),
                 LoadingAnimationWidget.newtonCradle(
                     color: Colors.orange, size: 100),
@@ -47,7 +55,13 @@ class MembeScreen extends StatelessWidget {
             ),
           );
         } else if (_memberController.members.isEmpty) {
-          return const Center(child: Text('No members found.'));
+          return Center(
+              child: Text(
+            'No members found.',
+            style: TextStyle(
+              color: Theme.of(context).textTheme.bodyLarge?.color,
+            ),
+          ));
         } else {
           return ListView.builder(
             itemCount: _memberController.members.length,
@@ -58,8 +72,18 @@ class MembeScreen extends StatelessWidget {
                 leading: CircleAvatar(
                   backgroundImage: NetworkImage(avatarUrl),
                 ),
-                title: Text(member['name'] ?? 'No name'),
-                subtitle: Text(member['email'] ?? 'No email'),
+                title: Text(
+                  member['name'] ?? 'No name',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
+                subtitle: Text(
+                  member['email'] ?? 'No email',
+                  style: TextStyle(
+                    color: Theme.of(context).textTheme.bodyLarge?.color,
+                  ),
+                ),
               );
             },
           );
