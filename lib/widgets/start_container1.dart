@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../screen/auth/home_screen.dart';
+import '../screen/auth/login_screen.dart';
 
 class StartContainer1 extends StatelessWidget {
   final String text1;
@@ -24,7 +24,7 @@ class StartContainer1 extends StatelessWidget {
     await prefs.setBool('isFirstUse', false);
 
     Navigator.of(context).pushReplacement(MaterialPageRoute(
-      builder: (context) => HomeScreen(),
+      builder: (context) => LoginScreen(),
     ));
   }
 

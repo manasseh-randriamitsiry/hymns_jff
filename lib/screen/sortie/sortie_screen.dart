@@ -11,25 +11,22 @@ class SortieScreen extends StatelessWidget {
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      body: SingleChildScrollView(
-        child: Stack(
-          clipBehavior: Clip.none,
-          children: [
-            Container(
-              height: 300,
-              width: screenWidth,
-              color: Colors.deepPurple,
-              child: Image.asset(
-                "assets/images/avatar-5.jpg",
-                fit: BoxFit.fitWidth,
-              ),
+      body: Stack(
+        children: [
+          SizedBox(
+            height: screenHeight / 1.5,
+            width: screenWidth,
+            child: Image.asset(
+              "assets/images/avatar-5.jpg",
+              fit: BoxFit.cover,
             ),
-            Positioned(
-              top: 250,
-              child: Container(
-                height: screenHeight,
-                // Adjusted height to avoid overlap
-                width: screenWidth,
+          ),
+          DraggableScrollableSheet(
+            initialChildSize: 0.4,
+            minChildSize: 0.4,
+            maxChildSize: 0.95,
+            builder: (context, scrollController) {
+              return Container(
                 padding: const EdgeInsets.all(10),
                 decoration: const BoxDecoration(
                   borderRadius: BorderRadius.only(
@@ -45,28 +42,30 @@ class SortieScreen extends StatelessWidget {
                     ),
                   ],
                 ),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    const HeaderWidget(),
-                    Container(
-                      margin: const EdgeInsets.all(10),
-                      width: screenWidth - 50,
-                      height: 2,
-                      color: Colors.grey.shade300,
-                    ),
-                    const InformationWidget(),
-                    const SizedBox(
-                      height: 10,
-                    ),
-                    const DescriptionWidget(),
-                  ],
+                child: SingleChildScrollView(
+                  controller: scrollController,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      const HeaderWidget(),
+                      Container(
+                        margin: const EdgeInsets.all(10),
+                        width: screenWidth - 50,
+                        height: 2,
+                        color: Colors.grey.shade300,
+                      ),
+                      const InformationWidget(),
+                      const SizedBox(
+                        height: 10,
+                      ),
+                      const DescriptionWidget(),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          ],
-        ),
+              );
+            },
+          ),
+        ],
       ),
     );
   }
@@ -267,6 +266,7 @@ class DescriptionWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
     return Column(
       children: [
         Container(
@@ -288,7 +288,7 @@ class DescriptionWidget extends StatelessWidget {
                 borderRadius: const BorderRadius.all(
                   Radius.circular(10),
                 ),
-                border: Border.all(color: Colors.black),
+                border: Border.all(color: Colors.black.withOpacity(0.2)),
               ),
               child: const Center(
                 child: TextField(
@@ -315,6 +315,9 @@ class DescriptionWidget extends StatelessWidget {
               margin: const EdgeInsets.all(10),
               child: const Text("Pas de commentaire pour le moment"),
             ),
+            Container(
+              height: screenHeight / 2,
+            )
           ],
         ),
       ],

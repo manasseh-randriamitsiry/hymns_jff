@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:permah_flutter/screen/auth/home_screen.dart';
+import 'package:permah_flutter/screen/auth/login_screen.dart';
 import 'package:permah_flutter/screen/intro/splash_screen3.dart';
 import 'package:permah_flutter/widgets/start_container1.dart';
 
@@ -29,7 +29,7 @@ class SplashScreen2 extends StatelessWidget {
                 padding: EdgeInsets.only(top: screenHeight - 312),
                 // Padding to prevent overlap with screen edges
                 child: StartContainer1(
-                  route1: HomeScreen(),
+                  route1: LoginScreen(),
                   route2: const SplashScreen3(),
                   imageUrl: 'assets/images/Dot2.png',
                   text1:

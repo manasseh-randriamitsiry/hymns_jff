@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permah_flutter/screen/intro/splash_screen2.dart';
 import 'package:permah_flutter/widgets/start_container1.dart';
 
-import '../auth/home_screen.dart';
+import '../auth/login_screen.dart';
 
 class SplashScreen1 extends StatelessWidget {
   const SplashScreen1({super.key});
@@ -31,7 +31,7 @@ class SplashScreen1 extends StatelessWidget {
                 // app bar is 70
                 // Padding to prevent overlap with screen edges
                 child: StartContainer1(
-                  route1: HomeScreen(),
+                  route1: LoginScreen(),
                   route2: const SplashScreen2(),
                   imageUrl: 'assets/images/Dot1.png',
                   text1: "Événement à venir et à proximité",

@@ -5,11 +5,11 @@ import 'package:permah_flutter/drawer.dart';
 
 import '../../controller/member_controller.dart';
 
-class MembersScreen extends StatelessWidget {
+class MembeScreen extends StatelessWidget {
   final MemberController _memberController = Get.put(MemberController());
   final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
 
-  MembersScreen({super.key});
+  MembeScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

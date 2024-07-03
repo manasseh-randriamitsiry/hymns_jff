@@ -7,7 +7,7 @@ import '../../widgets/btn_widget.dart';
 import '../../widgets/input_password_widget.dart';
 import '../../widgets/input_widget.dart';
 import '../../widgets/social_btn_widget.dart';
-import 'home_screen.dart';
+import 'login_screen.dart';
 
 class SignupScreen extends StatelessWidget {
   final AuthController _authController = Get.put(AuthController());
@@ -147,7 +147,7 @@ class SignupScreen extends StatelessWidget {
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    HomeScreen(),
+                                    LoginScreen(),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               return FadeTransition(

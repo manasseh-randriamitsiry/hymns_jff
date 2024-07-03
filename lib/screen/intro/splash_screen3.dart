@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:permah_flutter/screen/intro/splash_screen1.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../auth/home_screen.dart';
+import '../auth/login_screen.dart';
 
 class SplashScreen3 extends StatelessWidget {
   const SplashScreen3({super.key});
@@ -15,7 +15,7 @@ class SplashScreen3 extends StatelessWidget {
       await prefs.setBool('isFirstUse', false);
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => HomeScreen(),
+        builder: (context) => LoginScreen(),
       ));
     }
 

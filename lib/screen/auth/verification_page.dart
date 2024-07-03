@@ -3,7 +3,7 @@ import 'dart:async'; // Import the dart:async package for Timer
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permah_flutter/screen/auth/home_screen.dart';
+import 'package:permah_flutter/screen/auth/login_screen.dart';
 import 'package:permah_flutter/screen/auth/reset_pass_screen.dart';
 
 import '../../widgets/btn_widget.dart';
@@ -93,7 +93,7 @@ class _VerificationPageState extends State<VerificationPage> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      HomeScreen(),
+                                      LoginScreen(),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 return FadeTransition(

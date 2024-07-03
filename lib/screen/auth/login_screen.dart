@@ -10,13 +10,13 @@ import 'package:permah_flutter/widgets/social_btn_widget.dart';
 
 import '../../controller/auth_controller.dart';
 
-class HomeScreen extends StatelessWidget {
+class LoginScreen extends StatelessWidget {
   final AuthController _authController = Get.put(AuthController());
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
   final _switchValue = false.obs;
 
-  HomeScreen({super.key});
+  LoginScreen({super.key});
 
   @override
   Widget build(BuildContext context) {

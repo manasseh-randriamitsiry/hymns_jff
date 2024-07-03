@@ -27,7 +27,7 @@ class MemberController extends GetxController {
       }
       Get.snackbar(
         'Erreur',
-        'Verifier votre connection internet',
+        '$e',
         snackPosition: SnackPosition.BOTTOM,
         backgroundColor: Colors.red.withOpacity(0.2),
         colorText: Colors.white,

@@ -24,7 +24,6 @@ dependencies:
   dio: ^5.4.2+1
   google_fonts: ^6.2.1
   flutter_map: ^7.0.1
-  latlong2: ^0.9.1
   url_launcher: ^6.3.0
   google_maps_flutter: ^2.7.0
   carousel_slider: ^4.1.1
@@ -32,6 +31,10 @@ dependencies:
   adaptive_theme: ^3.6.0
   loading_animation_widget: ^1.2.1
   connectivity_plus: ^3.0.3
+  filter_list: ^1.0.3
+  curved_navigation_bar: ^1.0.6
+  latlong2: ^0.9.1
+  geolocator: ^8.2.0
 
 dev_dependencies:
   flutter_test:

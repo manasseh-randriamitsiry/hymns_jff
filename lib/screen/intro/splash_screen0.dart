@@ -7,7 +7,7 @@ import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../services/api_service.dart';
-import '../auth/home_screen.dart'; // Import necessary screens
+import '../auth/login_screen.dart'; // Import necessary screens
 import 'splash_screen1.dart';
 
 class SplashScreen0 extends StatefulWidget {
@@ -78,7 +78,7 @@ class SplashScreen0State extends State<SplashScreen0>
     } else if (lastRoute != null) {
       Get.offAllNamed(lastRoute);
     } else {
-      Get.offAll(() => HomeScreen());
+      Get.offAll(() => LoginScreen());
     }
   }
 
