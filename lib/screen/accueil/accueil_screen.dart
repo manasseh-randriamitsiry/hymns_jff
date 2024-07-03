@@ -271,13 +271,17 @@ class EventsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    var backgroundColor = theme.chipTheme.backgroundColor;
+    var textThemeColor = theme.textTheme.bodyLarge?.color;
     return Container(
       width: containerWidth,
       margin: const EdgeInsets.symmetric(vertical: 16.0),
       padding: const EdgeInsets.all(16.0),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(20),
-        color: Colors.white,
+        color: backgroundColor,
         boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
       ),
       child: Column(
@@ -290,7 +294,7 @@ class EventsWidget extends StatelessWidget {
             height: containerWidth / 3,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(20),
-              color: Colors.grey.shade300,
+              color: Colors.blue,
             ),
             child: Stack(
               children: [
@@ -347,7 +351,7 @@ class EventsWidget extends StatelessWidget {
           const SizedBox(height: 10),
           Text(
             title,
-            style: const TextStyle(fontSize: 20),
+            style: TextStyle(fontSize: 20, color: textThemeColor),
           ),
           const SizedBox(height: 10),
           Row(
@@ -360,7 +364,7 @@ class EventsWidget extends StatelessWidget {
               const SizedBox(width: 5),
               Text(
                 date,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12, color: textThemeColor),
               ),
             ],
           ),
@@ -375,7 +379,7 @@ class EventsWidget extends StatelessWidget {
               const SizedBox(width: 5),
               Text(
                 lieu,
-                style: const TextStyle(fontSize: 12),
+                style: TextStyle(fontSize: 12, color: textThemeColor),
               ),
             ],
           ),
@@ -391,41 +395,43 @@ class EventsWidget extends StatelessWidget {
                       color: Colors.deepOrange,
                       size: 15,
                     ),
-                    const SizedBox(width: 5),
+                    SizedBox(width: 5),
                     Text(
                       "$member_count membres ont rejoint",
-                      style: const TextStyle(fontSize: 12),
+                      style: TextStyle(fontSize: 12, color: textThemeColor),
                     ),
                   ],
                 ),
               ),
-              Container(
-                child: Row(
-                  children: [
-                    GestureDetector(
-                      onTap: () {
-                        Get.to(() => const SortieScreen());
-                      },
-                      child: Container(
-                        width: containerWidth / 4,
-                        height: containerHeight / 8,
-                        decoration: const BoxDecoration(
-                          color: Colors.blue,
-                          borderRadius: BorderRadius.all(Radius.circular(15)),
-                        ),
-                        child: const Center(
-                          child: Text(
-                            "Rejoindre",
-                            style: TextStyle(fontSize: 12, color: Colors.white),
-                          ),
-                        ),
-                      ),
-                    ),
-                  ],
-                ),
-              )
             ],
           ),
+          Container(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.end,
+              crossAxisAlignment: CrossAxisAlignment.end,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    Get.to(() => const SortieScreen());
+                  },
+                  child: Container(
+                    width: containerWidth / 4,
+                    height: containerHeight / 8,
+                    decoration: const BoxDecoration(
+                      color: Colors.blue,
+                      borderRadius: BorderRadius.all(Radius.circular(15)),
+                    ),
+                    child: const Center(
+                      child: Text(
+                        "Rejoindre",
+                        style: TextStyle(fontSize: 12, color: Colors.white),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          )
         ],
       ),
     );

@@ -8,6 +8,8 @@ class ProfilPageScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
+    var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    var backgroundColor = theme.chipTheme.backgroundColor;
     var textThemeColor = theme.textTheme.bodyLarge?.color;
     return Scaffold(
       appBar: AppBar(
@@ -60,16 +62,24 @@ class ProfilPageScreen extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Chip(
-                    label: Text(
-                  'Membre du staff',
-                  style: TextStyle(color: Theme.of(context).dividerColor),
-                )),
+                  label: Text(
+                    'Membre du staff',
+                    style: TextStyle(
+                      color: textColor,
+                    ),
+                  ),
+                  backgroundColor: backgroundColor,
+                ),
                 SizedBox(width: 10),
                 Chip(
-                    label: Text(
-                  'Référent sportif',
-                  style: TextStyle(color: Theme.of(context).dividerColor),
-                )),
+                  label: Text(
+                    'Référent sportif',
+                    style: TextStyle(
+                      color: textColor,
+                    ),
+                  ),
+                  backgroundColor: backgroundColor,
+                ),
               ],
             ),
             const SizedBox(height: 20),
