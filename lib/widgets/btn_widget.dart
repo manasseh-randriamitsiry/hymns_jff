@@ -14,18 +14,24 @@ class btnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final inputBorderColor = theme.hintColor;
+    final textColor = theme.dividerColor;
     return Column(
       children: [
         Container(
           width: inputWidth,
           height: inputHeigh,
-          decoration: const BoxDecoration(
-              color: Colors.black87,
-              borderRadius: BorderRadius.all(Radius.circular(15))),
+          decoration: BoxDecoration(
+            color: inputBorderColor,
+            borderRadius: const BorderRadius.all(
+              Radius.circular(15),
+            ),
+          ),
           child: Center(
             child: Text(
               text,
-              style: const TextStyle(color: Colors.white, fontSize: 20),
+              style: TextStyle(color: textColor, fontSize: 20),
             ),
           ),
         ),

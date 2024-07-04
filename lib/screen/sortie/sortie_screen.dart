@@ -30,11 +30,11 @@ class SortieScreen extends StatelessWidget {
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   color: Theme.of(context).dividerColor,
-                  borderRadius: BorderRadius.only(
+                  borderRadius: const BorderRadius.only(
                     topRight: Radius.circular(25),
                     topLeft: Radius.circular(25),
                   ),
-                  boxShadow: [
+                  boxShadow: const [
                     BoxShadow(
                       color: Colors.black26,
                       blurRadius: 10,
@@ -98,7 +98,7 @@ class HeaderWidget extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.location_on,
                             size: 12,
                             color: Colors.orange,
@@ -113,12 +113,12 @@ class HeaderWidget extends StatelessWidget {
                           ),
                         ],
                       ),
-                      SizedBox(
+                      const SizedBox(
                         width: 10,
                       ),
                       Row(
                         children: [
-                          Icon(
+                          const Icon(
                             Icons.calendar_month,
                             size: 12,
                             color: Colors.orange,

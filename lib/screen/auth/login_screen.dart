@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permah_flutter/screen/accueil/home_screen.dart';
 import 'package:permah_flutter/screen/auth/reset_pass_screen.dart';
 import 'package:permah_flutter/screen/auth/signup_screen.dart';
 import 'package:permah_flutter/widgets/btn_widget.dart';
@@ -9,17 +10,29 @@ import 'package:permah_flutter/widgets/input_widget.dart';
 import 'package:permah_flutter/widgets/social_btn_widget.dart';
 
 import '../../controller/auth_controller.dart';
+import '../../controller/theme_controller.dart';
 
-class LoginScreen extends StatelessWidget {
+class LoginScreen extends StatefulWidget {
+  const LoginScreen({super.key});
+
+  @override
+  State<LoginScreen> createState() => _LoginScreenState();
+}
+
+class _LoginScreenState extends State<LoginScreen> {
   final AuthController _authController = Get.put(AuthController());
   final TextEditingController _usernameController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final ThemeController _themeController = Get.put(ThemeController());
   final _switchValue = false.obs;
-
-  LoginScreen({super.key});
+  final _themeswitchValue = false.obs;
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    final backgroundColor = theme.scaffoldBackgroundColor;
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
     double containerWidth = screenWidth - 50;
@@ -27,17 +40,45 @@ class LoginScreen extends StatelessWidget {
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Connectez-vous",
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(fontSize: 25, color: textColor),
         ),
         centerTitle: true,
+        backgroundColor: backgroundColor,
+        elevation: 0,
+        actions: [
+          Obx(
+            () => Switch(
+              value: _themeswitchValue.value,
+              onChanged: (value) {
+                _themeswitchValue.value = value;
+                _themeController.toggleTheme(); // Toggle the theme
+              },
+              activeColor: theme.colorScheme.secondary.withOpacity(0.5),
+              activeTrackColor: theme.primaryColor.withOpacity(0.5),
+              thumbIcon: WidgetStateProperty.resolveWith<Icon?>(
+                (Set<WidgetState> states) {
+                  if (_themeswitchValue.value) {
+                    return const Icon(Icons.nights_stay_rounded,
+                        color: Colors.blue, size: 18);
+                  } else {
+                    return const Icon(Icons.sunny,
+                        color: Colors.orange, size: 18);
+                  }
+                },
+              ),
+            ),
+          ),
+        ],
         leading: GestureDetector(
           onTap: () {
             if (kDebugMode) {
               print('back button tapped');
             }
+            Navigator.of(context).pop();
           },
+          child: Icon(Icons.arrow_back, color: textColor),
         ),
       ),
       body: Center(
@@ -48,13 +89,13 @@ class LoginScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: screenHeight / 20),
-                  const Text(
+                  Text(
                     "Donner vos informations pour vous connecter à votre compte",
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: textColor),
                   ),
                   SizedBox(height: screenHeight / 40),
                   InputWidget(
-                    color: Colors.black45,
                     icon: Icons.email_outlined,
                     labelText: 'Saisissez votre identifiant',
                     controller: _usernameController,
@@ -63,7 +104,6 @@ class LoginScreen extends StatelessWidget {
                   const SizedBox(height: 15),
                   InputPasswordWidget(
                     lblText: "Saisissez votre mot de passe",
-                    color: Colors.black45,
                     controller: _passwordController,
                   ),
                   const SizedBox(height: 15),
@@ -72,24 +112,24 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       Row(
                         children: [
-                          Obx(() => Switch(
-                                value: _switchValue.value,
-                                onChanged: (value) {
-                                  _switchValue.value = value;
-                                },
-                                activeColor: Colors.white,
-                                activeTrackColor: Colors.deepOrange,
-                              )),
-                          const Text("Se souvenir de moi"),
+                          Obx(
+                            () => Switch(
+                              // this is not for the theme
+                              value: _switchValue.value,
+                              onChanged: (value) {},
+                            ),
+                          ),
+                          Text("Se souvenir de moi",
+                              style: TextStyle(color: textColor)),
                         ],
                       ),
                       TextButton(
                         onPressed: () {
                           Get.to(() => const ResetPassScreen());
                         },
-                        child: const Text(
+                        child: Text(
                           "Mot de passe oublié ?",
-                          style: TextStyle(color: Colors.orange),
+                          style: TextStyle(color: theme.primaryColor),
                         ),
                       ),
                     ],
@@ -102,6 +142,8 @@ class LoginScreen extends StatelessWidget {
                           _usernameController.text,
                           _passwordController.text,
                         );
+                        // for test ( ssl error )
+                        Get.to(const HomeScreen());
                       } catch (e) {
                         if (kDebugMode) {
                           print(e.toString());
@@ -120,13 +162,14 @@ class LoginScreen extends StatelessWidget {
                     children: [
                       Container(
                         width: 2 * screenWidth / 8,
-                        color: Colors.black.withOpacity(0.2),
+                        color: textColor.withOpacity(0.2),
                         height: 2,
                       ),
-                      const Text("ou continuer avec"),
+                      Text("ou continuer avec",
+                          style: TextStyle(color: textColor)),
                       Container(
                         width: 2 * screenWidth / 8,
-                        color: Colors.black.withOpacity(0.2),
+                        color: textColor.withOpacity(0.2),
                         height: 2,
                       ),
                     ],
@@ -147,14 +190,15 @@ class LoginScreen extends StatelessWidget {
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text("Vous n'avez pas de compte ?"),
+                  Text("Vous n'avez pas de compte ?",
+                      style: TextStyle(color: textColor)),
                   GestureDetector(
                     onTap: () {
                       Get.to(() => SignupScreen());
                     },
-                    child: const Text(
+                    child: Text(
                       "Creer un compte",
-                      style: TextStyle(color: Colors.orange),
+                      style: TextStyle(color: theme.primaryColor),
                     ),
                   ),
                 ],

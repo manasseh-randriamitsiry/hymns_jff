@@ -20,12 +20,14 @@ class _VerificationPageState extends State<ResetPassScreen> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double containerWidth = screenWidth - 50;
+    final theme = Theme.of(context);
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Réinitialiser le mot de passe",
-          style: TextStyle(fontSize: 20),
+          style: TextStyle(fontSize: 20, color: textColor),
         ),
         centerTitle: true,
       ),
@@ -37,15 +39,15 @@ class _VerificationPageState extends State<ResetPassScreen> {
               child: Column(
                 children: [
                   const SizedBox(height: 50),
-                  const Text(
+                  Text(
                     "Veuillez entrer votre adresse email pour demander une reinitialisation de mot de passe ",
                     textAlign: TextAlign.center,
+                    style: TextStyle(color: textColor),
                   ),
                   const SizedBox(height: 50),
                   const InputWidget(
                     icon: Icons.email_outlined,
                     labelText: "Entrer votre adresse email",
-                    color: Colors.black45,
                     type: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),

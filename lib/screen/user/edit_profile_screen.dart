@@ -5,14 +5,24 @@ class EditProfileScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context); // Get the current theme
+    final textColor =
+        theme.textTheme.bodyLarge?.color ?? Colors.black; // Dynamic text color
+    final borderColor = theme.dividerColor; // Dynamic border color
+    final backgroundColor =
+        theme.scaffoldBackgroundColor; // Dynamic background color for container
+    final buttonColor = theme.colorScheme.primary; // Dynamic button color
+
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: const Icon(Icons.arrow_back, color: Colors.black),
+          icon: Icon(Icons.arrow_back, color: textColor),
           onPressed: () => Navigator.of(context).pop(),
         ),
-        title:
-            const Text('Modifier le profil', style: TextStyle(color: Colors.black)),
+        title: Text(
+          'Modifier le profil',
+          style: TextStyle(color: textColor),
+        ),
         backgroundColor: Colors.transparent,
         elevation: 0,
       ),
@@ -26,18 +36,18 @@ class EditProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: Colors.grey[200],
+                    backgroundColor: backgroundColor,
                   ),
                   Positioned(
                     bottom: 0,
                     right: 0,
                     child: Container(
                       padding: const EdgeInsets.all(4),
-                      decoration: const BoxDecoration(
-                        color: Colors.orange,
+                      decoration: BoxDecoration(
+                        color: theme.colorScheme.secondary,
                         shape: BoxShape.circle,
                       ),
-                      child: const Icon(Icons.edit, color: Colors.white, size: 20),
+                      child: Icon(Icons.edit, color: textColor, size: 20),
                     ),
                   ),
                 ],
@@ -46,34 +56,69 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 24),
             Row(
               children: [
-                Expanded(child: _buildRoundedInput(label: 'H')),
+                Expanded(
+                    child: _buildRoundedInput(
+                        label: 'H',
+                        borderColor: borderColor,
+                        textColor: textColor)),
                 const SizedBox(width: 16),
-                Expanded(child: _buildRoundedInput(label: 'F')),
+                Expanded(
+                    child: _buildRoundedInput(
+                        label: 'F',
+                        borderColor: borderColor,
+                        textColor: textColor)),
               ],
             ),
             const SizedBox(height: 16),
-            _buildRoundedInput(label: 'Identifiant'),
+            _buildRoundedInput(
+                label: 'Identifiant',
+                borderColor: borderColor,
+                textColor: textColor),
             const SizedBox(height: 16),
-            _buildRoundedInput(label: 'E-mail'),
+            _buildRoundedInput(
+                label: 'E-mail',
+                borderColor: borderColor,
+                textColor: textColor),
             const SizedBox(height: 16),
             Row(
               children: [
-                Expanded(child: _buildRoundedInput(label: 'Nom')),
+                Expanded(
+                    child: _buildRoundedInput(
+                        label: 'Nom',
+                        borderColor: borderColor,
+                        textColor: textColor)),
                 const SizedBox(width: 16),
-                Expanded(child: _buildRoundedInput(label: 'Prénom')),
+                Expanded(
+                    child: _buildRoundedInput(
+                        label: 'Prénom',
+                        borderColor: borderColor,
+                        textColor: textColor)),
               ],
             ),
             const SizedBox(height: 16),
             _buildRoundedInput(
-                label: 'Date de naissance', trailing: Icons.calendar_today),
+                label: 'Date de naissance',
+                trailing: Icons.calendar_today,
+                borderColor: borderColor,
+                textColor: textColor),
             const SizedBox(height: 16),
-            _buildRoundedInput(label: 'Adresse', trailing: Icons.location_on),
+            _buildRoundedInput(
+                label: 'Adresse',
+                trailing: Icons.location_on,
+                borderColor: borderColor,
+                textColor: textColor),
             const SizedBox(height: 16),
             _buildRoundedInput(
                 label: "Centre d'intérêt: Culture Musique Sports",
-                trailing: Icons.arrow_drop_down),
+                trailing: Icons.arrow_drop_down,
+                borderColor: borderColor,
+                textColor: textColor),
             const SizedBox(height: 16),
-            _buildRoundedInput(label: 'Téléphone', trailing: Icons.phone),
+            _buildRoundedInput(
+                label: 'Téléphone',
+                trailing: Icons.phone,
+                borderColor: borderColor,
+                textColor: textColor),
             const SizedBox(height: 24),
             const Row(
               children: [
@@ -88,14 +133,14 @@ class EditProfileScreen extends StatelessWidget {
             const SizedBox(height: 24),
             ElevatedButton(
               style: ElevatedButton.styleFrom(
-                backgroundColor: Colors.black,
+                backgroundColor: buttonColor,
                 padding: const EdgeInsets.symmetric(vertical: 16),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(8),
                 ),
               ),
               onPressed: () {},
-              child: const Text('ENREGISTRER'),
+              child: Text('ENREGISTRER', style: TextStyle(color: textColor)),
             ),
           ],
         ),
@@ -103,18 +148,24 @@ class EditProfileScreen extends StatelessWidget {
     );
   }
 
-  Widget _buildRoundedInput({required String label, IconData? trailing}) {
+  Widget _buildRoundedInput(
+      {required String label,
+      IconData? trailing,
+      required Color borderColor,
+      required Color textColor}) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
-        border: Border.all(color: Colors.grey[300]!),
+        border: Border.all(color: borderColor),
         borderRadius: BorderRadius.circular(25),
       ),
       child: TextField(
         decoration: InputDecoration(
           labelText: label,
+          labelStyle: TextStyle(color: textColor), // Dynamic label text color
           border: InputBorder.none,
-          suffixIcon: trailing != null ? Icon(trailing) : null,
+          suffixIcon:
+              trailing != null ? Icon(trailing, color: textColor) : null,
         ),
       ),
     );

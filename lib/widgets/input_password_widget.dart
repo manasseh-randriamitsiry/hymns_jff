@@ -5,13 +5,11 @@ class InputPasswordWidget extends StatefulWidget {
     super.key,
     required this.lblText,
     this.errorText,
-    required this.color,
     this.controller,
   });
 
   final String lblText;
   final String? errorText;
-  final Color color;
   final TextEditingController? controller;
 
   @override
@@ -23,26 +21,28 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final inputBorderColor = theme.hintColor;
+    final hintColor = theme.hintColor;
+    final errorColor = theme.hintColor;
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         TextField(
           controller: widget.controller,
           obscureText: !_showPassword,
+          style: TextStyle(color: textColor),
           decoration: InputDecoration(
-            border: OutlineInputBorder(
-              borderSide: BorderSide(color: widget.color),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
-              ),
-            ),
             labelText: widget.lblText,
-            // Use widget.lblText
-            prefixIcon: Icon(Icons.lock, color: widget.color),
+            labelStyle: TextStyle(color: hintColor),
+            prefixIcon: Icon(Icons.lock, color: primaryColor),
             suffixIcon: IconButton(
               icon: Icon(
                 _showPassword ? Icons.visibility : Icons.visibility_off,
-                color: widget.color,
+                color: primaryColor,
               ),
               onPressed: () {
                 setState(() {
@@ -51,14 +51,14 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
               },
             ),
             errorText: widget.errorText,
+            errorStyle: TextStyle(color: errorColor),
             focusedBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: widget.color),
+              borderSide: BorderSide(color: primaryColor),
+              borderRadius: const BorderRadius.all(Radius.circular(0)),
             ),
             enabledBorder: OutlineInputBorder(
-              borderSide: BorderSide(color: widget.color),
-              borderRadius: const BorderRadius.all(
-                Radius.circular(10),
-              ),
+              borderSide: BorderSide(color: inputBorderColor),
+              borderRadius: const BorderRadius.all(Radius.circular(10)),
             ),
           ),
         ),

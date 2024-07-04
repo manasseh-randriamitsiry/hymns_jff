@@ -130,7 +130,7 @@ class AuthController extends GetxController {
         isDismissible: true,
         dismissDirection: DismissDirection.horizontal,
       );
-      Get.off(LoginScreen());
+      Get.off(const LoginScreen());
     } catch (e) {
       Get.snackbar(
         'Error',

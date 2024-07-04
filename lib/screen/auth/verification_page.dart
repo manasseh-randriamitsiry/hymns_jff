@@ -93,7 +93,7 @@ class _VerificationPageState extends State<VerificationPage> {
                             PageRouteBuilder(
                               pageBuilder:
                                   (context, animation, secondaryAnimation) =>
-                                      LoginScreen(),
+                                      const LoginScreen(),
                               transitionsBuilder: (context, animation,
                                   secondaryAnimation, child) {
                                 return FadeTransition(

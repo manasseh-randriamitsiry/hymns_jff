@@ -70,7 +70,7 @@ class ProfilPageScreen extends StatelessWidget {
                   ),
                   backgroundColor: backgroundColor,
                 ),
-                SizedBox(width: 10),
+                const SizedBox(width: 10),
                 Chip(
                   label: Text(
                     'Référent sportif',
@@ -93,7 +93,7 @@ class ProfilPageScreen extends StatelessWidget {
             ),
             const SizedBox(height: 20),
             Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20),
+              padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
                 'A propos de moi\nPassionné de football et de découverte, je me définis comme un explorateur du monde et des cultures. Mon parcours m\'a amené à voyager dans différents pays, enrichissant ma vision du football et de la vie. Aujourd\'hui, je partage mon expérience en tant qu\'entraîneur, cherchant toujours à inspirer et à motiver les jeunes talents.',
                 textAlign: TextAlign.center,

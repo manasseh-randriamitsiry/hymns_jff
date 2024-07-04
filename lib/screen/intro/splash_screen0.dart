@@ -78,7 +78,7 @@ class SplashScreen0State extends State<SplashScreen0>
     } else if (lastRoute != null) {
       Get.offAllNamed(lastRoute);
     } else {
-      Get.offAll(() => LoginScreen());
+      Get.offAll(() => const LoginScreen());
     }
   }
 

@@ -7,6 +7,8 @@ class SocialBtnWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final borderColor = theme.hintColor;
     return Container(
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -18,7 +20,7 @@ class SocialBtnWidget extends StatelessWidget {
                 Radius.circular(15),
               ),
               border: Border.all(
-                color: Colors.black.withOpacity(0.1),
+                color: borderColor.withOpacity(0.1),
                 width: 2,
               ),
             ),
@@ -42,7 +44,7 @@ class SocialBtnWidget extends StatelessWidget {
                 Radius.circular(15),
               ),
               border: Border.all(
-                color: Colors.black.withOpacity(0.1),
+                color: borderColor.withOpacity(0.1),
                 width: 2,
               ),
             ),
@@ -65,7 +67,7 @@ class SocialBtnWidget extends StatelessWidget {
                 Radius.circular(15),
               ),
               border: Border.all(
-                color: Colors.black.withOpacity(0.1),
+                color: borderColor.withOpacity(0.1),
                 width: 2,
               ),
             ),

@@ -1,13 +1,13 @@
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/screen/accueil/accueil_screen.dart';
 import 'package:permah_flutter/services/api_service.dart';
 
 import 'controller/auth_controller.dart';
+import 'controller/theme_controller.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({Key? key}) : super(key: key);
+  const DrawerScreen({super.key});
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -16,7 +16,7 @@ class DrawerScreen extends StatefulWidget {
 class _DrawerScreenState extends State<DrawerScreen> {
   final AuthController _authController = Get.put(AuthController());
   final ApiService apiService = Get.put(ApiService());
-
+  final ThemeController _themeController = Get.put(ThemeController());
   String _username = "Loading...";
 
   @override
@@ -92,7 +92,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               ),
             ),
             onTap: () {
-              AdaptiveTheme.of(context).toggleThemeMode();
+              _themeController.toggleTheme();
             },
           ),
           ListTile(

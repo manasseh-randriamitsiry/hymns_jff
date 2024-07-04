@@ -115,7 +115,7 @@ class ApiService extends GetxService {
       );
       await removeToken();
       Get.to(
-        LoginScreen(),
+        const LoginScreen(),
       );
     }
   }

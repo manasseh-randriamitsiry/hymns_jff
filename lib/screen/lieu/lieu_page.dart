@@ -74,7 +74,7 @@ class _LieuPageState extends State<LieuPage> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
+            const Text(
               'Designers Meetup 2022',
               style: TextStyle(
                 fontSize: 16,
@@ -85,7 +85,7 @@ class _LieuPageState extends State<LieuPage> {
               onPressed: () {
                 // Implement join functionality here
               },
-              child: Text(
+              child: const Text(
                 'REJOINDRE',
               ),
             ),

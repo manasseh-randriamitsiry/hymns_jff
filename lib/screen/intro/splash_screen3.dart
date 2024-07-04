@@ -15,7 +15,7 @@ class SplashScreen3 extends StatelessWidget {
       await prefs.setBool('isFirstUse', false);
 
       Navigator.of(context).pushReplacement(MaterialPageRoute(
-        builder: (context) => LoginScreen(),
+        builder: (context) => const LoginScreen(),
       ));
     }
 

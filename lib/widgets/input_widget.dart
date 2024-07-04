@@ -4,7 +4,6 @@ class InputWidget extends StatelessWidget {
   final IconData icon;
   final String labelText;
   final String? errorText;
-  final Color color;
   final TextInputType type;
   final TextEditingController? controller;
 
@@ -12,7 +11,6 @@ class InputWidget extends StatelessWidget {
     super.key,
     required this.icon,
     required this.labelText,
-    required this.color,
     this.controller,
     required this.type,
     this.errorText,
@@ -20,22 +18,30 @@ class InputWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final primaryColor = theme.primaryColor;
+    final inputBorderColor = theme.hintColor;
+    final hintColor = theme.hintColor;
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+
     return SizedBox(
       child: TextField(
         keyboardType: type,
         controller: controller,
-        style: const TextStyle(fontSize: 14),
+        style: TextStyle(fontSize: 14, color: textColor),
         decoration: InputDecoration(
-          prefixIcon: Icon(icon),
+          prefixIcon: Icon(icon, color: primaryColor),
           labelText: labelText,
+          labelStyle: TextStyle(color: hintColor),
           errorText: errorText,
-          border: const OutlineInputBorder(
-            borderRadius: BorderRadius.all(
-              Radius.circular(10),
-            ),
-          ),
+          errorStyle: TextStyle(color: theme.hintColor),
           focusedBorder: OutlineInputBorder(
-            borderSide: BorderSide(color: color),
+            borderSide: BorderSide(color: primaryColor),
+            borderRadius: const BorderRadius.all(Radius.circular(0)),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderSide: BorderSide(color: inputBorderColor),
+            borderRadius: const BorderRadius.all(Radius.circular(10)),
           ),
         ),
       ),

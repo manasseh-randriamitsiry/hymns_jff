@@ -24,12 +24,16 @@ class SignupScreen extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
     double containerWidth = screenWidth - 50;
 
+    // colors
+    final theme = Theme.of(context);
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+
     return Scaffold(
       resizeToAvoidBottomInset: false,
       appBar: AppBar(
-        title: const Text(
+        title: Text(
           "Creer un compte",
-          style: TextStyle(fontSize: 25),
+          style: TextStyle(fontSize: 25, color: textColor),
         ),
         centerTitle: true,
       ),
@@ -41,13 +45,13 @@ class SignupScreen extends StatelessWidget {
               child: Column(
                 children: [
                   SizedBox(height: screenHeight / 40),
-                  const Text(
+                  Text(
                     "Creer un compte et profiter de tous les services",
+                    style: TextStyle(color: textColor),
                     textAlign: TextAlign.center,
                   ),
                   SizedBox(height: screenHeight / 40),
                   InputWidget(
-                    color: Colors.black45,
                     icon: Icons.person_outline,
                     labelText: 'Votre pseudo',
                     controller: _usernameController,
@@ -55,7 +59,6 @@ class SignupScreen extends StatelessWidget {
                   ),
                   const SizedBox(height: 10),
                   InputWidget(
-                    color: Colors.black45,
                     icon: Icons.email_outlined,
                     labelText: 'Saisissez votre email',
                     controller: _emailController,
@@ -64,13 +67,11 @@ class SignupScreen extends StatelessWidget {
                   const SizedBox(height: 10),
                   InputPasswordWidget(
                     lblText: "Saisissez votre mot de passe",
-                    color: Colors.black45,
                     controller: _passwordController1,
                   ),
                   const SizedBox(height: 10),
                   InputPasswordWidget(
                     lblText: "Saisissez votre mot de passe",
-                    color: Colors.black45,
                     controller: _passwordController2,
                   ),
                   const SizedBox(
@@ -108,7 +109,10 @@ class SignupScreen extends StatelessWidget {
                         color: Colors.black.withOpacity(0.2),
                         height: 2,
                       ),
-                      const Text("ou continuer avec"),
+                      Text(
+                        "ou continuer avec",
+                        style: TextStyle(color: textColor),
+                      ),
                       Container(
                         width: 2 * screenWidth / 8,
                         color: Colors.black.withOpacity(0.2),
@@ -130,13 +134,16 @@ class SignupScreen extends StatelessWidget {
               ),
             ),
             Positioned(
-              top: screenHeight - 115, // 20 pixels from the top of the screen
+              top: screenHeight - 115,
               left: 0,
               right: 0,
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                 children: [
-                  const Text("J'ai un compte?"),
+                  Text(
+                    "J'ai un compte?",
+                    style: TextStyle(color: textColor),
+                  ),
                   GestureDetector(
                     onTap: () {},
                     child: GestureDetector(
@@ -147,7 +154,7 @@ class SignupScreen extends StatelessWidget {
                           PageRouteBuilder(
                             pageBuilder:
                                 (context, animation, secondaryAnimation) =>
-                                    LoginScreen(),
+                                    const LoginScreen(),
                             transitionsBuilder: (context, animation,
                                 secondaryAnimation, child) {
                               return FadeTransition(

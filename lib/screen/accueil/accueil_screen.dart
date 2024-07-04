@@ -62,13 +62,13 @@ class AccueilScreen extends StatelessWidget {
 
   Widget _buildUserInfoSection(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 5),
+      padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 5),
       child: Row(
         children: [
-          CircleAvatar(
+          const CircleAvatar(
             radius: 30,
           ),
-          SizedBox(
+          const SizedBox(
             width: 5,
           ),
           Column(
@@ -89,7 +89,7 @@ class AccueilScreen extends StatelessWidget {
               ),
             ],
           ),
-          Spacer(),
+          const Spacer(),
           Column(
             children: [
               Text(
@@ -162,7 +162,7 @@ class AccueilScreen extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -171,7 +171,7 @@ class AccueilScreen extends StatelessWidget {
                     fontSize: 18,
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                   )),
-              Icon(Icons.arrow_forward),
+              const Icon(Icons.arrow_forward),
             ],
           ),
         ),
@@ -215,7 +215,7 @@ class AccueilScreen extends StatelessWidget {
     return Column(
       children: [
         Padding(
-          padding: EdgeInsets.symmetric(horizontal: 16.0),
+          padding: const EdgeInsets.symmetric(horizontal: 16.0),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -224,7 +224,7 @@ class AccueilScreen extends StatelessWidget {
                     fontSize: 18,
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                   )),
-              Icon(Icons.arrow_forward),
+              const Icon(Icons.arrow_forward),
             ],
           ),
         ),
@@ -272,7 +272,6 @@ class EventsWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     var backgroundColor = theme.chipTheme.backgroundColor;
     var textThemeColor = theme.textTheme.bodyLarge?.color;
     return Container(
@@ -395,7 +394,7 @@ class EventsWidget extends StatelessWidget {
                       color: Colors.deepOrange,
                       size: 15,
                     ),
-                    SizedBox(width: 5),
+                    const SizedBox(width: 5),
                     Text(
                       "$member_count membres ont rejoint",
                       style: TextStyle(fontSize: 12, color: textThemeColor),

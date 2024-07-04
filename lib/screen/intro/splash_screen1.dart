@@ -30,9 +30,9 @@ class SplashScreen1 extends StatelessWidget {
                 padding: EdgeInsets.only(top: screenHeigh - 312),
                 // app bar is 70
                 // Padding to prevent overlap with screen edges
-                child: StartContainer1(
+                child: const StartContainer1(
                   route1: LoginScreen(),
-                  route2: const SplashScreen2(),
+                  route2: SplashScreen2(),
                   imageUrl: 'assets/images/Dot1.png',
                   text1: "Événement à venir et à proximité",
                   text2:

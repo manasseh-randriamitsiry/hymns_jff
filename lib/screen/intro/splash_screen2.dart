@@ -28,9 +28,9 @@ class SplashScreen2 extends StatelessWidget {
               child: Padding(
                 padding: EdgeInsets.only(top: screenHeight - 312),
                 // Padding to prevent overlap with screen edges
-                child: StartContainer1(
+                child: const StartContainer1(
                   route1: LoginScreen(),
-                  route2: const SplashScreen3(),
+                  route2: SplashScreen3(),
                   imageUrl: 'assets/images/Dot2.png',
                   text1:
                       "Créer et trouver des évenements facilement à un seul endroit ",

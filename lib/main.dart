@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:adaptive_theme/adaptive_theme.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -22,9 +21,10 @@ import 'package:permah_flutter/screen/sortie/sortie_screen.dart';
 import 'package:permah_flutter/screen/user/edit_profile_screen.dart';
 import 'package:permah_flutter/screen/user/profil_page_screen.dart';
 import 'package:permah_flutter/services/api_service.dart';
+import 'package:permah_flutter/theme.dart';
 
 import 'controller/connectivity_controller.dart';
-import 'theme.dart'; // Import your theme definitions here
+import 'controller/theme_controller.dart';
 
 void main() {
   HttpOverrides.global = MyHttpOverrides();
@@ -32,6 +32,7 @@ void main() {
 }
 
 class MyApp extends StatelessWidget {
+  final ThemeController _themeController = Get.put(ThemeController());
   final ApiService apiService = ApiService();
   final ConnectivityController connectivityController =
       Get.put(ConnectivityController());
@@ -55,7 +56,7 @@ class MyApp extends StatelessWidget {
           if (kDebugMode) {
             print('Redirecting to members with Token: ${snapshot.data}');
           }
-          return _buildApp('/home');
+          return _buildApp('/login');
         } else {
           if (kDebugMode) {
             print(
@@ -68,21 +69,23 @@ class MyApp extends StatelessWidget {
   }
 
   Widget _buildApp(String initialRoute) {
-    return AdaptiveTheme(
-      light: lightTheme,
-      dark: darkTheme,
-      initial: AdaptiveThemeMode.light,
-      builder: (theme, darkTheme) => GetMaterialApp(
+    return Obx(() {
+      return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: theme,
+        theme: lightTheme,
+        // Use the predefined light theme
         darkTheme: darkTheme,
+        // Use the predefined dark theme
+        themeMode: _themeController.isDarkMode.value
+            ? ThemeMode.dark
+            : ThemeMode.light,
         initialRoute: initialRoute,
         getPages: [
           GetPage(name: '/', page: () => const SplashScreen0()),
           GetPage(name: '/splash1', page: () => const SplashScreen1()),
           GetPage(name: '/splash2', page: () => const SplashScreen2()),
           GetPage(name: '/splash3', page: () => const SplashScreen3()),
-          GetPage(name: '/login', page: () => LoginScreen()),
+          GetPage(name: '/login', page: () => const LoginScreen()),
           GetPage(name: '/signup', page: () => SignupScreen()),
           GetPage(name: '/verify', page: () => const VerificationPage()),
           GetPage(name: '/resetPassword', page: () => const ResetPassScreen()),
@@ -99,8 +102,8 @@ class MyApp extends StatelessWidget {
         initialBinding: BindingsBuilder(() {
           Get.put(ApiService());
         }),
-      ),
-    );
+      );
+    });
   }
 }
 
