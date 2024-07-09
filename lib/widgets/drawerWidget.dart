@@ -3,8 +3,8 @@ import 'package:get/get.dart';
 import 'package:permah_flutter/screen/accueil/accueil_screen.dart';
 import 'package:permah_flutter/services/api_service.dart';
 
-import 'controller/auth_controller.dart';
-import 'controller/theme_controller.dart';
+import '../controller/auth_controller.dart';
+import '../controller/theme_controller.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({super.key});

@@ -1,11 +1,11 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permah_flutter/screen/sortie/sortie_screen.dart';
 
 import '../../controller/BottomNavController.dart';
 import '../../controller/accueil_controller.dart';
 import '../../controller/horizontalScrollController.dart';
+import '../../widgets/EventsWidget.dart';
 
 class AccueilScreen extends StatelessWidget {
   final AccueilController controller = Get.put(AccueilController());
@@ -115,10 +115,19 @@ class AccueilScreen extends StatelessWidget {
       itemCount: events.length,
       options: CarouselOptions(
         height: screenHeight / 2,
-        viewportFraction: 0.8,
+        viewportFraction: 0.9,
         initialPage: 1,
         enableInfiniteScroll: true,
-        autoPlay: false,
+        autoPlay: true,
+        pauseAutoPlayOnTouch: true,
+        autoPlayInterval: const Duration(seconds: 5),
+        clipBehavior: Clip.antiAliasWithSaveLayer,
+        animateToClosest: true,
+        enlargeFactor: BorderSide.strokeAlignOutside,
+        enlargeStrategy: CenterPageEnlargeStrategy.zoom,
+        pauseAutoPlayInFiniteScroll: true,
+        pauseAutoPlayOnManualNavigate: true,
+        autoPlayCurve: Curves.easeIn,
         enlargeCenterPage: true,
       ),
       itemBuilder: (context, index, realIndex) {
@@ -136,17 +145,10 @@ class AccueilScreen extends StatelessWidget {
   }
 
   Widget _buildEventSection(BuildContext context,
-      {required Map<String, String> event, double scaleFactor = 1.0}) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double containerWidth = 4 * screenWidth / 5;
-    double containerHeight = screenHeight / 3;
-
+      {required Map<String, String> event, double scaleFactor = 2.0}) {
     return FractionallySizedBox(
-      widthFactor: 0.9,
+      widthFactor: 0.92,
       child: EventsWidget(
-        containerWidth: containerWidth,
-        containerHeight: containerHeight,
         title: event['title']!,
         date: event['date']!,
         lieu: event['location']!,
@@ -245,194 +247,6 @@ class AccueilScreen extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class EventsWidget extends StatelessWidget {
-  const EventsWidget({
-    super.key,
-    required this.containerWidth,
-    required this.containerHeight,
-    required this.title,
-    required this.date,
-    required this.lieu,
-    required this.member_count,
-    required this.image_url,
-  });
-
-  final double containerWidth;
-  final double containerHeight;
-  final String title;
-  final String date;
-  final String lieu;
-  final String member_count;
-  final String image_url;
-
-  @override
-  Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-    var backgroundColor = theme.chipTheme.backgroundColor;
-    var textThemeColor = theme.textTheme.bodyLarge?.color;
-    return Container(
-      width: containerWidth,
-      margin: const EdgeInsets.symmetric(vertical: 16.0),
-      padding: const EdgeInsets.all(16.0),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(20),
-        color: backgroundColor,
-        boxShadow: const [BoxShadow(color: Colors.grey, blurRadius: 4)],
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Container(
-            width: double.infinity,
-            height: containerWidth / 3,
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20),
-              color: Colors.blue,
-            ),
-            child: Stack(
-              children: [
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(20),
-                  child: GestureDetector(
-                    onTap: () {
-                      Get.to(() => const SortieScreen());
-                    },
-                    child: Image.network(
-                      image_url,
-                      fit: BoxFit.cover,
-                      width: double.infinity,
-                      height: double.infinity,
-                      loadingBuilder: (context, child, loadingProgress) {
-                        if (loadingProgress == null) return child;
-                        return Center(
-                          child: CircularProgressIndicator(
-                            value: loadingProgress.expectedTotalBytes != null
-                                ? loadingProgress.cumulativeBytesLoaded /
-                                    (loadingProgress.expectedTotalBytes ?? 1)
-                                : null,
-                          ),
-                        );
-                      },
-                      errorBuilder: (context, error, stackTrace) {
-                        return const Center(
-                          child: Icon(Icons.error, color: Colors.red),
-                        );
-                      },
-                    ),
-                  ),
-                ),
-                Positioned(
-                  top: 10,
-                  right: 10,
-                  child: Container(
-                    width: containerWidth / 10,
-                    height: containerHeight / 10,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(100),
-                      color: Colors.grey,
-                    ),
-                    child: const Icon(
-                      Icons.favorite,
-                      color: Colors.red,
-                      size: 20,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(height: 10),
-          Text(
-            title,
-            style: TextStyle(fontSize: 20, color: textThemeColor),
-          ),
-          const SizedBox(height: 10),
-          Row(
-            children: [
-              const Icon(
-                Icons.calendar_month,
-                color: Colors.deepOrange,
-                size: 15,
-              ),
-              const SizedBox(width: 5),
-              Text(
-                date,
-                style: TextStyle(fontSize: 12, color: textThemeColor),
-              ),
-            ],
-          ),
-          const SizedBox(height: 5),
-          Row(
-            children: [
-              const Icon(
-                Icons.location_on_sharp,
-                color: Colors.deepOrange,
-                size: 15,
-              ),
-              const SizedBox(width: 5),
-              Text(
-                lieu,
-                style: TextStyle(fontSize: 12, color: textThemeColor),
-              ),
-            ],
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Container(
-                child: Row(
-                  children: [
-                    const Icon(
-                      Icons.person_pin,
-                      color: Colors.deepOrange,
-                      size: 15,
-                    ),
-                    const SizedBox(width: 5),
-                    Text(
-                      "$member_count membres ont rejoint",
-                      style: TextStyle(fontSize: 12, color: textThemeColor),
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
-          Container(
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.end,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-                GestureDetector(
-                  onTap: () {
-                    Get.to(() => const SortieScreen());
-                  },
-                  child: Container(
-                    width: containerWidth / 4,
-                    height: containerHeight / 8,
-                    decoration: const BoxDecoration(
-                      color: Colors.blue,
-                      borderRadius: BorderRadius.all(Radius.circular(15)),
-                    ),
-                    child: const Center(
-                      child: Text(
-                        "Rejoindre",
-                        style: TextStyle(fontSize: 12, color: Colors.white),
-                      ),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          )
-        ],
-      ),
     );
   }
 }

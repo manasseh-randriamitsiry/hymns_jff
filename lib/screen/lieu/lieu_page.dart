@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
+import '../../widgets/drawerWidget.dart';
+
 class LieuPage extends StatefulWidget {
   const LieuPage({super.key});
 
@@ -11,8 +13,7 @@ class LieuPage extends StatefulWidget {
 class _LieuPageState extends State<LieuPage> {
   late GoogleMapController mapController;
 
-  final LatLng _center =
-      const LatLng(37.7749, -122.4194); // San Francisco coordinates
+  final LatLng _center = const LatLng(37.7749, -122.4194);
 
   final Set<Marker> _markers = {
     Marker(
@@ -27,7 +28,6 @@ class _LieuPageState extends State<LieuPage> {
       infoWindow: const InfoWindow(title: 'Local Bar'),
       icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueOrange),
     ),
-    // Add more markers here
   };
 
   void _onMapCreated(GoogleMapController controller) {
@@ -37,6 +37,7 @@ class _LieuPageState extends State<LieuPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      drawer: const DrawerScreen(),
       appBar: AppBar(
         title: Text(
           'Party Locations',

@@ -1,30 +1,37 @@
 import 'package:flutter/material.dart';
 
+import '../../widgets/btn_widget.dart';
+import '../../widgets/input_widget.dart';
+
 class EditProfileScreen extends StatelessWidget {
   const EditProfileScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context); // Get the current theme
-    final textColor =
-        theme.textTheme.bodyLarge?.color ?? Colors.black; // Dynamic text color
-    final borderColor = theme.dividerColor; // Dynamic border color
-    final backgroundColor =
-        theme.scaffoldBackgroundColor; // Dynamic background color for container
-    final buttonColor = theme.colorScheme.primary; // Dynamic button color
+    final theme = Theme.of(context);
+    final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double inputHeight = screenHeight / 10;
+    double containerWidth = screenWidth - 50;
 
+    final TextEditingController idController = TextEditingController();
+    final TextEditingController usernameController = TextEditingController();
+    final TextEditingController nextNameController = TextEditingController();
+    final TextEditingController emailController = TextEditingController();
+    final TextEditingController dateOfBirthController = TextEditingController();
+    final TextEditingController adressController = TextEditingController();
+    final TextEditingController ciController = TextEditingController();
+    final TextEditingController phoneNumberController = TextEditingController();
     return Scaffold(
       appBar: AppBar(
-        leading: IconButton(
-          icon: Icon(Icons.arrow_back, color: textColor),
-          onPressed: () => Navigator.of(context).pop(),
-        ),
+        centerTitle: true,
+        surfaceTintColor: Colors.transparent,
         title: Text(
           'Modifier le profil',
           style: TextStyle(color: textColor),
         ),
         backgroundColor: Colors.transparent,
-        elevation: 0,
       ),
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16),
@@ -36,7 +43,7 @@ class EditProfileScreen extends StatelessWidget {
                 children: [
                   CircleAvatar(
                     radius: 50,
-                    backgroundColor: backgroundColor,
+                    backgroundColor: theme.hintColor,
                   ),
                   Positioned(
                     bottom: 0,
@@ -55,117 +62,109 @@ class EditProfileScreen extends StatelessWidget {
             ),
             const SizedBox(height: 24),
             Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Expanded(
-                    child: _buildRoundedInput(
-                        label: 'H',
-                        borderColor: borderColor,
-                        textColor: textColor)),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: _buildRoundedInput(
-                        label: 'F',
-                        borderColor: borderColor,
-                        textColor: textColor)),
+                SizedBox(
+                  width: containerWidth / 2,
+                  height: inputHeight,
+                  child: InputWidget(
+                    icon: Icons.perm_identity_outlined,
+                    labelText: 'Identifiant',
+                    type: TextInputType.text,
+                    controller: idController,
+                  ),
+                ),
+                SizedBox(
+                  width: containerWidth / 2,
+                  height: inputHeight,
+                  child: InputWidget(
+                    icon: Icons.person,
+                    labelText: 'Nom',
+                    type: TextInputType.name,
+                    controller: usernameController,
+                  ),
+                ),
               ],
             ),
-            const SizedBox(height: 16),
-            _buildRoundedInput(
-                label: 'Identifiant',
-                borderColor: borderColor,
-                textColor: textColor),
-            const SizedBox(height: 16),
-            _buildRoundedInput(
-                label: 'E-mail',
-                borderColor: borderColor,
-                textColor: textColor),
-            const SizedBox(height: 16),
+            SizedBox(
+              width: containerWidth / 2,
+              height: inputHeight,
+              child: InputWidget(
+                  icon: Icons.arrow_forward_ios,
+                  labelText: 'Prenom',
+                  type: TextInputType.text,
+                  controller: nextNameController),
+            ),
+            SizedBox(
+              width: containerWidth / 2,
+              height: inputHeight,
+              child: InputWidget(
+                  icon: Icons.email,
+                  labelText: 'Email',
+                  type: TextInputType.emailAddress,
+                  controller: emailController),
+            ),
+            SizedBox(
+              width: containerWidth / 2,
+              height: inputHeight,
+              child: InputWidget(
+                icon: Icons.date_range_outlined,
+                labelText: 'Date de naissance',
+                type: TextInputType.datetime,
+                controller: dateOfBirthController,
+              ),
+            ),
+            SizedBox(
+              width: containerWidth / 2,
+              height: inputHeight,
+              child: InputWidget(
+                icon: Icons.location_on,
+                labelText: 'Adresse',
+                type: TextInputType.streetAddress,
+                controller: adressController,
+              ),
+            ),
+            SizedBox(
+              width: containerWidth / 2,
+              height: inputHeight,
+              child: InputWidget(
+                  icon: Icons.phone,
+                  labelText: 'Téléphone',
+                  type: TextInputType.phone,
+                  controller: phoneNumberController),
+            ),
+            SizedBox(
+              width: containerWidth / 2,
+              height: inputHeight,
+              child: InputWidget(
+                icon: Icons.interests_outlined,
+                labelText: "Centre d'interet",
+                type: TextInputType.multiline,
+                controller: ciController,
+              ),
+            ),
             Row(
               children: [
                 Expanded(
-                    child: _buildRoundedInput(
-                        label: 'Nom',
-                        borderColor: borderColor,
-                        textColor: textColor)),
-                const SizedBox(width: 16),
-                Expanded(
-                    child: _buildRoundedInput(
-                        label: 'Prénom',
-                        borderColor: borderColor,
-                        textColor: textColor)),
-              ],
-            ),
-            const SizedBox(height: 16),
-            _buildRoundedInput(
-                label: 'Date de naissance',
-                trailing: Icons.calendar_today,
-                borderColor: borderColor,
-                textColor: textColor),
-            const SizedBox(height: 16),
-            _buildRoundedInput(
-                label: 'Adresse',
-                trailing: Icons.location_on,
-                borderColor: borderColor,
-                textColor: textColor),
-            const SizedBox(height: 16),
-            _buildRoundedInput(
-                label: "Centre d'intérêt: Culture Musique Sports",
-                trailing: Icons.arrow_drop_down,
-                borderColor: borderColor,
-                textColor: textColor),
-            const SizedBox(height: 16),
-            _buildRoundedInput(
-                label: 'Téléphone',
-                trailing: Icons.phone,
-                borderColor: borderColor,
-                textColor: textColor),
-            const SizedBox(height: 24),
-            const Row(
-              children: [
-                Expanded(
                   child: Text('Offre particulier Gratuit',
-                      style: TextStyle(fontWeight: FontWeight.bold)),
+                      style: TextStyle(
+                          fontWeight: FontWeight.bold, color: textColor)),
                 ),
-                Text('Abonnement premium\n4,99€/mois',
-                    textAlign: TextAlign.right),
+                Text(
+                  'Abonnement premium\n4,99€/mois',
+                  textAlign: TextAlign.right,
+                  style: TextStyle(color: textColor),
+                ),
               ],
             ),
             const SizedBox(height: 24),
-            ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                backgroundColor: buttonColor,
-                padding: const EdgeInsets.symmetric(vertical: 16),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8),
-                ),
-              ),
-              onPressed: () {},
-              child: Text('ENREGISTRER', style: TextStyle(color: textColor)),
+            const btnWidget(
+              inputWidth: 350,
+              inputHeigh: 60,
+              text: "ENREGISTRER",
             ),
           ],
-        ),
-      ),
-    );
-  }
-
-  Widget _buildRoundedInput(
-      {required String label,
-      IconData? trailing,
-      required Color borderColor,
-      required Color textColor}) {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 4),
-      decoration: BoxDecoration(
-        border: Border.all(color: borderColor),
-        borderRadius: BorderRadius.circular(25),
-      ),
-      child: TextField(
-        decoration: InputDecoration(
-          labelText: label,
-          labelStyle: TextStyle(color: textColor), // Dynamic label text color
-          border: InputBorder.none,
-          suffixIcon:
-              trailing != null ? Icon(trailing, color: textColor) : null,
         ),
       ),
     );

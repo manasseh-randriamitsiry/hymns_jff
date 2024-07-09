@@ -25,22 +25,14 @@ final ThemeData lightTheme = ThemeData(
   ),
   chipTheme: ChipThemeData(
     backgroundColor: Colors.grey[200]!,
-    // Light grey background
     labelStyle: const TextStyle(color: Colors.black),
-    // Black text for the light theme
     shape: const StadiumBorder(),
-    // Shape of the chip, you can customize it
     side: BorderSide(color: Colors.grey[400]!),
-    // Border color
     disabledColor: Colors.grey[300]!,
-    // Color when the chip is disabled
     selectedColor: Colors.blue[100]!,
-    // Color when the chip is selected
     secondarySelectedColor: Colors.blue[200]!,
-    // Secondary color for selected chip
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    // Padding inside the chip
-    pressElevation: 4.0, // Elevation when pressed
+    pressElevation: 4.0,
   ),
 );
 
@@ -52,7 +44,7 @@ final ThemeData darkTheme = ThemeData(
     surfaceTintColor: Colors.black,
     backgroundColor: Colors.white,
   ),
-  primaryColor: Colors.orange,
+  primaryColor: Colors.blueGrey,
   hintColor: Colors.white,
   scaffoldBackgroundColor: Colors.black,
   colorScheme: const ColorScheme.light(),
@@ -69,21 +61,13 @@ final ThemeData darkTheme = ThemeData(
   ),
   chipTheme: ChipThemeData(
     backgroundColor: Colors.grey[800]!,
-    // Dark grey background
     labelStyle: const TextStyle(color: Colors.white),
-    // White text for the dark theme
     shape: const StadiumBorder(),
-    // Shape of the chip
     side: BorderSide(color: Colors.grey[600]!),
-    // Border color
     disabledColor: Colors.grey[700]!,
-    // Color when the chip is disabled
     selectedColor: Colors.orange[700]!,
-    // Color when the chip is selected
     secondarySelectedColor: Colors.orange[600]!,
-    // Secondary color for selected chip
     padding: const EdgeInsets.symmetric(horizontal: 8.0),
-    // Padding inside the chip
     pressElevation: 4.0, // Elevation when pressed
   ),
 );

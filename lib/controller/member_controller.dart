@@ -1,26 +1,24 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-
-import '../services/api_service.dart';
+import 'package:permah_flutter/services/api_service.dart';
 
 class MemberController extends GetxController {
-  var members = <dynamic>[].obs;
-  var isLoading = false.obs;
-
-  final ApiService _apiService = Get.put(ApiService());
+  final RxBool isLoading = false.obs;
+  final RxList<dynamic> members = <dynamic>[].obs;
+  final ApiService apiService = Get.put(ApiService());
 
   @override
   void onInit() {
-    super.onInit();
     fetchMembers();
+    super.onInit();
   }
 
-  void fetchMembers() async {
+  Future<void> fetchMembers() async {
+    isLoading.value = true;
     try {
-      isLoading(true);
-      List<dynamic> fetchedMembers = await _apiService.fetchMembers();
-      members.value = fetchedMembers;
+      List<dynamic> fetchedMembers = await apiService.fetchMembers();
+      members.assignAll(fetchedMembers);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -35,7 +33,11 @@ class MemberController extends GetxController {
         dismissDirection: DismissDirection.horizontal,
       );
     } finally {
-      isLoading(false);
+      isLoading.value = false;
     }
+  }
+
+  Future<Image?> loadImageFromStorage(String imageName) {
+    return apiService.loadImageFromStorage(imageName);
   }
 }

@@ -50,6 +50,7 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
                 });
               },
             ),
+            contentPadding: const EdgeInsets.all(20),
             errorText: widget.errorText,
             errorStyle: TextStyle(color: errorColor),
             focusedBorder: OutlineInputBorder(

@@ -34,10 +34,13 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var bottomNaviationBarColor = theme.primaryColor;
     return Scaffold(
       bottomNavigationBar: CurvedNavigationBar(
+        animationCurve: Curves.easeOutExpo,
         backgroundColor: Colors.transparent,
-        color: Colors.orange,
+        color: bottomNaviationBarColor,
         index: _selectedIndex,
         items: const [
           Icon(Icons.home, color: Colors.white),
@@ -75,8 +78,8 @@ class _HomeScreenState extends State<HomeScreen> {
           TextButton(
             onPressed: () => Get.back(),
             child: Container(
-              padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 10, bottom: 10),
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(20),
@@ -91,8 +94,8 @@ class _HomeScreenState extends State<HomeScreen> {
               Get.back();
             },
             child: Container(
-              padding:
-                  const EdgeInsets.only(left: 20, right: 20, top: 10, bottom: 10),
+              padding: const EdgeInsets.only(
+                  left: 20, right: 20, top: 10, bottom: 10),
               decoration: BoxDecoration(
                   borderRadius: const BorderRadius.all(
                     Radius.circular(20),
@@ -109,6 +112,4 @@ class _HomeScreenState extends State<HomeScreen> {
 
 class HomeController extends GetxController {
   var selectedIndex = 0.obs;
-
-
 }

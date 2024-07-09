@@ -30,11 +30,15 @@ class InputWidget extends StatelessWidget {
         controller: controller,
         style: TextStyle(fontSize: 14, color: textColor),
         decoration: InputDecoration(
-          prefixIcon: Icon(icon, color: primaryColor),
+          contentPadding: const EdgeInsets.all(20),
           labelText: labelText,
           labelStyle: TextStyle(color: hintColor),
           errorText: errorText,
           errorStyle: TextStyle(color: theme.hintColor),
+          prefixIcon: Icon(
+            icon,
+            color: primaryColor,
+          ),
           focusedBorder: OutlineInputBorder(
             borderSide: BorderSide(color: primaryColor),
             borderRadius: const BorderRadius.all(Radius.circular(0)),

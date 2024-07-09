@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/screen/user/edit_profile_screen.dart';
+import 'package:permah_flutter/widgets/drawerWidget.dart';
 
 class ProfilPageScreen extends StatelessWidget {
   const ProfilPageScreen({super.key});
@@ -12,6 +13,7 @@ class ProfilPageScreen extends StatelessWidget {
     var backgroundColor = theme.chipTheme.backgroundColor;
     var textThemeColor = theme.textTheme.bodyLarge?.color;
     return Scaffold(
+      drawer: const DrawerScreen(),
       appBar: AppBar(
         title: Text(
           'Profil',
@@ -95,8 +97,8 @@ class ProfilPageScreen extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 20),
               child: Text(
-                'A propos de moi\nPassionné de football et de découverte, je me définis comme un explorateur du monde et des cultures. Mon parcours m\'a amené à voyager dans différents pays, enrichissant ma vision du football et de la vie. Aujourd\'hui, je partage mon expérience en tant qu\'entraîneur, cherchant toujours à inspirer et à motiver les jeunes talents.',
-                textAlign: TextAlign.center,
+                '\tA propos de moi: passionné de football et de découverte, je me définis comme un explorateur du monde et des cultures. Mon parcours m\'a amené à voyager dans différents pays, enrichissant ma vision du football et de la vie. Aujourd\'hui, je partage mon expérience en tant qu\'entraîneur, cherchant toujours à inspirer et à motiver les jeunes talents.',
+                textAlign: TextAlign.justify,
                 style: TextStyle(color: textThemeColor),
               ),
             ),

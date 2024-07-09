@@ -1,7 +1,10 @@
-import 'dart:math'; // Add this import for random number generation
+import 'dart:math';
 
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
+
+import '../../widgets/drawerWidget.dart';
+import '../../widgets/listeSortieWidget.dart';
 
 class ListeSortieScreen extends StatefulWidget {
   const ListeSortieScreen({super.key});
@@ -98,11 +101,10 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
     }).toList();
 
     var theme = Theme.of(context);
-    var borderColor =
-        theme.dividerColor.withOpacity(0.5); // Using dividerColor for borders
-    var focusedBorderColor =
-        theme.dividerColor.withOpacity(0.7); // Primary color for focused border
+    var borderColor = theme.dividerColor.withOpacity(0.5);
+    var focusedBorderColor = theme.dividerColor.withOpacity(0.7);
     return Scaffold(
+      drawer: const DrawerScreen(),
       appBar: AppBar(
         title: Text(
           'Evenements',
@@ -129,11 +131,11 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
                 decoration: InputDecoration(
                   prefixIcon: Icon(
                     Icons.search,
-                    color: theme.iconTheme.color, // Dynamic icon color
+                    color: theme.iconTheme.color,
                   ),
                   hintText: "Trouver une sortie",
                   hintStyle: TextStyle(
-                    color: theme.hintColor, // Dynamic hint text color
+                    color: theme.hintColor,
                   ),
                   focusedBorder: OutlineInputBorder(
                     borderSide: BorderSide(color: focusedBorderColor),
@@ -156,7 +158,6 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
               return ListSortieWidget(
                 screenHeight: screenHeight,
                 backgroundColor: eventColors[index],
-                // Use the random color here
                 icon: Icons.event,
                 title: sortie['title']!,
                 time: sortie['time']!,
@@ -173,125 +174,6 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
   }
 }
 
-class ListSortieWidget extends StatelessWidget {
-  const ListSortieWidget({
-    super.key,
-    required this.screenHeight,
-    required this.backgroundColor,
-    required this.icon,
-    required this.title,
-    required this.time,
-    required this.location,
-    required this.occupied,
-    required this.dateLeft,
-    required this.dateRight,
-  });
-
-  final double screenHeight;
-  final Color backgroundColor;
-  final IconData icon;
-  final String title;
-  final String time;
-  final String dateLeft;
-  final String dateRight;
-  final String location;
-  final String occupied;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: const BorderRadius.all(
-          Radius.circular(10),
-        ),
-        color: backgroundColor,
-      ),
-      padding: const EdgeInsets.all(10),
-      margin: const EdgeInsets.only(right: 10, left: 10, top: 10),
-      child: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Icon(
-            icon,
-            size: 50,
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                title,
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              Text(
-                time,
-                style: TextStyle(
-                  fontSize: 12,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              Row(
-                children: [
-                  Text(
-                    dateLeft,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Theme.of(context).textTheme.bodyLarge?.color,
-                    ),
-                  ),
-                  const SizedBox(width: 5),
-                  Text(
-                    dateRight,
-                    style: TextStyle(
-                      fontSize: 10,
-                      color: Theme.of(context).textTheme.bodyLarge?.color,
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          Container(
-            color: Theme.of(context).textTheme.bodyLarge?.color,
-            width: 1,
-            height: screenHeight / 20,
-            margin: const EdgeInsets.all(10),
-          ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                location,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              Text(
-                occupied,
-                style: TextStyle(
-                  fontSize: 10,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              Text(
-                "REJOINDRE",
-                style: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-}
-
 class ListItemsTop extends StatelessWidget {
   const ListItemsTop({
     super.key,
@@ -300,7 +182,7 @@ class ListItemsTop extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var iconBorderColor = theme.dividerColor.withOpacity(0.2);
+    var iconBorderColor = theme.hintColor.withOpacity(0.2);
     return Row(
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.spaceAround,

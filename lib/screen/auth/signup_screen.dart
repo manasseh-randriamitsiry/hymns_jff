@@ -94,7 +94,7 @@ class SignupScreen extends StatelessWidget {
                     },
                     child: btnWidget(
                       inputWidth: containerWidth,
-                      inputHeigh: screenHeight / 12,
+                      inputHeigh: screenHeight / 14,
                       text: "S'INSCRIRE",
                     ),
                   ),

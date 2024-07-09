@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:permah_flutter/screen/accueil/home_screen.dart';
 import 'package:permah_flutter/screen/auth/reset_pass_screen.dart';
 import 'package:permah_flutter/screen/auth/signup_screen.dart';
 import 'package:permah_flutter/widgets/btn_widget.dart';
@@ -71,15 +70,6 @@ class _LoginScreenState extends State<LoginScreen> {
             ),
           ),
         ],
-        leading: GestureDetector(
-          onTap: () {
-            if (kDebugMode) {
-              print('back button tapped');
-            }
-            Navigator.of(context).pop();
-          },
-          child: Icon(Icons.arrow_back, color: textColor),
-        ),
       ),
       body: Center(
         child: Stack(
@@ -143,16 +133,15 @@ class _LoginScreenState extends State<LoginScreen> {
                           _passwordController.text,
                         );
                         // for test ( ssl error )
-                        Get.to(const HomeScreen());
                       } catch (e) {
                         if (kDebugMode) {
                           print(e.toString());
                         }
                       }
                     },
-                    child: const btnWidget(
-                      inputWidth: 350,
-                      inputHeigh: 60,
+                    child: btnWidget(
+                      inputWidth: containerWidth,
+                      inputHeigh: screenHeight / 14,
                       text: "SE CONNECTER",
                     ),
                   ),
@@ -194,7 +183,8 @@ class _LoginScreenState extends State<LoginScreen> {
                       style: TextStyle(color: textColor)),
                   GestureDetector(
                     onTap: () {
-                      Get.to(() => SignupScreen());
+                      Get.to(() => SignupScreen(),
+                          transition: Transition.rightToLeft);
                     },
                     child: Text(
                       "Creer un compte",

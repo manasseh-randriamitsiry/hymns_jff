@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:permah_flutter/drawer.dart';
 
 import '../../controller/member_controller.dart';
+import '../../widgets/drawerWidget.dart';
 
 class MembeScreen extends StatelessWidget {
   final MemberController _memberController = Get.put(MemberController());
@@ -24,74 +24,65 @@ class MembeScreen extends StatelessWidget {
           ),
         ),
         leading: IconButton(
-          icon: const Icon(Icons.list_rounded),
-          onPressed: () {
-            _scaffoldKey.currentState?.openDrawer();
-          },
+          icon: const Icon(Icons.menu),
+          onPressed: () => _scaffoldKey.currentState?.openDrawer(),
         ),
       ),
-      body: Obx(() {
-        if (_memberController.isLoading.value) {
-          return Center(
-            child: Column(
-              textDirection: TextDirection.ltr,
-              children: [
-                const SizedBox(
-                  height: 100,
-                ),
-                Text(
-                  "En attente de connection ",
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ),
-                LoadingAnimationWidget.newtonCradle(
-                    color: Colors.orange, size: 100),
-                const SizedBox(
-                  height: 10,
-                ),
-              ],
+      body: Column(
+        children: [
+          Expanded(
+            child: Obx(
+              () {
+                if (_memberController.isLoading.value) {
+                  return Center(
+                    child: LoadingAnimationWidget.staggeredDotsWave(
+                      color: Theme.of(context).primaryColor,
+                      size: 50,
+                    ),
+                  );
+                } else if (_memberController.members.isEmpty) {
+                  return const Center(
+                    child: Text('Aucun membre trouvé'),
+                  );
+                } else {
+                  return ListView.builder(
+                    itemCount: _memberController.members.length,
+                    itemBuilder: (context, index) {
+                      final member = _memberController.members[index];
+                      final imageName = 'member_${member['id']}.jpg';
+                      return ListTile(
+                        leading: FutureBuilder<Image?>(
+                          future:
+                              _memberController.loadImageFromStorage(imageName),
+                          builder: (context, imageSnapshot) {
+                            if (imageSnapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator();
+                            } else if (imageSnapshot.hasError) {
+                              return const CircleAvatar(
+                                child: Icon(Icons.error),
+                              );
+                            } else if (imageSnapshot.hasData &&
+                                imageSnapshot.data != null) {
+                              return CircleAvatar(
+                                backgroundImage: imageSnapshot.data!.image,
+                              );
+                            } else {
+                              return const CircleAvatar(
+                                child: Icon(Icons.person),
+                              );
+                            }
+                          },
+                        ),
+                        title: Text(member['name']),
+                      );
+                    },
+                  );
+                }
+              },
             ),
-          );
-        } else if (_memberController.members.isEmpty) {
-          return Center(
-              child: Text(
-            'No members found.',
-            style: TextStyle(
-              color: Theme.of(context).textTheme.bodyLarge?.color,
-            ),
-          ));
-        } else {
-          return ListView.builder(
-            itemCount: _memberController.members.length,
-            itemBuilder: (context, index) {
-              var member = _memberController.members[index];
-              String avatarUrl = 'https:' + member['avatar_urls']['full'];
-              return ListTile(
-                leading: CircleAvatar(
-                  backgroundImage: NetworkImage(avatarUrl),
-                ),
-                title: Text(
-                  member['name'] ?? 'No name',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ),
-                subtitle: Text(
-                  member['email'] ?? 'No email',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  ),
-                ),
-              );
-            },
-          );
-        }
-      }),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () => _memberController.fetchMembers(),
-        child: const Icon(Icons.refresh),
+          ),
+        ],
       ),
     );
   }

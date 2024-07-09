@@ -31,15 +31,13 @@ class ConnectivityController extends GetxController {
   }
 
   void startPeriodicCheck() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+    _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
       checkConnectivity();
     });
   }
 
   void _reloadContent() {
     apiService.fetchMembers();
-    // Logic to reload your content goes here
-    // For example, you might call an API or refresh the app state
     print("Connected! Attempting to reload content...");
   }
 }

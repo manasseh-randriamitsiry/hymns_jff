@@ -15,6 +15,7 @@ import 'package:permah_flutter/screen/intro/splash_screen0.dart';
 import 'package:permah_flutter/screen/intro/splash_screen1.dart';
 import 'package:permah_flutter/screen/intro/splash_screen2.dart';
 import 'package:permah_flutter/screen/intro/splash_screen3.dart';
+import 'package:permah_flutter/screen/intro/splash_screen_authenticated.dart';
 import 'package:permah_flutter/screen/member/member_screen.dart';
 import 'package:permah_flutter/screen/sortie/liste_sortie_screen.dart';
 import 'package:permah_flutter/screen/sortie/sortie_screen.dart';
@@ -56,7 +57,7 @@ class MyApp extends StatelessWidget {
           if (kDebugMode) {
             print('Redirecting to members with Token: ${snapshot.data}');
           }
-          return _buildApp('/login');
+          return _buildApp('/splash_authenticated');
         } else {
           if (kDebugMode) {
             print(
@@ -82,6 +83,9 @@ class MyApp extends StatelessWidget {
         initialRoute: initialRoute,
         getPages: [
           GetPage(name: '/', page: () => const SplashScreen0()),
+          GetPage(
+              name: '/splash_authenticated',
+              page: () => const SplashScreenAuthenticated()),
           GetPage(name: '/splash1', page: () => const SplashScreen1()),
           GetPage(name: '/splash2', page: () => const SplashScreen2()),
           GetPage(name: '/splash3', page: () => const SplashScreen3()),

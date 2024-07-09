@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
+import 'package:permah_flutter/screen/accueil/home_screen.dart';
 import 'package:permah_flutter/screen/auth/interest_screen.dart';
 import 'package:permah_flutter/screen/auth/login_screen.dart';
 
-import '../screen/member/member_screen.dart';
 import '../services/api_service.dart';
 
 class AuthController extends GetxController {
@@ -88,7 +88,7 @@ class AuthController extends GetxController {
         token.value = response['token'];
         isAuthenticated.value = true;
         await storage.write(key: 'auth_token', value: token.value);
-        Get.off(MembeScreen());
+        Get.off(const HomeScreen(), transition: Transition.zoom);
         Get.snackbar(
           'Success',
           'Hello $username',

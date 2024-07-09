@@ -4,20 +4,19 @@ import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
-import 'package:shared_preferences/shared_preferences.dart';
+import 'package:permah_flutter/screen/accueil/home_screen.dart';
 
 import '../../services/api_service.dart';
-import '../auth/login_screen.dart'; // Import necessary screens
-import 'splash_screen1.dart';
 
-class SplashScreen0 extends StatefulWidget {
-  const SplashScreen0({super.key});
+class SplashScreenAuthenticated extends StatefulWidget {
+  const SplashScreenAuthenticated({super.key});
 
   @override
-  SplashScreen0State createState() => SplashScreen0State();
+  SplashScreenAuthenticatedState createState() =>
+      SplashScreenAuthenticatedState();
 }
 
-class SplashScreen0State extends State<SplashScreen0>
+class SplashScreenAuthenticatedState extends State<SplashScreenAuthenticated>
     with SingleTickerProviderStateMixin {
   late AnimationController _controller;
   final ApiService apiService = ApiService();
@@ -58,29 +57,7 @@ class SplashScreen0State extends State<SplashScreen0>
   }
 
   Future<void> _preloadData() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    bool isFirstUse = prefs.getBool('isFirstUse') ?? true;
-    String? lastRoute = prefs.getString('lastRoute');
-
-    // Simulate a delay for the splash screen
-    await Future.delayed(
-      const Duration(seconds: 1),
-    );
-
-    // Pre-load necessary data (e.g., user details, settings)
-    if (!isFirstUse) {
-      await ApiService().fetchMembers(); // Example: pre-loading members
-    }
-
-    // Navigate based on the last route or whether it is the first use
-    if (isFirstUse) {
-      Get.offAll(() => const SplashScreen1(),
-          transition: Transition.rightToLeft);
-    } else if (lastRoute != null) {
-      Get.offAllNamed(lastRoute);
-    } else {
-      Get.offAll(() => const LoginScreen());
-    }
+    Get.offAll(() => const HomeScreen());
   }
 
   @override

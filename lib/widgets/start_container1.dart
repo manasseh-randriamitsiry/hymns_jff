@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../screen/auth/login_screen.dart';
@@ -81,20 +82,7 @@ class StartContainer1 extends StatelessWidget {
                     Container(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Close drawer
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      route1,
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                    opacity: animation, child: child);
-                              },
-                            ),
-                          );
+                          Get.to(route1, transition: Transition.circularReveal);
                         },
                         child: GestureDetector(
                           onTap: () {
@@ -118,20 +106,7 @@ class StartContainer1 extends StatelessWidget {
                     Container(
                       child: TextButton(
                         onPressed: () {
-                          Navigator.pop(context); // Close drawer
-                          Navigator.push(
-                            context,
-                            PageRouteBuilder(
-                              pageBuilder:
-                                  (context, animation, secondaryAnimation) =>
-                                      route2,
-                              transitionsBuilder: (context, animation,
-                                  secondaryAnimation, child) {
-                                return FadeTransition(
-                                    opacity: animation, child: child);
-                              },
-                            ),
-                          );
+                          Get.to(route2, transition: Transition.circularReveal);
                         },
                         child: const Text(
                           "Suivant",
