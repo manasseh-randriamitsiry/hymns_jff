@@ -7,6 +7,7 @@ import 'package:permah_flutter/widgets/btn_widget.dart';
 import 'package:permah_flutter/widgets/input_password_widget.dart';
 import 'package:permah_flutter/widgets/input_widget.dart';
 import 'package:permah_flutter/widgets/social_btn_widget.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/auth_controller.dart';
 import '../../controller/theme_controller.dart';
@@ -28,6 +29,13 @@ class _LoginScreenState extends State<LoginScreen> {
 
   @override
   Widget build(BuildContext context) {
+    Future<void> completeSetup() async {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setBool('isFirstUse', false);
+    }
+
+    completeSetup();
+
     final theme = Theme.of(context);
     final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     final backgroundColor = theme.scaffoldBackgroundColor;

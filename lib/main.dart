@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permah_flutter/screen/accueil/accueil_screen.dart';
 import 'package:permah_flutter/screen/accueil/home_screen.dart';
 import 'package:permah_flutter/screen/auth/interest_screen.dart';
@@ -13,8 +12,6 @@ import 'package:permah_flutter/screen/auth/signup_screen.dart';
 import 'package:permah_flutter/screen/auth/verification_page.dart';
 import 'package:permah_flutter/screen/intro/splash_screen0.dart';
 import 'package:permah_flutter/screen/intro/splash_screen1.dart';
-import 'package:permah_flutter/screen/intro/splash_screen2.dart';
-import 'package:permah_flutter/screen/intro/splash_screen3.dart';
 import 'package:permah_flutter/screen/intro/splash_screen_authenticated.dart';
 import 'package:permah_flutter/screen/member/member_screen.dart';
 import 'package:permah_flutter/screen/sortie/liste_sortie_screen.dart';
@@ -45,13 +42,7 @@ class MyApp extends StatelessWidget {
     return FutureBuilder<String?>(
       future: apiService.getToken(),
       builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          connectivityController.startPeriodicCheck();
-          return Center(
-            child: LoadingAnimationWidget.fallingDot(
-                color: Colors.black, size: 50),
-          );
-        } else if (snapshot.hasData &&
+        if (snapshot.hasData &&
             snapshot.data != null &&
             snapshot.data!.isNotEmpty) {
           if (kDebugMode) {
@@ -74,9 +65,7 @@ class MyApp extends StatelessWidget {
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
-        // Use the predefined light theme
         darkTheme: darkTheme,
-        // Use the predefined dark theme
         themeMode: _themeController.isDarkMode.value
             ? ThemeMode.dark
             : ThemeMode.light,
@@ -86,9 +75,7 @@ class MyApp extends StatelessWidget {
           GetPage(
               name: '/splash_authenticated',
               page: () => const SplashScreenAuthenticated()),
-          GetPage(name: '/splash1', page: () => const SplashScreen1()),
-          GetPage(name: '/splash2', page: () => const SplashScreen2()),
-          GetPage(name: '/splash3', page: () => const SplashScreen3()),
+          GetPage(name: '/splash1', page: () => SplashScreen1()),
           GetPage(name: '/login', page: () => const LoginScreen()),
           GetPage(name: '/signup', page: () => SignupScreen()),
           GetPage(name: '/verify', page: () => const VerificationPage()),

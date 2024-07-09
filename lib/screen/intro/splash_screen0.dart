@@ -50,7 +50,6 @@ class SplashScreen0State extends State<SplashScreen0>
       });
 
       if (_isConnected) {
-        // If connected, stop the timer and preload data
         _timer.cancel();
         _preloadData();
       }
@@ -74,8 +73,7 @@ class SplashScreen0State extends State<SplashScreen0>
 
     // Navigate based on the last route or whether it is the first use
     if (isFirstUse) {
-      Get.offAll(() => const SplashScreen1(),
-          transition: Transition.rightToLeft);
+      Get.offAll(() => SplashScreen1(), transition: Transition.rightToLeft);
     } else if (lastRoute != null) {
       Get.offAllNamed(lastRoute);
     } else {
@@ -132,23 +130,28 @@ class SplashScreen0State extends State<SplashScreen0>
                       const SizedBox(height: 20),
                       // Add some space between animation and text
                       const Text(
-                        'Pas de connexion internet.\nEn attente de connexion ...',
+                        'Pas de connexion internet.\n Veuillez activer votre data ou wifi',
                         textAlign: TextAlign.center,
                         style: TextStyle(
                           color: Colors.red,
-                          fontSize: 18,
+                          fontSize: 15,
                         ),
                       ),
                     ] else ...[
                       const SizedBox(height: 20),
                       // Add some space between animation and text
-                      const Text(
-                        'Veuillez patientez ...',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
+                      GestureDetector(
+                        child: const Text(
+                          'Veuillez patientez ...',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
+                        onLongPress: () {
+                          Get.off(SplashScreen1());
+                        },
                       ),
                     ],
                   ],

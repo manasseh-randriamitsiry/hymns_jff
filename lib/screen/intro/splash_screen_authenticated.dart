@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:loading_animation_widget/loading_animation_widget.dart';
 import 'package:permah_flutter/screen/accueil/home_screen.dart';
+import 'package:permah_flutter/screen/intro/splash_screen1.dart';
 
 import '../../services/api_service.dart';
 
@@ -49,7 +50,6 @@ class SplashScreenAuthenticatedState extends State<SplashScreenAuthenticated>
       });
 
       if (_isConnected) {
-        // If connected, stop the timer and preload data
         _timer.cancel();
         _preloadData();
       }
@@ -119,13 +119,18 @@ class SplashScreenAuthenticatedState extends State<SplashScreenAuthenticated>
                     ] else ...[
                       const SizedBox(height: 20),
                       // Add some space between animation and text
-                      const Text(
-                        'Veuillez patientez ...',
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 18,
+                      GestureDetector(
+                        child: const Text(
+                          'Veuillez patientezz ...',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 18,
+                          ),
                         ),
+                        onTap: () {
+                          Get.off(SplashScreen1());
+                        },
                       ),
                     ],
                   ],
