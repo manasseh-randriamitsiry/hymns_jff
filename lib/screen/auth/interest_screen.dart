@@ -52,9 +52,17 @@ class InterestSelectionScreen extends StatelessWidget {
                   borderRadius: BorderRadius.circular(10),
                 ),
               ),
-              child: btnWidget(
+              child: BtnWidget(
+                onTap: () {
+                  // Récupérer les éléments sélectionnés
+                  List<String> selectedInterests =
+                      InterestGridState.selectedInterests;
+                  if (kDebugMode) {
+                    print("Éléments sélectionnés : $selectedInterests");
+                  }
+                },
                 inputWidth: containerWidth - 50,
-                inputHeigh: 50,
+                inputHeight: 50,
                 text: "SUIVANT",
               ),
             ),

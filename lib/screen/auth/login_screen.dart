@@ -112,7 +112,6 @@ class _LoginScreenState extends State<LoginScreen> {
                         children: [
                           Obx(
                             () => Switch(
-                              // this is not for the theme
                               value: _switchValue.value,
                               onChanged: (value) {},
                             ),
@@ -133,25 +132,22 @@ class _LoginScreenState extends State<LoginScreen> {
                     ],
                   ),
                   SizedBox(height: screenHeight / 20),
-                  GestureDetector(
-                    onTap: () async {
+                  BtnWidget(
+                    onTap: () {
                       try {
-                        await _authController.login(
+                        _authController.login(
                           _usernameController.text,
                           _passwordController.text,
                         );
-                        // for test ( ssl error )
                       } catch (e) {
                         if (kDebugMode) {
                           print(e.toString());
                         }
                       }
                     },
-                    child: btnWidget(
-                      inputWidth: containerWidth,
-                      inputHeigh: screenHeight / 14,
-                      text: "SE CONNECTER",
-                    ),
+                    inputWidth: containerWidth,
+                    inputHeight: screenHeight / 14,
+                    text: "SE CONNECTER",
                   ),
                   SizedBox(height: screenHeight / 30),
                   Row(

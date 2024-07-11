@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:permah_flutter/widgets/input_widget.dart';
 
@@ -51,28 +52,16 @@ class _VerificationPageState extends State<ResetPassScreen> {
                     type: TextInputType.emailAddress,
                   ),
                   const SizedBox(height: 20),
-                  GestureDetector(
+                  BtnWidget(
                     onTap: () {
-                      Navigator.pop(context); // Close drawer
-                      Navigator.push(
-                        context,
-                        PageRouteBuilder(
-                          pageBuilder:
-                              (context, animation, secondaryAnimation) =>
-                                  const ResetPassScreen(),
-                          transitionsBuilder:
-                              (context, animation, secondaryAnimation, child) {
-                            return FadeTransition(
-                                opacity: animation, child: child);
-                          },
-                        ),
-                      );
+                      if (kDebugMode) {
+                        print("Send email");
+                      }
+                      // Send email
                     },
-                    child: btnWidget(
-                      inputWidth: containerWidth,
-                      inputHeigh: 60,
-                      text: "ENVOYER",
-                    ),
+                    inputWidth: containerWidth,
+                    inputHeight: 60,
+                    text: "ENVOYER",
                   ),
                   const SizedBox(
                     height: 50,

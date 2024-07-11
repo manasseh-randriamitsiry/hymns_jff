@@ -1,15 +1,17 @@
 import 'package:flutter/material.dart';
 
-class btnWidget extends StatelessWidget {
+class BtnWidget extends StatelessWidget {
   final double inputWidth;
-  final double inputHeigh;
+  final double inputHeight;
   final String text;
+  final Function onTap;
 
-  const btnWidget({
+  const BtnWidget({
     super.key,
     required this.inputWidth,
-    required this.inputHeigh,
+    required this.inputHeight,
     required this.text,
+    required this.onTap,
   });
 
   @override
@@ -17,21 +19,31 @@ class btnWidget extends StatelessWidget {
     final theme = Theme.of(context);
     final inputBorderColor = theme.hintColor;
     final textColor = theme.dividerColor;
+
     return Column(
       children: [
-        Container(
-          width: inputWidth,
-          height: inputHeigh,
-          decoration: BoxDecoration(
-            color: inputBorderColor,
-            borderRadius: const BorderRadius.all(
-              Radius.circular(15),
-            ),
+        Card(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+            side: BorderSide(color: inputBorderColor, width: 0),
           ),
-          child: Center(
-            child: Text(
-              text,
-              style: TextStyle(color: textColor, fontSize: 20),
+          color: inputBorderColor,
+          child: SizedBox(
+            width: inputWidth,
+            height: inputHeight,
+            child: InkWell(
+              onTap: () {
+                onTap();
+              },
+              borderRadius: BorderRadius.circular(15),
+              splashColor: Colors.orange,
+              hoverColor: Colors.green,
+              child: Center(
+                child: Text(
+                  text,
+                  style: TextStyle(color: textColor, fontSize: 20),
+                ),
+              ),
             ),
           ),
         ),

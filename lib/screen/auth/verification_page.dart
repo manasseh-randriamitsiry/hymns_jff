@@ -180,9 +180,14 @@ class _VerificationPageState extends State<VerificationPage> {
                         ),
                       );
                     },
-                    child: const btnWidget(
+                    child: BtnWidget(
+                      onTap: () {
+                        if (kDebugMode) {
+                          print("Sending verification email");
+                        }
+                      },
                       inputWidth: 350,
-                      inputHeigh: 60,
+                      inputHeight: 60,
                       text: "VERIFIER",
                     ),
                   ),

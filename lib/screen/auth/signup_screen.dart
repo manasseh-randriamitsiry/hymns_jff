@@ -77,10 +77,10 @@ class SignupScreen extends StatelessWidget {
                   const SizedBox(
                     height: 10,
                   ),
-                  GestureDetector(
-                    onTap: () async {
+                  BtnWidget(
+                    onTap: () {
                       try {
-                        await _authController.signup(
+                        _authController.signup(
                           _usernameController.text,
                           _passwordController1.text,
                           _passwordController2.text,
@@ -92,11 +92,9 @@ class SignupScreen extends StatelessWidget {
                         }
                       }
                     },
-                    child: btnWidget(
-                      inputWidth: containerWidth,
-                      inputHeigh: screenHeight / 14,
-                      text: "S'INSCRIRE",
-                    ),
+                    inputWidth: containerWidth,
+                    inputHeight: screenHeight / 14,
+                    text: "S'INSCRIRE",
                   ),
                   SizedBox(
                     height: screenHeight / 30,

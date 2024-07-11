@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import 'package:get/get.dart';
@@ -23,7 +24,9 @@ class AuthController extends GetxController {
         return true;
       }
     } catch (e) {
-      print('Internet connection check failed: $e');
+      if (kDebugMode) {
+        print('Internet connection check failed: $e');
+      }
     }
     return false;
   }
@@ -65,7 +68,9 @@ class AuthController extends GetxController {
             isDismissible: true,
             dismissDirection: DismissDirection.horizontal,
           );
-          print(e);
+          if (kDebugMode) {
+            print(e);
+          }
         }
       }
     } else {
@@ -82,7 +87,15 @@ class AuthController extends GetxController {
   // Login method
   Future<void> login(String username, String password) async {
     bool isConnected = await checkInternetConnection();
-    if (isConnected) {
+    if (username.isEmpty || password.isEmpty) {
+      Get.snackbar(
+        'Erreur de connection',
+        'Raison : Veuillez remplir tous les champs',
+        backgroundColor: Colors.yellowAccent.withOpacity(0.2),
+        colorText: Colors.black,
+        icon: const Icon(Icons.warning_amber, color: Colors.black),
+      );
+    } else if (isConnected) {
       try {
         final response = await apiService.login(username, password);
         token.value = response['token'];
@@ -105,7 +118,9 @@ class AuthController extends GetxController {
             isDismissible: true,
             dismissDirection: DismissDirection.horizontal,
             forwardAnimationCurve: Curves.easeInOutCirc);
-        print(e);
+        if (kDebugMode) {
+          print(e);
+        }
       }
     } else {
       Get.snackbar(

@@ -159,9 +159,12 @@ class EditProfileScreen extends StatelessWidget {
               ],
             ),
             const SizedBox(height: 24),
-            const btnWidget(
+            BtnWidget(
+              onTap: () {
+                // Save data
+              },
               inputWidth: 350,
-              inputHeigh: 60,
+              inputHeight: 60,
               text: "ENREGISTRER",
             ),
           ],
