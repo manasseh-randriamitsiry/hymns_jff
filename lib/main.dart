@@ -31,7 +31,7 @@ void main() {
 
 class MyApp extends StatelessWidget {
   final ThemeController _themeController = Get.put(ThemeController());
-  final ApiService apiService = ApiService();
+  final ApiService apiService = Get.put(ApiService());
   final ConnectivityController connectivityController =
       Get.put(ConnectivityController());
 
@@ -42,7 +42,9 @@ class MyApp extends StatelessWidget {
     return FutureBuilder<String?>(
       future: apiService.getToken(),
       builder: (context, snapshot) {
-        if (snapshot.hasData &&
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const CircularProgressIndicator(); // Add a loading indicator
+        } else if (snapshot.hasData &&
             snapshot.data != null &&
             snapshot.data!.isNotEmpty) {
           if (kDebugMode) {

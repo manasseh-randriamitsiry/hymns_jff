@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utility/screen_util.dart';
+
 class BtnWidget extends StatelessWidget {
   final double inputWidth;
   final double inputHeight;
@@ -33,6 +35,7 @@ class BtnWidget extends StatelessWidget {
             height: inputHeight,
             child: InkWell(
               onTap: () {
+                getHaptics();
                 onTap();
               },
               borderRadius: BorderRadius.circular(15),

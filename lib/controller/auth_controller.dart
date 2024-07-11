@@ -5,7 +5,6 @@ import 'package:get/get.dart';
 import 'package:http/http.dart' as http;
 import 'package:permah_flutter/screen/accueil/home_screen.dart';
 import 'package:permah_flutter/screen/auth/interest_screen.dart';
-import 'package:permah_flutter/screen/auth/login_screen.dart';
 
 import '../services/api_service.dart';
 
@@ -19,13 +18,13 @@ class AuthController extends GetxController {
 
   Future<bool> checkInternetConnection() async {
     try {
-      final response = await http.get(Uri.parse('https://www.google.com'));
+      final response = await http.get(Uri.parse('https://www.permah.net'));
       if (response.statusCode == 200) {
         return true;
       }
     } catch (e) {
       if (kDebugMode) {
-        print('Internet connection check failed: $e');
+        print('En attente de connection au serveur $e');
       }
     }
     return false;
@@ -98,9 +97,8 @@ class AuthController extends GetxController {
     } else if (isConnected) {
       try {
         final response = await apiService.login(username, password);
-        token.value = response['token'];
+        token.value = response['jwt_token'];
         isAuthenticated.value = true;
-        await storage.write(key: 'auth_token', value: token.value);
         Get.off(const HomeScreen(), transition: Transition.zoom);
         Get.snackbar(
           'Success',
@@ -145,7 +143,6 @@ class AuthController extends GetxController {
         isDismissible: true,
         dismissDirection: DismissDirection.horizontal,
       );
-      Get.off(const LoginScreen());
     } catch (e) {
       Get.snackbar(
         'Error',

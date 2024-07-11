@@ -11,6 +11,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../controller/auth_controller.dart';
 import '../../controller/theme_controller.dart';
+import '../../utility/screen_util.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -39,10 +40,11 @@ class _LoginScreenState extends State<LoginScreen> {
     final theme = Theme.of(context);
     final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     final backgroundColor = theme.scaffoldBackgroundColor;
+    bool tablet = isTablet(context);
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
-    double containerWidth = screenWidth - 50;
+    double screenWidth = getScreenWidth(context);
+    double screenHeight = getScreenHeight(context);
+    double containerWidth = getContainerWidth(context);
 
     return Scaffold(
       resizeToAvoidBottomInset: false,
@@ -80,125 +82,128 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
       body: Center(
-        child: Stack(
-          children: [
-            SizedBox(
-              width: containerWidth,
-              child: Column(
-                children: [
-                  SizedBox(height: screenHeight / 20),
-                  Text(
-                    "Donner vos informations pour vous connecter à votre compte",
-                    textAlign: TextAlign.center,
-                    style: TextStyle(color: textColor),
-                  ),
-                  SizedBox(height: screenHeight / 40),
-                  InputWidget(
-                    icon: Icons.email_outlined,
-                    labelText: 'Saisissez votre identifiant',
-                    controller: _usernameController,
-                    type: TextInputType.text,
-                  ),
-                  const SizedBox(height: 15),
-                  InputPasswordWidget(
-                    lblText: "Saisissez votre mot de passe",
-                    controller: _passwordController,
-                  ),
-                  const SizedBox(height: 15),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Row(
-                        children: [
-                          Obx(
-                            () => Switch(
-                              value: _switchValue.value,
-                              onChanged: (value) {},
-                            ),
-                          ),
-                          Text("Se souvenir de moi",
-                              style: TextStyle(color: textColor)),
-                        ],
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          Get.to(() => const ResetPassScreen());
-                        },
-                        child: Text(
-                          "Mot de passe oublié ?",
-                          style: TextStyle(color: theme.primaryColor),
-                        ),
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight / 20),
-                  BtnWidget(
-                    onTap: () {
-                      try {
-                        _authController.login(
-                          _usernameController.text,
-                          _passwordController.text,
-                        );
-                      } catch (e) {
-                        if (kDebugMode) {
-                          print(e.toString());
-                        }
-                      }
-                    },
-                    inputWidth: containerWidth,
-                    inputHeight: screenHeight / 14,
-                    text: "SE CONNECTER",
-                  ),
-                  SizedBox(height: screenHeight / 30),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                    children: [
-                      Container(
-                        width: 2 * screenWidth / 8,
-                        color: textColor.withOpacity(0.2),
-                        height: 2,
-                      ),
-                      Text("ou continuer avec",
-                          style: TextStyle(color: textColor)),
-                      Container(
-                        width: 2 * screenWidth / 8,
-                        color: textColor.withOpacity(0.2),
-                        height: 2,
-                      ),
-                    ],
-                  ),
-                  SizedBox(height: screenHeight / 30),
-                  SizedBox(
-                    width: containerWidth - 40,
-                    child: const SocialBtnWidget(),
-                  ),
-                  const SizedBox(height: 10),
-                ],
-              ),
-            ),
-            Positioned(
-              top: screenHeight - 115,
-              left: 0,
-              right: 0,
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  Text("Vous n'avez pas de compte ?",
-                      style: TextStyle(color: textColor)),
-                  GestureDetector(
-                    onTap: () {
-                      Get.to(() => SignupScreen(),
-                          transition: Transition.rightToLeft);
-                    },
-                    child: Text(
-                      "Creer un compte",
-                      style: TextStyle(color: theme.primaryColor),
+        child: Container(
+          width: tablet ? 600 : containerWidth,
+          child: Stack(
+            children: [
+              SizedBox(
+                width: containerWidth,
+                child: Column(
+                  children: [
+                    SizedBox(height: screenHeight / 20),
+                    Text(
+                      "Donner vos informations pour vous connecter à votre compte",
+                      textAlign: TextAlign.center,
+                      style: TextStyle(color: textColor),
                     ),
-                  ),
-                ],
+                    SizedBox(height: screenHeight / 40),
+                    InputWidget(
+                      icon: Icons.email_outlined,
+                      labelText: 'Saisissez votre identifiant',
+                      controller: _usernameController,
+                      type: TextInputType.text,
+                    ),
+                    const SizedBox(height: 15),
+                    InputPasswordWidget(
+                      lblText: "Saisissez votre mot de passe",
+                      controller: _passwordController,
+                    ),
+                    const SizedBox(height: 15),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Row(
+                          children: [
+                            Obx(
+                              () => Switch(
+                                value: _switchValue.value,
+                                onChanged: (value) {},
+                              ),
+                            ),
+                            Text("Se souvenir de moi",
+                                style: TextStyle(color: textColor)),
+                          ],
+                        ),
+                        TextButton(
+                          onPressed: () {
+                            Get.to(() => const ResetPassScreen());
+                          },
+                          child: Text(
+                            "Mot de passe oublié ?",
+                            style: TextStyle(color: theme.primaryColor),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight / 20),
+                    BtnWidget(
+                      onTap: () {
+                        try {
+                          _authController.login(
+                            _usernameController.text,
+                            _passwordController.text,
+                          );
+                        } catch (e) {
+                          if (kDebugMode) {
+                            print(e.toString());
+                          }
+                        }
+                      },
+                      inputWidth: containerWidth,
+                      inputHeight: screenHeight / 14,
+                      text: "SE CONNECTER",
+                    ),
+                    SizedBox(height: screenHeight / 30),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        Container(
+                          width: 2 * screenWidth / 8,
+                          color: textColor.withOpacity(0.2),
+                          height: 2,
+                        ),
+                        Text("ou continuer avec",
+                            style: TextStyle(color: textColor)),
+                        Container(
+                          width: 2 * screenWidth / 8,
+                          color: textColor.withOpacity(0.2),
+                          height: 2,
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight / 30),
+                    SizedBox(
+                      width: containerWidth - 40,
+                      child: const SocialBtnWidget(),
+                    ),
+                    const SizedBox(height: 10),
+                  ],
+                ),
               ),
-            ),
-          ],
+              Positioned(
+                top: screenHeight - 115,
+                left: 0,
+                right: 0,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Text("Vous n'avez pas de compte ?",
+                        style: TextStyle(color: textColor)),
+                    GestureDetector(
+                      onTap: () {
+                        Get.to(() => SignupScreen(),
+                            transition: Transition.rightToLeft);
+                      },
+                      child: Text(
+                        "Creer un compte",
+                        style: TextStyle(color: theme.primaryColor),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

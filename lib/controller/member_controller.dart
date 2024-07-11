@@ -17,8 +17,8 @@ class MemberController extends GetxController {
   Future<void> fetchMembers() async {
     isLoading.value = true;
     try {
-      List<dynamic> fetchedMembers = await apiService.fetchMembers();
-      members.assignAll(fetchedMembers);
+      //List<dynamic> fetchedMembers = await apiService.fetchMembers();
+      // members.assignAll(fetchedMembers);
     } catch (e) {
       if (kDebugMode) {
         print(e);
@@ -37,7 +37,7 @@ class MemberController extends GetxController {
     }
   }
 
-  Future<Image?> loadImageFromStorage(String imageName) {
-    return apiService.loadImageFromStorage(imageName);
-  }
+// Future<Image?> loadImageFromStorage(String imageName) {
+//   return apiService.loadImageFromStorage(imageName);
+// }
 }

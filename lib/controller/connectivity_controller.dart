@@ -37,7 +37,7 @@ class ConnectivityController extends GetxController {
   }
 
   void _reloadContent() {
-    apiService.fetchMembers();
+    // apiService.fetchMembers();
     print("Connected! Attempting to reload content...");
   }
 }

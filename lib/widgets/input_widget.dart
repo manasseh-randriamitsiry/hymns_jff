@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utility/screen_util.dart';
+
 class InputWidget extends StatelessWidget {
   final IconData icon;
   final String labelText;
@@ -23,6 +25,7 @@ class InputWidget extends StatelessWidget {
     final inputBorderColor = theme.hintColor;
     final hintColor = theme.hintColor;
     final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    bool tablet = isTablet(context);
 
     return SizedBox(
       child: TextField(
@@ -30,7 +33,8 @@ class InputWidget extends StatelessWidget {
         controller: controller,
         style: TextStyle(fontSize: 14, color: textColor),
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.all(20),
+          contentPadding:
+              tablet ? const EdgeInsets.all(30) : const EdgeInsets.all(20),
           labelText: labelText,
           labelStyle: TextStyle(color: hintColor),
           errorText: errorText,

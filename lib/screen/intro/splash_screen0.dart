@@ -68,7 +68,7 @@ class SplashScreen0State extends State<SplashScreen0>
 
     // Pre-load necessary data (e.g., user details, settings)
     if (!isFirstUse) {
-      await ApiService().fetchMembers(); // Example: pre-loading members
+      //await ApiService().fetchMembers(); // Example: pre-loading members
     }
 
     // Navigate based on the last route or whether it is the first use

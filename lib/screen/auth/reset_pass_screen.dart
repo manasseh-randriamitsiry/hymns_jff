@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:permah_flutter/utility/screen_util.dart';
 import 'package:permah_flutter/widgets/input_widget.dart';
 
 import '../../widgets/btn_widget.dart';
@@ -19,8 +20,8 @@ class _VerificationPageState extends State<ResetPassScreen> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double containerWidth = screenWidth - 50;
+    double containerWidth = getContainerWidth(context);
+    bool tablet = isTablet(context);
     final theme = Theme.of(context);
     final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
 
@@ -36,7 +37,7 @@ class _VerificationPageState extends State<ResetPassScreen> {
         child: Stack(
           children: [
             SizedBox(
-              width: containerWidth,
+              width: tablet ? 200 : containerWidth,
               child: Column(
                 children: [
                   const SizedBox(height: 50),
@@ -59,7 +60,7 @@ class _VerificationPageState extends State<ResetPassScreen> {
                       }
                       // Send email
                     },
-                    inputWidth: containerWidth,
+                    inputWidth: tablet ? 200 : containerWidth,
                     inputHeight: 60,
                     text: "ENVOYER",
                   ),

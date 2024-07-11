@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../../utility/screen_util.dart';
+
 class InputPasswordWidget extends StatefulWidget {
   const InputPasswordWidget({
     super.key,
@@ -27,6 +29,7 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
     final hintColor = theme.hintColor;
     final errorColor = theme.hintColor;
     final textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
+    bool tablet = isTablet(context);
 
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -50,7 +53,8 @@ class _InputPasswordWidgetState extends State<InputPasswordWidget> {
                 });
               },
             ),
-            contentPadding: const EdgeInsets.all(20),
+            contentPadding:
+                tablet ? const EdgeInsets.all(30) : const EdgeInsets.all(20),
             errorText: widget.errorText,
             errorStyle: TextStyle(color: errorColor),
             focusedBorder: OutlineInputBorder(
