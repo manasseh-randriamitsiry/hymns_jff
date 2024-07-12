@@ -49,14 +49,14 @@ class _DrawerScreenState extends State<DrawerScreen> {
               _username,
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             accountEmail: Text(
               'this_is_you_email@gmail.com',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             decoration: const BoxDecoration(color: Colors.transparent),
@@ -67,12 +67,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ListTile(
             leading: Icon(
               Icons.brightness_6,
-              color: Colors.white,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
             title: Text(
               'Change Theme',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             onTap: () {
@@ -82,12 +82,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ListTile(
             leading: Icon(
               Icons.power_settings_new,
-              color: Colors.white,
+              color: Theme.of(context).textTheme.bodyLarge?.color,
             ),
             title: Text(
               'Logout',
               style: TextStyle(
-                color: Colors.white,
+                color: Theme.of(context).textTheme.bodyLarge?.color,
               ),
             ),
             onTap: () {

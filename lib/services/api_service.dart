@@ -111,7 +111,7 @@ class ApiService extends GetxService {
     if (response.statusCode == 200) {
       final responseBody = jsonDecode(response.body) as Map<String, dynamic>;
       await _saveToken(responseBody['jwt_token']);
-      await storage.write(key: username, value: username);
+      await storage.write(key: 'username', value: username);
       await storage.write(key: _tokenKey, value: responseBody['jwt_token']);
       await storage.write(
           key: 'expires_in', value: responseBody['expires_in'].toString());
@@ -135,22 +135,6 @@ class ApiService extends GetxService {
       await removeToken();
     }
     Get.off(() => const LoginScreen());
-  }
-
-  Future<Map<String, dynamic>> getProtectedData() async {
-    if (_token.value.isEmpty) throw Exception('No token found');
-
-    final url = Uri.parse('$baseUrl/protected');
-    final response = await http.get(
-      url,
-      headers: {'Authorization': _token.value},
-    );
-
-    if (response.statusCode == 200) {
-      return jsonDecode(response.body);
-    } else {
-      throw Exception('Failed to fetch protected data');
-    }
   }
 
   Future<String?> getUsername() async {

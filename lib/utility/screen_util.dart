@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 
 bool isTablet(BuildContext context) {
   final mediaQuery = MediaQuery.of(context);
@@ -65,4 +66,16 @@ double getContainerHeightWithTabBarAndAppBar(BuildContext context) {
 
 void getHaptics() async {
   HapticFeedback.lightImpact();
+}
+
+void openDrawer(BuildContext context) {
+  if (ZoomDrawer.of(context)!.isOpen()) {
+    ZoomDrawer.of(context)!.close();
+  } else {
+    ZoomDrawer.of(context)!.open();
+  }
+}
+
+void closeDrawer(BuildContext context) {
+  ZoomDrawer.of(context)!.close();
 }

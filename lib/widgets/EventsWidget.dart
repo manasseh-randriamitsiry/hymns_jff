@@ -49,7 +49,7 @@ class EventsWidget extends StatelessWidget {
           children: [
             Container(
               width: double.infinity,
-              height: containerWidth / 2,
+              height: containerHeight / 2,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(20),
                 color: Colors.blue,

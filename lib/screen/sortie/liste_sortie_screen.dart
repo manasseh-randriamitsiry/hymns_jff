@@ -3,7 +3,7 @@ import 'dart:math';
 import 'package:filter_list/filter_list.dart';
 import 'package:flutter/material.dart';
 
-import '../../widgets/drawerWidget.dart';
+import '../../utility/screen_util.dart';
 import '../../widgets/listeSortieWidget.dart';
 
 class ListeSortieScreen extends StatefulWidget {
@@ -101,11 +101,20 @@ class _ListeSortieScreenState extends State<ListeSortieScreen> {
     }).toList();
 
     var theme = Theme.of(context);
-    var borderColor = theme.dividerColor.withOpacity(0.5);
-    var focusedBorderColor = theme.dividerColor.withOpacity(0.7);
+    var borderColor = theme.hintColor.withOpacity(0.3);
+    var focusedBorderColor = theme.primaryColor.withOpacity(0.7);
+    var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     return Scaffold(
-      drawer: const DrawerScreen(),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: textColor,
+          ),
+          onPressed: () {
+            openDrawer(context);
+          },
+        ),
         title: Text(
           'Evenements',
           style: TextStyle(

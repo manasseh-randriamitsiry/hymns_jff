@@ -17,9 +17,10 @@ final ThemeData lightTheme = ThemeData(
     iconTheme: IconThemeData(color: Colors.black),
   ),
   drawerTheme: const DrawerThemeData(
-      backgroundColor: Colors.white,
-      elevation: 10,
-      surfaceTintColor: Colors.black),
+    backgroundColor: Colors.black,
+    elevation: 10,
+    surfaceTintColor: Colors.black,
+  ),
   textTheme: const TextTheme(
     bodyLarge: TextStyle(color: Colors.black),
   ),
@@ -44,6 +45,11 @@ final ThemeData darkTheme = ThemeData(
     surfaceTintColor: Colors.black,
     backgroundColor: Colors.white,
   ),
+  drawerTheme: const DrawerThemeData(
+    backgroundColor: Colors.black,
+    elevation: 10,
+    surfaceTintColor: Colors.black,
+  ),
   primaryColor: Colors.blueGrey,
   hintColor: Colors.white,
   scaffoldBackgroundColor: Colors.black,
@@ -52,10 +58,6 @@ final ThemeData darkTheme = ThemeData(
     backgroundColor: Colors.transparent,
     iconTheme: IconThemeData(color: Colors.white),
   ),
-  drawerTheme: const DrawerThemeData(
-      backgroundColor: Colors.black,
-      elevation: 10,
-      surfaceTintColor: Colors.white),
   textTheme: const TextTheme(
     bodyLarge: TextStyle(color: Colors.white),
   ),

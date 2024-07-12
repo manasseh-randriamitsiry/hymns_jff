@@ -1,20 +1,51 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/screen/user/edit_profile_screen.dart';
-import 'package:permah_flutter/widgets/drawerWidget.dart';
+import 'package:permah_flutter/utility/screen_util.dart';
 
-class ProfilPageScreen extends StatelessWidget {
+import '../../services/api_service.dart';
+
+class ProfilPageScreen extends StatefulWidget {
   const ProfilPageScreen({super.key});
 
   @override
+  State<ProfilPageScreen> createState() => _ProfilPageScreenState();
+}
+
+class _ProfilPageScreenState extends State<ProfilPageScreen> {
+  @override
+  final ApiService _apiService = Get.put(ApiService());
+  String _username = "Anonymous";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsername();
+  }
+
+  Future<void> _fetchUsername() async {
+    String? username = await _apiService.getUsername();
+    setState(() {
+      _username = username!;
+    });
+  }
+
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     var backgroundColor = theme.chipTheme.backgroundColor;
     var textThemeColor = theme.textTheme.bodyLarge?.color;
     return Scaffold(
-      drawer: const DrawerScreen(),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: textColor,
+          ),
+          onPressed: () {
+            openDrawer(context);
+          },
+        ),
         title: Text(
           'Profil',
           style: TextStyle(color: textThemeColor),
@@ -53,7 +84,7 @@ class ProfilPageScreen extends StatelessWidget {
             ),
             const SizedBox(height: 10),
             Text(
-              'MADI Ahmed',
+              _username,
               style: TextStyle(
                   fontSize: 20,
                   fontWeight: FontWeight.bold,

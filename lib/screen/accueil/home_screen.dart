@@ -1,5 +1,6 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/screen/accueil/accueil_screen.dart';
@@ -7,6 +8,7 @@ import 'package:permah_flutter/screen/lieu/lieu_page.dart';
 import 'package:permah_flutter/screen/member/member_screen.dart';
 import 'package:permah_flutter/screen/sortie/liste_sortie_screen.dart';
 import 'package:permah_flutter/screen/user/profil_page_screen.dart';
+import 'package:permah_flutter/widgets/drawerWidget.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -36,26 +38,37 @@ class _HomeScreenState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var bottomNaviationBarColor = theme.primaryColor;
-    return Scaffold(
-      bottomNavigationBar: CurvedNavigationBar(
-        animationCurve: Curves.easeOutExpo,
-        backgroundColor: Colors.transparent,
-        color: bottomNaviationBarColor,
-        index: _selectedIndex,
-        items: const [
-          Icon(Icons.home, color: Colors.white),
-          Icon(Icons.calendar_month, color: Colors.white),
-          Icon(Icons.location_on, color: Colors.white),
-          Icon(Icons.people_outline_outlined, color: Colors.white),
-          Icon(Icons.person, color: Colors.white),
-        ],
-        onTap: (index) {
-          setState(() {
-            _selectedIndex = index;
-          });
-        },
+    return ZoomDrawer(
+      style: DrawerStyle.defaultStyle,
+      mainScreenTapClose: true,
+      menuScreenWidth: MediaQuery.of(context).size.width * 0.65,
+      moveMenuScreen: true,
+      menuScreen: const DrawerScreen(),
+      mainScreen: Scaffold(
+        bottomNavigationBar: CurvedNavigationBar(
+          animationCurve: Curves.easeOutExpo,
+          backgroundColor: Colors.transparent,
+          color: bottomNaviationBarColor,
+          index: _selectedIndex,
+          items: const [
+            Icon(Icons.home, color: Colors.white),
+            Icon(Icons.calendar_month, color: Colors.white),
+            Icon(Icons.location_on, color: Colors.white),
+            Icon(Icons.people_outline_outlined, color: Colors.white),
+            Icon(Icons.person, color: Colors.white),
+          ],
+          onTap: (index) {
+            setState(() {
+              _selectedIndex = index;
+            });
+          },
+        ),
+        body: _screens[_selectedIndex],
       ),
-      body: _screens[_selectedIndex],
+      borderRadius: 24.0,
+      showShadow: true,
+      angle: 0.0,
+      slideWidth: MediaQuery.of(context).size.width * 0.65,
     );
   }
 
@@ -71,7 +84,13 @@ class _HomeScreenState extends State<HomeScreen> {
   void _showLocationPermissionDialog() {
     Get.dialog(
       AlertDialog(
+        backgroundColor: Theme.of(context).cardColor,
         title: const Text('Activer la localisation'),
+        icon: Icon(
+          Icons.location_on,
+          size: 100,
+          color: Colors.red.shade500,
+        ),
         content: const Text(
             'Veuillez activer les services de localisation pour une meilleure expérience.'),
         actions: [

@@ -40,6 +40,7 @@ dependencies:
   flutter_svg: ^2.0.10+1
   flare_flutter: ^3.0.2
   haptic_feedback: ^0.5.1+1
+  flutter_zoom_drawer: ^3.2.0
 
 dev_dependencies:
   flutter_test:

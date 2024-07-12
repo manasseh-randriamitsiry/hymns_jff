@@ -1,19 +1,45 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:permah_flutter/services/api_service.dart';
 
 import '../../controller/BottomNavController.dart';
 import '../../controller/accueil_controller.dart';
 import '../../controller/horizontalScrollController.dart';
+import '../../utility/screen_util.dart';
 import '../../widgets/EventsWidget.dart';
 
-class AccueilScreen extends StatelessWidget {
+class AccueilScreen extends StatefulWidget {
+  AccueilScreen({super.key});
+
+  @override
+  State<AccueilScreen> createState() => _AccueilScreenState();
+}
+
+class _AccueilScreenState extends State<AccueilScreen> {
   final AccueilController controller = Get.put(AccueilController());
+
+  final ApiService _apiService = Get.put(ApiService());
+
   final BottomNavController navController = Get.put(BottomNavController());
+
   final HorizontalScrollController horizontalScrollController =
       Get.put(HorizontalScrollController());
 
-  AccueilScreen({super.key});
+  String _username = "Anonymous";
+
+  @override
+  void initState() {
+    super.initState();
+    _fetchUsername();
+  }
+
+  Future<void> _fetchUsername() async {
+    String? username = await _apiService.getUsername();
+    setState(() {
+      _username = username!;
+    });
+  }
 
   final List<Map<String, String>> events = [
     {
@@ -65,8 +91,13 @@ class AccueilScreen extends StatelessWidget {
       padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 5),
       child: Row(
         children: [
-          const CircleAvatar(
-            radius: 30,
+          GestureDetector(
+            child: const CircleAvatar(
+              radius: 30,
+            ),
+            onTap: () {
+              openDrawer(context);
+            },
           ),
           const SizedBox(
             width: 5,
@@ -80,7 +111,7 @@ class AccueilScreen extends StatelessWidget {
                     color: Theme.of(context).textTheme.bodyLarge?.color,
                   )),
               Text(
-                'MADI Ahmed',
+                _username,
                 style: TextStyle(
                   fontSize: 14,
                   fontWeight: FontWeight.bold,

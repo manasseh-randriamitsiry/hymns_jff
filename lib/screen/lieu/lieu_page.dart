@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 
-import '../../widgets/drawerWidget.dart';
+import '../../utility/screen_util.dart';
 
 class LieuPage extends StatefulWidget {
   const LieuPage({super.key});
@@ -36,9 +36,19 @@ class _LieuPageState extends State<LieuPage> {
 
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+    var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;
     return Scaffold(
-      drawer: const DrawerScreen(),
       appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(
+            Icons.menu,
+            color: textColor,
+          ),
+          onPressed: () {
+            openDrawer(context);
+          },
+        ),
         title: Text(
           'Party Locations',
           style: TextStyle(
