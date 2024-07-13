@@ -82,7 +82,7 @@ class _LoginScreenState extends State<LoginScreen> {
         ],
       ),
       body: Center(
-        child: Container(
+        child: SizedBox(
           width: tablet ? 600 : containerWidth,
           child: Stack(
             children: [

@@ -10,7 +10,7 @@ import '../../utility/screen_util.dart';
 import '../../widgets/EventsWidget.dart';
 
 class AccueilScreen extends StatefulWidget {
-  AccueilScreen({super.key});
+  const AccueilScreen({super.key});
 
   @override
   State<AccueilScreen> createState() => _AccueilScreenState();
@@ -72,6 +72,8 @@ class _AccueilScreenState extends State<AccueilScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
+      //backgroundColor: Colors.blue,
+
       body: SingleChildScrollView(
         child: Column(
           children: [

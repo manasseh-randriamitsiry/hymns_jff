@@ -2,6 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/screen/accueil/accueil_screen.dart';
 import 'package:permah_flutter/screen/accueil/home_screen.dart';
@@ -64,13 +65,21 @@ class MyApp extends StatelessWidget {
 
   Widget _buildApp(String initialRoute) {
     return Obx(() {
+      final isDarkMode = _themeController.isDarkMode.value;
+
+      // Set the System UI Overlay Style based on the current theme
+      SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+        statusBarColor: Colors.transparent,
+        statusBarIconBrightness:
+            isDarkMode ? Brightness.light : Brightness.dark,
+        statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
+      ));
+
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
         theme: lightTheme,
         darkTheme: darkTheme,
-        themeMode: _themeController.isDarkMode.value
-            ? ThemeMode.dark
-            : ThemeMode.light,
+        themeMode: isDarkMode ? ThemeMode.dark : ThemeMode.light,
         initialRoute: initialRoute,
         getPages: [
           GetPage(name: '/', page: () => const SplashScreen0()),
@@ -86,7 +95,7 @@ class MyApp extends StatelessWidget {
               name: '/interest', page: () => const InterestSelectionScreen()),
           GetPage(name: '/members', page: () => MembeScreen()),
           GetPage(name: '/sortie', page: () => const SortieScreen()),
-          GetPage(name: '/accueil', page: () => AccueilScreen()),
+          GetPage(name: '/accueil', page: () => const AccueilScreen()),
           GetPage(name: '/liste_sortie', page: () => const ListeSortieScreen()),
           GetPage(name: '/home', page: () => const HomeScreen()),
           GetPage(name: '/edit_profil', page: () => const EditProfileScreen()),

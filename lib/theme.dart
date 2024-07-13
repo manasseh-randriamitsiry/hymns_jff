@@ -1,12 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
+/// Light theme configuration
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   iconTheme: const IconThemeData(color: Colors.deepOrange),
-  navigationDrawerTheme: const NavigationDrawerThemeData(
-    surfaceTintColor: Colors.white,
-    backgroundColor: Colors.white,
-  ),
   primaryColor: Colors.blue,
   dividerColor: Colors.white,
   hintColor: Colors.black,
@@ -15,7 +13,13 @@ final ThemeData lightTheme = ThemeData(
   appBarTheme: const AppBarTheme(
     backgroundColor: Colors.transparent,
     iconTheme: IconThemeData(color: Colors.black),
+    systemOverlayStyle: SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: Brightness.dark,
+      statusBarBrightness: Brightness.light,
+    ),
   ),
+  cardColor: Colors.white,
   drawerTheme: const DrawerThemeData(
     backgroundColor: Colors.black,
     elevation: 10,
@@ -37,6 +41,7 @@ final ThemeData lightTheme = ThemeData(
   ),
 );
 
+/// Dark theme configuration
 final ThemeData darkTheme = ThemeData(
   brightness: Brightness.light,
   dividerColor: Colors.black,

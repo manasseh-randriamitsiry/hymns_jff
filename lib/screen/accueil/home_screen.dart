@@ -19,7 +19,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
-    AccueilScreen(),
+    const AccueilScreen(),
     const ListeSortieScreen(),
     const LieuPage(),
     MembeScreen(),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:permah_flutter/services/api_service.dart';
 
@@ -22,8 +23,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
   void initState() {
     super.initState();
     _fetchUsername();
+    _themeController.isDarkMode.listen((isDarkMode) {
+      _setSystemUiOverlayStyle(isDarkMode);
+    });
   }
 
+  /// Fetch the username from the API service
   Future<void> _fetchUsername() async {
     String? username = await apiService.getUsername();
     if (username != null) {
@@ -35,8 +40,20 @@ class _DrawerScreenState extends State<DrawerScreen> {
     }
   }
 
+  /// Set the System UI Overlay Style based on the current theme
+  void _setSystemUiOverlayStyle(bool isDarkMode) {
+    SystemChrome.setSystemUIOverlayStyle(SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent,
+      statusBarIconBrightness: isDarkMode ? Brightness.light : Brightness.dark,
+      statusBarBrightness: isDarkMode ? Brightness.dark : Brightness.light,
+    ));
+  }
+
   @override
   Widget build(BuildContext context) {
+    bool isDarkMode = _themeController.isDarkMode.value;
+    _setSystemUiOverlayStyle(isDarkMode);
+
     double screenWidth = MediaQuery.of(context).size.width;
     bool isDesktop = screenWidth >= 1200;
     return Drawer(
@@ -47,12 +64,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
           UserAccountsDrawerHeader(
             accountName: Text(
               _username,
-              style: TextStyle(
+              style: const TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.white,
               ),
             ),
-            accountEmail: Text(
+            accountEmail: const Text(
               'this_is_you_email@gmail.com',
               style: TextStyle(
                 fontWeight: FontWeight.bold,
@@ -65,11 +82,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.brightness_6,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'Change Theme',
               style: TextStyle(
                 color: Colors.white,
@@ -80,11 +97,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.power_settings_new,
               color: Colors.white,
             ),
-            title: Text(
+            title: const Text(
               'Logout',
               style: TextStyle(
                 color: Colors.white,

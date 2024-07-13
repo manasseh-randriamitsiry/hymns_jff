@@ -30,6 +30,7 @@ class _ProfilPageScreenState extends State<ProfilPageScreen> {
     });
   }
 
+  @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
     var textColor = theme.textTheme.bodyLarge?.color ?? Colors.black;

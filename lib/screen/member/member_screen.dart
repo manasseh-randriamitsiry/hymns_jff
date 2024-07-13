@@ -31,7 +31,7 @@ class MembeScreen extends StatelessWidget {
           ),
         ),
       ),
-      body: Column(
+      body: const Column(
         children: [
           /**
               Expanded(
