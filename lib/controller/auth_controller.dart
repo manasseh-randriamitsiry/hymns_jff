@@ -7,6 +7,7 @@ import 'package:permah_flutter/screen/accueil/home_screen.dart';
 import 'package:permah_flutter/screen/auth/interest_screen.dart';
 
 import '../services/api_service.dart';
+import '../services/notification_service.dart';
 
 class AuthController extends GetxController {
   final ApiService apiService = ApiService();
@@ -100,12 +101,9 @@ class AuthController extends GetxController {
         token.value = response['jwt_token'];
         isAuthenticated.value = true;
         Get.off(const HomeScreen(), transition: Transition.zoom);
-        Get.snackbar(
+        NotificationService.showSuccessNotification(
           'Success',
-          'Hello $username',
-          backgroundColor: Colors.green.withOpacity(0.2),
-          colorText: Colors.black,
-          icon: const Icon(Icons.check),
+          'Logged into permah successfully',
         );
       } catch (e) {
         Get.snackbar('Erreur connection', 'Verifier les informations',
@@ -137,11 +135,9 @@ class AuthController extends GetxController {
       await apiService.logout();
       isAuthenticated.value = false;
       apiService.removeToken();
-      Get.snackbar(
-        'Success',
-        'Logout successful',
-        isDismissible: true,
-        dismissDirection: DismissDirection.horizontal,
+      NotificationService.showSuccessNotification(
+        'See you soon!',
+        'Logged of from permah successfully',
       );
     } catch (e) {
       Get.snackbar(

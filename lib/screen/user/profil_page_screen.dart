@@ -4,6 +4,7 @@ import 'package:permah_flutter/screen/user/edit_profile_screen.dart';
 import 'package:permah_flutter/utility/screen_util.dart';
 
 import '../../services/api_service.dart';
+import '../../services/notification_service.dart';
 
 class ProfilPageScreen extends StatefulWidget {
   const ProfilPageScreen({super.key});
@@ -69,9 +70,17 @@ class _ProfilPageScreenState extends State<ProfilPageScreen> {
             Stack(
               alignment: Alignment.bottomRight,
               children: [
-                CircleAvatar(
-                  radius: 50,
-                  backgroundColor: Colors.grey[200],
+                GestureDetector(
+                  onTap: () {
+                    NotificationService.showSuccessNotification(
+                      'Hello',
+                      'From profile_page_screen',
+                    );
+                  },
+                  child: CircleAvatar(
+                    radius: 50,
+                    backgroundColor: Colors.grey[200],
+                  ),
                 ),
                 Container(
                   padding: const EdgeInsets.all(4),

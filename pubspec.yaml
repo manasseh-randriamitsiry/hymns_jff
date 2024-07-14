@@ -41,6 +41,7 @@ dependencies:
   flare_flutter: ^3.0.2
   haptic_feedback: ^0.5.1+1
   flutter_zoom_drawer: ^3.2.0
+  awesome_notifications: ^0.9.3+1
 
 dev_dependencies:
   flutter_test:
