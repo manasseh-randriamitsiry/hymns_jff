@@ -1,3 +1,4 @@
+import 'package:fihirana/utility/screen_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -94,18 +95,12 @@ class _DrawerScreenState extends State<DrawerScreen> {
             accountName: Text(
               'Fihirana JFF',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+                  fontWeight: FontWeight.bold, color: getTextTheme(context)),
             ),
             accountEmail: Text(
               'manassehrandriamitsiry@gmail.com',
               style: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+                  fontWeight: FontWeight.bold, color: getTextTheme(context)),
             ),
             decoration: const BoxDecoration(color: Colors.transparent),
             currentAccountPicture: const CircleAvatar(
@@ -113,17 +108,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           ),
           ListTile(
-            leading: Icon(
-              Icons.brightness_6,
-              color:
-                  Colors.black, // Assuming getTextTheme(context) returns color
-            ),
+            leading: Icon(Icons.brightness_6, color: getTextTheme(context)),
             title: Text(
               'Hanova loko',
-              style: TextStyle(
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+              style: TextStyle(color: getTextTheme(context)),
             ),
             onTap: () {
               _themeController.toggleTheme();
@@ -131,16 +119,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
           ),
           if (_isAuthenticated)
             ListTile(
-              leading: Icon(
-                Icons.logout,
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+              leading: Icon(Icons.logout, color: getTextTheme(context)),
               title: Text(
                 'Mivoaka',
                 style: TextStyle(
-                  color: Colors
-                      .black, // Assuming getTextTheme(context) returns color
+                  color: getTextTheme(context),
                 ),
               ),
               onTap: () {
@@ -149,17 +132,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           if (!_isAuthenticated)
             ListTile(
-              leading: Icon(
-                Icons.login,
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+              leading: Icon(Icons.login, color: getTextTheme(context)),
               title: Text(
                 'Miditra',
-                style: TextStyle(
-                  color: Colors
-                      .black, // Assuming getTextTheme(context) returns color
-                ),
+                style: TextStyle(color: getTextTheme(context)),
               ),
               onTap: () {
                 _signInWithGoogle();
