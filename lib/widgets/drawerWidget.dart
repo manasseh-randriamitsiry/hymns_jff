@@ -160,17 +160,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
               },
             ),
           ListTile(
-            leading: Icon(
-              Icons.favorite,
-              color:
-                  Colors.black, // Assuming getTextTheme(context) returns color
-            ),
+            leading: Icon(Icons.favorite, color: getTextTheme(context)),
             title: Text(
               'Tiana',
-              style: TextStyle(
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+              style: TextStyle(color: getTextTheme(context)),
             ),
             onTap: () {
               Get.to(FavoritesPage());
