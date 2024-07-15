@@ -1,285 +1,247 @@
-import 'package:carousel_slider/carousel_slider.dart';
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:permah_flutter/services/api_service.dart';
+import 'dart:math';
 
-import '../../controller/BottomNavController.dart';
-import '../../controller/accueil_controller.dart';
-import '../../controller/horizontalScrollController.dart';
-import '../../utility/screen_util.dart';
-import '../../widgets/EventsWidget.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fihirana/utility/screen_util.dart';
+import 'package:flutter/material.dart';
+
+import '../../models/hymn.dart';
+import '../../services/hymn_service.dart';
+import '../hymn/edit_hymn_screen.dart'; // Import your edit screen
+import '../hymn/hymn_detail_screen.dart';
 
 class AccueilScreen extends StatefulWidget {
-  const AccueilScreen({super.key});
+  const AccueilScreen({Key? key}) : super(key: key);
 
   @override
-  State<AccueilScreen> createState() => _AccueilScreenState();
+  _AccueilScreenState createState() => _AccueilScreenState();
 }
 
 class _AccueilScreenState extends State<AccueilScreen> {
-  final AccueilController controller = Get.put(AccueilController());
-
-  final ApiService _apiService = Get.put(ApiService());
-
-  final BottomNavController navController = Get.put(BottomNavController());
-
-  final HorizontalScrollController horizontalScrollController =
-      Get.put(HorizontalScrollController());
-
-  String _username = "Anonymous";
+  final TextEditingController _searchController = TextEditingController();
+  final HymnService _hymnService = HymnService();
+  List<Hymn> _hymns = [];
+  List<Hymn> _filteredHymns = [];
+  final Random _random = Random();
 
   @override
   void initState() {
     super.initState();
-    _fetchUsername();
+    _fetchHymns();
+    _searchController.addListener(_filterHymns);
   }
 
-  Future<void> _fetchUsername() async {
-    String? username = await _apiService.getUsername();
-    setState(() {
-      _username = username!;
+  void _fetchHymns() {
+    _hymnService.getHymnsStream().listen((QuerySnapshot snapshot) {
+      setState(() {
+        _hymns = snapshot.docs
+            .map((doc) => Hymn.fromFirestore(
+                doc as QueryDocumentSnapshot<Map<String, dynamic>>))
+            .toList();
+
+        // Sort hymns by hymnNumber or title
+        _hymns.sort((a, b) {
+          int numA = int.tryParse(a.hymnNumber) ?? 0;
+          int numB = int.tryParse(b.hymnNumber) ?? 0;
+          if (numA != numB) {
+            return numA.compareTo(numB);
+          } else {
+            return a.title.compareTo(b.title);
+          }
+        });
+
+        _filteredHymns = _hymns;
+      });
     });
   }
 
-  final List<Map<String, String>> events = [
-    {
-      'title': 'International Band Co',
-      'date': '12 Avril 2025 à 12h',
-      'location': 'Andrainjato',
-      'member_count': '20/30',
-      'image_url':
-          'https://variety.com/wp-content/uploads/2023/06/avatar-1.jpg?w=1000',
-    },
-    {
-      'title': 'Tech Conference 2024',
-      'date': '15 Juillet 2024 à 09h',
-      'location': 'Paris',
-      'member_count': '50/100',
-      'image_url':
-          'https://cdn1.epicgames.com/offer/eca39884bdf14f65af242a8e3ff5b2d9/EGST_StoreLandscape_2560x1440_2560x1440-4207efea668639964f50064af970da15',
-    },
-    {
-      'title': 'Art Exhibition',
-      'date': '01 Décembre 2024 à 14h',
-      'location': 'New York',
-      'member_count': '80/150',
-      'image_url':
-          'https://cdn.vox-cdn.com/thumbor/OUz8LMwmB-DNdR1_vgdGN_iEsbY=/0x0:1200x800/1200x800/filters:focal(523x244:715x436)/cdn.vox-cdn.com/uploads/chorus_image/image/71772548/DChinAvatarSequel_20thCentury_Getty_Ringer.0.jpg',
-    },
-  ];
+  void _filterHymns() {
+    String query = _searchController.text.toLowerCase();
+    setState(() {
+      _filteredHymns = _hymns
+          .where((hymn) =>
+              hymn.hymnNumber.toLowerCase().contains(query) ||
+              hymn.title.toLowerCase().contains(query) ||
+              hymn.verses.any((verse) => verse.toLowerCase().contains(query)))
+          .toList();
+    });
+  }
+
+  Future<void> _deleteHymn(Hymn hymn) async {
+    await _hymnService.deleteHymn(hymn.id);
+  }
+
+  Color _getRandomColor() {
+    return Color.fromARGB(
+      255,
+      _random.nextInt(256),
+      _random.nextInt(256),
+      _random.nextInt(256),
+    );
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_filterHymns);
+    _searchController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      resizeToAvoidBottomInset: false,
-      //backgroundColor: Colors.blue,
-
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            const SizedBox(height: 20),
-            _buildUserInfoSection(context),
-            _buildEventCarousel(context),
-            _buildMemberSection(context),
-            _buildOnlineMemberSection(context),
-          ],
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.add_circle),
+          onPressed: () {
+            openDrawer(context);
+          },
         ),
+        centerTitle: true,
+        title: Text('Fihirana JFF'),
       ),
-    );
-  }
-
-  Widget _buildUserInfoSection(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(top: 10, left: 5, right: 5, bottom: 5),
-      child: Row(
+      body: Column(
         children: [
-          GestureDetector(
-            child: const CircleAvatar(
-              radius: 30,
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                labelText: 'Hitady hira',
+                prefixIcon: Icon(Icons.search),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(30.0),
+                ),
+              ),
+              onChanged: (value) {
+                _filterHymns();
+              },
             ),
-            onTap: () {
-              openDrawer(context);
-            },
           ),
-          const SizedBox(
-            width: 5,
+          SizedBox(
+            height: 10,
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text('Bienvenue',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  )),
-              Text(
-                _username,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.bold,
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-            ],
-          ),
-          const Spacer(),
-          Column(
-            children: [
-              Text(
-                'Position actuelle',
-                style: TextStyle(
-                  color: Theme.of(context).textTheme.bodyLarge?.color,
-                ),
-              ),
-              Text('Mayotte, 97640',
-                  style: TextStyle(
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  )),
-            ],
+          Expanded(
+            child: ListView.builder(
+              itemCount: _filteredHymns.length,
+              itemBuilder: (context, index) {
+                final hymn = _filteredHymns[index];
+                String firstVersePreview =
+                    hymn.verses.isNotEmpty && hymn.verses.first.length > 30
+                        ? hymn.verses.first.substring(0, 30) + '...'
+                        : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
+
+                return Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
+                      child: DecoratedBox(
+                        decoration: BoxDecoration(
+                          color: _getRandomColor().withOpacity(0.1),
+                          borderRadius: BorderRadius.circular(15),
+                        ),
+                        child: ListTile(
+                          leading: CircleAvatar(
+                            child: Text(
+                              hymn.hymnNumber,
+                              style: TextStyle(
+                                color: getTextTheme(context),
+                                fontWeight: FontWeight.bold,
+                              ),
+                            ),
+                          ),
+                          title: Text(hymn.title),
+                          subtitle: Text(firstVersePreview),
+                          trailing: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              IconButton(
+                                icon: Icon(Icons.edit),
+                                onPressed: () {
+                                  _navigateToEditScreen(context, hymn);
+                                },
+                              ),
+                              IconButton(
+                                icon: Icon(Icons.delete),
+                                onPressed: () {
+                                  _confirmDelete(context, hymn);
+                                },
+                              ),
+                            ],
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) =>
+                                    HymnDetailScreen(hymn: hymn),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
+                );
+              },
+            ),
           ),
         ],
       ),
     );
   }
 
-  Widget _buildEventCarousel(BuildContext context) {
-    double screenHeight = MediaQuery.of(context).size.height;
-    return CarouselSlider.builder(
-      itemCount: events.length,
-      options: CarouselOptions(
-        height: screenHeight / 2,
-        viewportFraction: 0.9,
-        initialPage: 1,
-        enableInfiniteScroll: true,
-        autoPlay: true,
-        pauseAutoPlayOnTouch: true,
-        autoPlayInterval: const Duration(seconds: 5),
-        clipBehavior: Clip.antiAliasWithSaveLayer,
-        animateToClosest: true,
-        enlargeFactor: BorderSide.strokeAlignOutside,
-        enlargeStrategy: CenterPageEnlargeStrategy.zoom,
-        pauseAutoPlayInFiniteScroll: true,
-        pauseAutoPlayOnManualNavigate: true,
-        autoPlayCurve: Curves.easeIn,
-        enlargeCenterPage: true,
-      ),
-      itemBuilder: (context, index, realIndex) {
-        double scaleFactor = 2;
-        if (index == 0 || index == 2) {
-          scaleFactor = 0.9;
-        }
-        return _buildEventSection(
-          context,
-          event: events[index],
-          scaleFactor: scaleFactor,
+  void _confirmDelete(BuildContext context, Hymn hymn) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.yellowAccent.withOpacity(0.5),
+          title: Text(
+            'Hamafa',
+            style: TextStyle(
+              color: getTextTheme(context),
+            ),
+          ),
+          content: Text('Manaiky fa hamafa ?',
+              style: TextStyle(
+                color: getTextTheme(context),
+              )),
+          actions: <Widget>[
+            TextButton(
+              child: Text('Tsia',
+                  style: TextStyle(
+                    fontSize: 15,
+                    color: getTextTheme(context),
+                  )),
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+            ),
+            TextButton(
+              child: Text('Eny',
+                  style: TextStyle(
+                    color: getTextTheme(context),
+                  )),
+              onPressed: () {
+                _deleteHymn(hymn);
+                Navigator.of(context).pop();
+              },
+            ),
+          ],
         );
       },
     );
   }
 
-  Widget _buildEventSection(BuildContext context,
-      {required Map<String, String> event, double scaleFactor = 2.0}) {
-    return FractionallySizedBox(
-      widthFactor: 0.92,
-      child: EventsWidget(
-        title: event['title']!,
-        date: event['date']!,
-        lieu: event['location']!,
-        member_count: event['member_count']!,
-        image_url: event['image_url']!,
+  void _navigateToEditScreen(BuildContext context, Hymn hymn) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditHymnScreen(hymn: hymn),
       ),
-    );
-  }
-
-  Widget _buildMemberSection(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Derniers membres',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  )),
-              const Icon(Icons.arrow_forward),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.recentMembers.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child:
-                    _buildMemberItem(controller.recentMembers[index], context),
-              );
-            },
-          ),
-        ),
-      ],
-    );
-  }
-
-  Widget _buildMemberItem(String name, BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-      crossAxisAlignment: CrossAxisAlignment.center,
-      children: [
-        const CircleAvatar(
-          child: Icon(
-            Icons.person,
-            size: 20,
-          ),
-        ),
-        Text(name),
-      ],
-    );
-  }
-
-  Widget _buildOnlineMemberSection(BuildContext context) {
-    return Column(
-      children: [
-        Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 16.0),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text('Membres en ligne',
-                  style: TextStyle(
-                    fontSize: 18,
-                    color: Theme.of(context).textTheme.bodyLarge?.color,
-                  )),
-              const Icon(Icons.arrow_forward),
-            ],
-          ),
-        ),
-        const SizedBox(height: 10),
-        SizedBox(
-          height: 100,
-          child: ListView.builder(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            scrollDirection: Axis.horizontal,
-            itemCount: controller.onlineMembers.length,
-            itemBuilder: (context, index) {
-              return Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                child:
-                    _buildMemberItem(controller.onlineMembers[index], context),
-              );
-            },
-          ),
-        ),
-      ],
     );
   }
 }

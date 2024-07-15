@@ -5,13 +5,13 @@ class NotificationService {
   static void showSuccessNotification(String title, String body) {
     AwesomeNotifications().createNotification(
       content: NotificationContent(
-        id: createUniqueId(),
-        channelKey: 'basic_channel',
-        title: title,
-        body: body,
-        color: Colors.green,
-        notificationLayout: NotificationLayout.Default,
-      ),
+          id: createUniqueId(),
+          channelKey: 'basic_channel',
+          title: title,
+          body: body,
+          color: Colors.green,
+          notificationLayout: NotificationLayout.Inbox,
+          badge: AwesomeNotifications.maxID),
     );
   }
 

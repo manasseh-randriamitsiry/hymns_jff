@@ -1,15 +1,12 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
+import 'package:fihirana/screen/about/about_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
-import 'package:geolocator/geolocator.dart';
 import 'package:get/get.dart';
-import 'package:permah_flutter/screen/accueil/accueil_screen.dart';
-import 'package:permah_flutter/screen/lieu/lieu_page.dart';
-import 'package:permah_flutter/screen/member/member_screen.dart';
-import 'package:permah_flutter/screen/sortie/liste_sortie_screen.dart';
-import 'package:permah_flutter/screen/user/profil_page_screen.dart';
-import 'package:permah_flutter/widgets/drawerWidget.dart';
+
+import '../../widgets/drawerWidget.dart';
+import 'accueil_screen.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
@@ -20,11 +17,8 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final List<Widget> _screens = [
-    const AccueilScreen(),
-    const ListeSortieScreen(),
-    const LieuPage(),
-    MembeScreen(),
-    const ProfilPageScreen(),
+    AccueilScreen(),
+    AboutScreen(),
   ];
 
   int _selectedIndex = 0;
@@ -37,31 +31,28 @@ class _HomeScreenState extends State<HomeScreen> {
       }
     });
     super.initState();
-    _checkLocationPermission();
   }
 
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
-    var bottomNaviationBarColor = theme.primaryColor;
     return ZoomDrawer(
-      style: DrawerStyle.defaultStyle,
+      style: DrawerStyle.style4,
       mainScreenTapClose: true,
       menuScreenWidth: MediaQuery.of(context).size.width * 0.65,
       moveMenuScreen: true,
       menuScreen: const DrawerScreen(),
+      menuScreenOverlayColor: Colors.black,
       mainScreen: Scaffold(
         bottomNavigationBar: CurvedNavigationBar(
+          height: 70,
           animationCurve: Curves.easeOutExpo,
           backgroundColor: Colors.transparent,
-          color: bottomNaviationBarColor,
+          color: theme.primaryColor,
           index: _selectedIndex,
           items: const [
             Icon(Icons.home, color: Colors.white),
-            Icon(Icons.calendar_month, color: Colors.white),
-            Icon(Icons.location_on, color: Colors.white),
-            Icon(Icons.people_outline_outlined, color: Colors.white),
-            Icon(Icons.person, color: Colors.white),
+            Icon(Icons.app_shortcut_outlined, color: Colors.white),
           ],
           onTap: (index) {
             setState(() {
@@ -75,62 +66,6 @@ class _HomeScreenState extends State<HomeScreen> {
       showShadow: true,
       angle: 0.0,
       slideWidth: MediaQuery.of(context).size.width * 0.65,
-    );
-  }
-
-  Future<void> _checkLocationPermission() async {
-    // Vérifier si les services de localisation sont activés
-    bool isLocationServiceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!isLocationServiceEnabled) {
-      _showLocationPermissionDialog();
-      return;
-    }
-  }
-
-  void _showLocationPermissionDialog() {
-    Get.dialog(
-      AlertDialog(
-        backgroundColor: Theme.of(context).cardColor,
-        title: const Text('Activer la localisation'),
-        icon: Icon(
-          Icons.location_on,
-          size: 100,
-          color: Colors.red.shade500,
-        ),
-        content: const Text(
-            'Veuillez activer les services de localisation pour une meilleure expérience.'),
-        actions: [
-          TextButton(
-            onPressed: () => Get.back(),
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                  color: Colors.red.shade500),
-              child: const Text('Annuler'),
-            ),
-          ),
-          TextButton(
-            onPressed: () async {
-              await Geolocator.openLocationSettings();
-              Get.back();
-            },
-            child: Container(
-              padding: const EdgeInsets.only(
-                  left: 20, right: 20, top: 10, bottom: 10),
-              decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(
-                    Radius.circular(20),
-                  ),
-                  color: Colors.green.shade500),
-              child: const Text('Activer'),
-            ),
-          ),
-        ],
-      ),
     );
   }
 }

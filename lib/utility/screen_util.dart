@@ -16,6 +16,15 @@ double getScreenWidth(BuildContext context) {
   return MediaQuery.of(context).size.width;
 }
 
+Color? getTextTheme(BuildContext context) {
+  return Theme.of(context).textTheme.bodyLarge?.color;
+}
+
+ThemeData getTheme(BuildContext context) {
+  final theme = Theme.of(context);
+  return theme;
+}
+
 double getScreenHeight(BuildContext context) {
   return MediaQuery.of(context).size.height;
 }
