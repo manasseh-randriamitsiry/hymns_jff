@@ -39,7 +39,7 @@ class _HomeScreenState extends State<HomeScreen> {
     return ZoomDrawer(
       style: DrawerStyle.style4,
       mainScreenTapClose: true,
-      menuScreenWidth: MediaQuery.of(context).size.width * 0.65,
+      menuScreenWidth: MediaQuery.of(context).size.width * 0.64,
       moveMenuScreen: true,
       menuScreen: const DrawerScreen(),
       menuScreenOverlayColor: Colors.black,
