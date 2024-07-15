@@ -343,7 +343,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
             content: Text('Midira ho pikambana vao afaka manatanteraka.'),
             actions: [
               TextButton(
-                child: Text('OK'),
+                child: Text('Voaray'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
