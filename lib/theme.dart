@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-/// Light theme configuration
 final ThemeData lightTheme = ThemeData(
   brightness: Brightness.light,
   iconTheme: const IconThemeData(color: Colors.deepOrange),
@@ -55,7 +54,7 @@ final ThemeData darkTheme = ThemeData(
     elevation: 10,
     surfaceTintColor: Colors.black,
   ),
-  primaryColor: Colors.blue,
+  primaryColor: Colors.white,
   hintColor: Colors.white,
   scaffoldBackgroundColor: Colors.black,
   colorScheme: const ColorScheme.light(),

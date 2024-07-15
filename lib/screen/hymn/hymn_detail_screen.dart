@@ -1,8 +1,8 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../models/hymn.dart';
-import '../../utility/screen_util.dart';
 
 class HymnDetailScreen extends StatefulWidget {
   final Hymn hymn;
@@ -39,10 +39,13 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
     Colors.grey,
   ];
 
+  bool _isFavorited = false;
+
   @override
   void initState() {
     super.initState();
     _loadFontSize();
+    _loadFavoriteStatus();
   }
 
   Future<void> _loadFontSize() async {
@@ -59,18 +62,62 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
     await prefs.setDouble('fontSize', _fontSize);
   }
 
+  Future<void> _loadFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isFavorited = prefs.getBool('favorite_${widget.hymn.id}') ?? false;
+    });
+  }
+
+  Future<void> _toggleFavoriteStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isFavorited = !_isFavorited;
+    });
+    await prefs.setBool('favorite_${widget.hymn.id}', _isFavorited);
+  }
+
+  bool isUserAuthenticated() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
+
   @override
   Widget build(BuildContext context) {
+    var theme = Theme.of(context);
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         title: Text(
           widget.hymn.title,
           style: TextStyle(
-            color: getTextTheme(context),
+            color: theme.textTheme.bodyLarge?.color,
             fontWeight: FontWeight.bold,
           ),
         ),
+        actions: [
+          IconButton(
+            icon: Icon(
+              _isFavorited ? Icons.favorite : Icons.favorite_border,
+              color: _isFavorited ? Colors.red : Colors.white,
+            ),
+            onPressed: _toggleFavoriteStatus,
+          ),
+          if (isUserAuthenticated())
+            IconButton(
+              icon: Icon(Icons.edit),
+              onPressed: () {
+                // Add edit logic here
+              },
+            ),
+          if (isUserAuthenticated())
+            IconButton(
+              icon: Icon(Icons.delete),
+              onPressed: () {
+                // Add delete logic here
+              },
+            ),
+        ],
       ),
       body: GestureDetector(
         onScaleStart: (ScaleStartDetails details) {
@@ -105,7 +152,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                       style: TextStyle(
                         fontSize: 18.0,
                         fontWeight: FontWeight.bold,
-                        color: getTextTheme(context),
+                        color: theme.textTheme.bodyLarge?.color,
                       ),
                     ),
                   ),
@@ -115,7 +162,8 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                     child: Text(
                       widget.hymn.bridge!,
                       style: TextStyle(
-                          fontSize: _fontSize, color: getTextTheme(context)),
+                          fontSize: _fontSize,
+                          color: theme.textTheme.bodyLarge?.color),
                     ),
                   ),
                 ],
@@ -141,7 +189,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                                         style: TextStyle(
                                           fontSize: _countFontSize,
                                           fontWeight: FontWeight.bold,
-                                          color: getTheme(context).primaryColor,
+                                          color: theme.primaryColor,
                                         ),
                                       ),
                                     ),
@@ -153,9 +201,8 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                                     '${i + 1}. ${widget.hymn.verses[i]}',
                                     style: TextStyle(
                                       fontSize: _fontSize,
-                                      color: verseColors[i %
-                                          verseColors
-                                              .length], // Choose color based on index
+                                      color:
+                                          verseColors[i % verseColors.length],
                                     ),
                                   ),
                                 ),
@@ -169,7 +216,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                           child: Text(
                             "-- tapitra --",
                             style: TextStyle(
-                              color: getTextTheme(context),
+                              color: theme.textTheme.bodyLarge?.color,
                               fontSize: _fontSize,
                             ),
                           ),

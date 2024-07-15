@@ -6,6 +6,8 @@ class Hymn {
   String title;
   List<String> verses;
   String? bridge;
+  bool isFavorite;
+  DateTime? favoriteAddedDate;
 
   Hymn({
     required this.id,
@@ -13,9 +15,10 @@ class Hymn {
     required this.title,
     required this.verses,
     this.bridge,
+    this.isFavorite = false,
+    this.favoriteAddedDate,
   });
 
-  // Factory method to create Hymn object from Firestore data
   factory Hymn.fromFirestore(DocumentSnapshot<Map<String, dynamic>> doc) {
     Map<String, dynamic> data = doc.data()!;
     return Hymn(
@@ -24,16 +27,19 @@ class Hymn {
       title: data['title'] as String,
       verses: List<String>.from(data['verses'] as List<dynamic>),
       bridge: data['bridge'] as String?,
+      isFavorite: data['isFavorite'] ?? false,
+      favoriteAddedDate: (data['favoriteAddedDate'] as Timestamp?)?.toDate(),
     );
   }
 
-  // Method to convert Hymn object to a Map for Firestore
   Map<String, dynamic> toFirestore() {
     return {
       'hymnNumber': hymnNumber,
       'title': title,
       'verses': verses,
       'bridge': bridge,
+      'isFavorite': isFavorite,
+      'favoriteAddedDate': favoriteAddedDate,
     };
   }
 }

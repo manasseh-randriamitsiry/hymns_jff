@@ -88,12 +88,15 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                 ),
                 const SizedBox(height: 16.0),
                 Text(
-                  'Tonony',
+                  'Andininy',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
                     color: getTextTheme(context),
                   ),
+                ),
+                SizedBox(
+                  height: 10,
                 ),
                 ..._buildVerseInputs(),
                 Row(
@@ -116,7 +119,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
-                    labelText: 'Fiverenena (Raha misy fiverenana)',
+                    labelText: 'Isan\'andininy (Raha misy)',
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -149,27 +152,32 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                   controller: _verseControllers[i],
                   maxLines: null, // Allow multiple lines for verses
                   decoration: InputDecoration(
-                    labelText: 'Tonony: ${i + 1}',
+                    labelText: 'Andininy: ${i + 1}',
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                   validator: (value) {
                     if (value == null || value.isEmpty) {
-                      return 'Soraty eto ny tonony ${i + 1}';
+                      return 'Soraty eto ny andininy ${i + 1}';
                     }
                     return null;
                   },
                 ),
               ),
+              SizedBox(
+                width: 5,
+              ),
               if (_verseControllers.length > 1)
-                IconButton(
-                  icon: const Icon(Icons.remove),
-                  onPressed: () {
-                    setState(() {
-                      _verseControllers.removeAt(i);
-                    });
-                  },
+                CircleAvatar(
+                  child: IconButton(
+                    icon: const Icon(Icons.remove),
+                    onPressed: () {
+                      setState(() {
+                        _verseControllers.removeAt(i);
+                      });
+                    },
+                  ),
                 ),
             ],
           ),
@@ -197,10 +205,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
     );
 
     _hymnService.addHymn(newHymn).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
-        content: Text('Tafiditra soamantsara'),
-      ));
-      // Clear form after submission
       _hymnNumberController.clear();
       _titleController.clear();
       for (var controller in _verseControllers) {

@@ -1,5 +1,4 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
-import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:fihirana/screen/about/about_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -44,22 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
       menuScreen: const DrawerScreen(),
       menuScreenOverlayColor: Colors.black,
       mainScreen: Scaffold(
-        bottomNavigationBar: CurvedNavigationBar(
-          height: 70,
-          animationCurve: Curves.easeOutExpo,
-          backgroundColor: Colors.transparent,
-          color: theme.primaryColor,
-          index: _selectedIndex,
-          items: const [
-            Icon(Icons.home, color: Colors.white),
-            Icon(Icons.app_shortcut_outlined, color: Colors.white),
-          ],
-          onTap: (index) {
-            setState(() {
-              _selectedIndex = index;
-            });
-          },
-        ),
         body: _screens[_selectedIndex],
       ),
       borderRadius: 24.0,

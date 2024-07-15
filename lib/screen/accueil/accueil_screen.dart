@@ -2,10 +2,12 @@ import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fihirana/utility/screen_util.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
+import '../favorite/favorites_screen.dart';
 import '../hymn/edit_hymn_screen.dart'; // Import your edit screen
 import '../hymn/hymn_detail_screen.dart';
 
@@ -23,6 +25,14 @@ class _AccueilScreenState extends State<AccueilScreen> {
   List<Hymn> _filteredHymns = [];
   final Random _random = Random();
 
+  bool isUserAuthenticated() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
+
+  String getUsername() {
+    return FirebaseAuth.instance.currentUser?.displayName ?? 'Guest';
+  }
+
   @override
   void initState() {
     super.initState();
@@ -35,10 +45,9 @@ class _AccueilScreenState extends State<AccueilScreen> {
       setState(() {
         _hymns = snapshot.docs
             .map((doc) => Hymn.fromFirestore(
-                doc as QueryDocumentSnapshot<Map<String, dynamic>>))
+                doc as DocumentSnapshot<Map<String, dynamic>>))
             .toList();
 
-        // Sort hymns by hymnNumber or title
         _hymns.sort((a, b) {
           int numA = int.tryParse(a.hymnNumber) ?? 0;
           int numB = int.tryParse(b.hymnNumber) ?? 0;
@@ -67,7 +76,35 @@ class _AccueilScreenState extends State<AccueilScreen> {
   }
 
   Future<void> _deleteHymn(Hymn hymn) async {
-    await _hymnService.deleteHymn(hymn.id);
+    if (isUserAuthenticated()) {
+      await _hymnService.deleteHymn(hymn.id);
+    } else {
+      // Show a dialog to inform the user they must be logged in
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Action not allowed'),
+            content: Text('You must be logged in to delete hymns.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
+  }
+
+  Future<void> _toggleFavorite(Hymn hymn) async {
+    await _hymnService.toggleFavorite(hymn);
+    setState(() {
+      _filteredHymns = List.from(_filteredHymns);
+    });
   }
 
   Color _getRandomColor() {
@@ -97,7 +134,21 @@ class _AccueilScreenState extends State<AccueilScreen> {
           },
         ),
         centerTitle: true,
-        title: const Text('Fihirana JFF'),
+        title: const Text(
+          'Fihirana JFF',
+          style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(Icons.favorite),
+            onPressed: () {
+              Navigator.push(
+                context,
+                MaterialPageRoute(builder: (context) => FavoritesPage()),
+              );
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [
@@ -130,118 +181,177 @@ class _AccueilScreenState extends State<AccueilScreen> {
                         ? '${hymn.verses.first.substring(0, 30)}...'
                         : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
 
-                return Column(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.symmetric(horizontal: 8.0),
-                      child: DecoratedBox(
-                        decoration: BoxDecoration(
-                          color: _getRandomColor().withOpacity(0.1),
-                          borderRadius: BorderRadius.circular(15),
-                        ),
-                        child: ListTile(
-                          leading: CircleAvatar(
-                            child: Text(
-                              hymn.hymnNumber,
-                              style: TextStyle(
-                                color: getTextTheme(context),
-                                fontWeight: FontWeight.bold,
+                return Padding(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+                  child: Dismissible(
+                    key: Key(hymn.id),
+                    direction: DismissDirection.endToStart,
+                    background: Container(
+                      color: Colors.red,
+                      alignment: Alignment.centerRight,
+                      padding: EdgeInsets.only(right: 20.0),
+                      child: Icon(Icons.delete, color: Colors.white),
+                    ),
+                    confirmDismiss: (direction) async {
+                      if (isUserAuthenticated()) {
+                        return await showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text(
+                                'Hamafa',
+                                style: TextStyle(
+                                  color: getTextTheme(context),
+                                ),
                               ),
+                              content: Text('Manamafy fa hamafa ?',
+                                  style: TextStyle(
+                                    color: getTextTheme(context),
+                                  )),
+                              actions: <Widget>[
+                                TextButton(
+                                  child: Text('Tsia',
+                                      style: TextStyle(
+                                        fontSize: 15,
+                                        color: getTextTheme(context),
+                                      )),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(false);
+                                  },
+                                ),
+                                TextButton(
+                                  child: Text('Eny',
+                                      style: TextStyle(
+                                        color: getTextTheme(context),
+                                      )),
+                                  onPressed: () {
+                                    Navigator.of(context).pop(true);
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                      } else {
+                        showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            return AlertDialog(
+                              title: Text('Miala tsiny'),
+                              content: Text(
+                                  'Midira ho pikambana vao afaka manatanteraka.'),
+                              actions: [
+                                TextButton(
+                                  child: Text('OK'),
+                                  onPressed: () {
+                                    Navigator.of(context).pop();
+                                  },
+                                ),
+                              ],
+                            );
+                          },
+                        );
+                        return false;
+                      }
+                    },
+                    onDismissed: (direction) {
+                      _deleteHymn(hymn);
+                    },
+                    child: DecoratedBox(
+                      decoration: BoxDecoration(
+                        color: _getRandomColor().withOpacity(0.3),
+                        borderRadius: BorderRadius.circular(15),
+                      ),
+                      child: ListTile(
+                        leading: CircleAvatar(
+                          child: Text(
+                            hymn.hymnNumber,
+                            style: TextStyle(
+                              color: getTextTheme(context),
+                              fontWeight: FontWeight.bold,
                             ),
                           ),
-                          title: Text(hymn.title),
-                          subtitle: Text(firstVersePreview),
-                          trailing: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
+                        ),
+                        title: Text(
+                          hymn.title,
+                          style: TextStyle(fontWeight: FontWeight.bold),
+                        ),
+                        subtitle: Text(firstVersePreview),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: Icon(
+                                hymn.isFavorite
+                                    ? Icons.favorite
+                                    : Icons.favorite_border,
+                                color: hymn.isFavorite ? Colors.red : null,
+                              ),
+                              onPressed: () {
+                                _toggleFavorite(hymn);
+                              },
+                            ),
+                            if (isUserAuthenticated())
                               IconButton(
                                 icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   _navigateToEditScreen(context, hymn);
                                 },
                               ),
-                              IconButton(
-                                icon: const Icon(Icons.delete),
-                                onPressed: () {
-                                  _confirmDelete(context, hymn);
-                                },
-                              ),
-                            ],
-                          ),
-                          onTap: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) =>
-                                    HymnDetailScreen(hymn: hymn),
-                              ),
-                            );
-                          },
+                          ],
                         ),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) =>
+                                  HymnDetailScreen(hymn: hymn),
+                            ),
+                          );
+                        },
                       ),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    )
-                  ],
+                  ),
                 );
               },
             ),
+          ),
+          Text(
+            getUsername(),
           ),
         ],
       ),
     );
   }
 
-  void _confirmDelete(BuildContext context, Hymn hymn) {
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          backgroundColor: Colors.yellowAccent.withOpacity(0.5),
-          title: Text(
-            'Hamafa',
-            style: TextStyle(
-              color: getTextTheme(context),
-            ),
-          ),
-          content: Text('Manaiky fa hamafa ?',
-              style: TextStyle(
-                color: getTextTheme(context),
-              )),
-          actions: <Widget>[
-            TextButton(
-              child: Text('Tsia',
-                  style: TextStyle(
-                    fontSize: 15,
-                    color: getTextTheme(context),
-                  )),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-            TextButton(
-              child: Text('Eny',
-                  style: TextStyle(
-                    color: getTextTheme(context),
-                  )),
-              onPressed: () {
-                _deleteHymn(hymn);
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   void _navigateToEditScreen(BuildContext context, Hymn hymn) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => EditHymnScreen(hymn: hymn),
-      ),
-    );
+    if (isUserAuthenticated()) {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditHymnScreen(hymn: hymn),
+        ),
+      );
+    } else {
+      // Show a dialog to inform the user they must be logged in
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text('Miala tsiny'),
+            content: Text('Midira ho pikambana vao afaka manatanteraka.'),
+            actions: [
+              TextButton(
+                child: Text('OK'),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        },
+      );
+    }
   }
 }
