@@ -5,6 +5,8 @@ import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
 
 class CreateHymnPage extends StatefulWidget {
+  const CreateHymnPage({super.key});
+
   @override
   _CreateHymnPageState createState() => _CreateHymnPageState();
 }
@@ -32,7 +34,9 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
     _titleController.dispose();
     _versesController.dispose();
     _bridgeController.dispose();
-    _verseControllers.forEach((controller) => controller.dispose());
+    for (var controller in _verseControllers) {
+      controller.dispose();
+    }
     super.dispose();
   }
 
@@ -40,7 +44,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Mampiditra hira'),
+        title: const Text('Mampiditra hira'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -66,7 +70,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _titleController,
                   decoration: InputDecoration(
@@ -82,7 +86,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     return null;
                   },
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Text(
                   'Tonony',
                   style: TextStyle(
@@ -95,7 +99,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                 Row(
                   children: [
                     IconButton(
-                      icon: Icon(Icons.add),
+                      icon: const Icon(Icons.add),
                       onPressed: () {
                         setState(() {
                           _verseControllers.add(TextEditingController());
@@ -104,7 +108,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     ),
                   ],
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _bridgeController,
                   maxLines: null, // Allow multiple lines for bridge
@@ -115,14 +119,14 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     labelText: 'Fiverenena (Raha misy fiverenana)',
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
                       _createHymn();
                     }
                   },
-                  child: Text('Apidiro'),
+                  child: const Text('Apidiro'),
                 ),
               ],
             ),
@@ -160,7 +164,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
               ),
               if (_verseControllers.length > 1)
                 IconButton(
-                  icon: Icon(Icons.remove),
+                  icon: const Icon(Icons.remove),
                   onPressed: () {
                     setState(() {
                       _verseControllers.removeAt(i);
@@ -193,13 +197,15 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
     );
 
     _hymnService.addHymn(newHymn).then((_) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
         content: Text('Tafiditra soamantsara'),
       ));
       // Clear form after submission
       _hymnNumberController.clear();
       _titleController.clear();
-      _verseControllers.forEach((controller) => controller.clear());
+      for (var controller in _verseControllers) {
+        controller.clear();
+      }
       _bridgeController.clear();
       setState(() {
         _verseControllers = [TextEditingController()]; // Reset to initial state

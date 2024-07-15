@@ -10,7 +10,7 @@ import '../hymn/edit_hymn_screen.dart'; // Import your edit screen
 import '../hymn/hymn_detail_screen.dart';
 
 class AccueilScreen extends StatefulWidget {
-  const AccueilScreen({Key? key}) : super(key: key);
+  const AccueilScreen({super.key});
 
   @override
   _AccueilScreenState createState() => _AccueilScreenState();
@@ -91,13 +91,13 @@ class _AccueilScreenState extends State<AccueilScreen> {
     return Scaffold(
       appBar: AppBar(
         leading: IconButton(
-          icon: Icon(Icons.add_circle),
+          icon: const Icon(Icons.add_circle),
           onPressed: () {
             openDrawer(context);
           },
         ),
         centerTitle: true,
-        title: Text('Fihirana JFF'),
+        title: const Text('Fihirana JFF'),
       ),
       body: Column(
         children: [
@@ -107,7 +107,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
               controller: _searchController,
               decoration: InputDecoration(
                 labelText: 'Hitady hira',
-                prefixIcon: Icon(Icons.search),
+                prefixIcon: const Icon(Icons.search),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(30.0),
                 ),
@@ -117,7 +117,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
               },
             ),
           ),
-          SizedBox(
+          const SizedBox(
             height: 10,
           ),
           Expanded(
@@ -127,7 +127,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
                 final hymn = _filteredHymns[index];
                 String firstVersePreview =
                     hymn.verses.isNotEmpty && hymn.verses.first.length > 30
-                        ? hymn.verses.first.substring(0, 30) + '...'
+                        ? '${hymn.verses.first.substring(0, 30)}...'
                         : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
 
                 return Column(
@@ -155,13 +155,13 @@ class _AccueilScreenState extends State<AccueilScreen> {
                             mainAxisSize: MainAxisSize.min,
                             children: [
                               IconButton(
-                                icon: Icon(Icons.edit),
+                                icon: const Icon(Icons.edit),
                                 onPressed: () {
                                   _navigateToEditScreen(context, hymn);
                                 },
                               ),
                               IconButton(
-                                icon: Icon(Icons.delete),
+                                icon: const Icon(Icons.delete),
                                 onPressed: () {
                                   _confirmDelete(context, hymn);
                                 },
@@ -180,7 +180,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
                         ),
                       ),
                     ),
-                    SizedBox(
+                    const SizedBox(
                       height: 20,
                     )
                   ],

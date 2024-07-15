@@ -6,7 +6,7 @@ import '../../services/hymn_service.dart'; // Import your Firestore service
 class EditHymnScreen extends StatefulWidget {
   final Hymn hymn;
 
-  const EditHymnScreen({Key? key, required this.hymn}) : super(key: key);
+  const EditHymnScreen({super.key, required this.hymn});
 
   @override
   _EditHymnScreenState createState() => _EditHymnScreenState();
@@ -51,7 +51,7 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
 
     // Call your Firestore update method from the service
     _hymnService
-        .updateHymn(updatedHymn.id!, updatedHymn) // Pass the id and updatedHymn
+        .updateHymn(updatedHymn.id, updatedHymn) // Pass the id and updatedHymn
         .then((_) {
       Navigator.pop(context); // Navigate back after update
     }).catchError((error) {
@@ -66,11 +66,11 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
       appBar: AppBar(
         title: Text(
           'Hanova ny hira faha: ${widget.hymn.hymnNumber}',
-          style: TextStyle(fontWeight: FontWeight.bold),
+          style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.save),
+            icon: const Icon(Icons.save),
             onPressed: () {
               _saveChanges();
             },
@@ -89,56 +89,56 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                   controller: _hymnNumberController,
                   decoration: InputDecoration(
                     labelText: 'Laharan\'ny hira',
-                    prefixIcon: Icon(Icons.onetwothree_outlined),
+                    prefixIcon: const Icon(Icons.onetwothree_outlined),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextField(
                   controller: _titleController,
                   decoration: InputDecoration(
                     labelText: 'Lohateny',
-                    prefixIcon: Icon(Icons.title),
+                    prefixIcon: const Icon(Icons.title),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextField(
                   controller: _versesController,
                   minLines: 4,
                   maxLines: null,
                   decoration: InputDecoration(
                     labelText: "Andininy ( ' , ' = midinana andalana )",
-                    prefixIcon: Icon(Icons.title),
+                    prefixIcon: const Icon(Icons.title),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 TextField(
                   controller: _bridgeController,
                   minLines: 2,
                   maxLines: null,
                   decoration: InputDecoration(
                     labelText: 'Fiverenana (Tsy voatery)',
-                    prefixIcon: Icon(Icons.refresh),
+                    prefixIcon: const Icon(Icons.refresh),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                   ),
                 ),
-                SizedBox(height: 16.0),
+                const SizedBox(height: 16.0),
                 Center(
                   child: ElevatedButton(
                     onPressed: () {
                       _saveChanges();
                     },
-                    child: Text("Apidiro"),
+                    child: const Text("Apidiro"),
                   ),
                 )
               ],

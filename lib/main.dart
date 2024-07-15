@@ -17,19 +17,19 @@ void main() async {
 class MyApp extends StatelessWidget {
   final SharedPreferences prefs;
 
-  MyApp(this.prefs);
+  const MyApp(this.prefs, {super.key});
 
   @override
   Widget build(BuildContext context) {
-    final ThemeController _themeController = Get.put(ThemeController());
-    _themeController.isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
+    final ThemeController themeController = Get.put(ThemeController());
+    themeController.isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode:
-          _themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+          themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
-      home: HomeScreen(),
+      home: const HomeScreen(),
     );
   }
 }

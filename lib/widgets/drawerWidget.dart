@@ -15,7 +15,7 @@ class DrawerScreen extends StatefulWidget {
 
 class _DrawerScreenState extends State<DrawerScreen> {
   final ThemeController _themeController = Get.put(ThemeController());
-  String _username = "Anonymous";
+  final String _username = "Anonymous";
 
   @override
   void initState() {
@@ -92,7 +92,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
               ),
             ),
             onTap: () {
-              Get.to(CreateHymnPage());
+              Get.to(const CreateHymnPage());
             },
           ),
         ],

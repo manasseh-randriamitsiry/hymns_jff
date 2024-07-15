@@ -7,15 +7,15 @@ import '../../utility/screen_util.dart';
 class HymnDetailScreen extends StatefulWidget {
   final Hymn hymn;
 
-  HymnDetailScreen({required this.hymn});
+  const HymnDetailScreen({super.key, required this.hymn});
 
   @override
   _HymnDetailScreenState createState() => _HymnDetailScreenState();
 }
 
 class _HymnDetailScreenState extends State<HymnDetailScreen> {
-  double _baseFontSize = 16.0;
-  double _baseCountFontSize = 50.0;
+  final double _baseFontSize = 16.0;
+  final double _baseCountFontSize = 50.0;
   double _fontSize = 16.0;
   double _countFontSize = 50.0;
   double _scale = 1.0;
@@ -163,7 +163,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                             ),
                           ),
                         ],
-                        SizedBox(height: 100), // Adjust as needed
+                        const SizedBox(height: 100), // Adjust as needed
                         Container(
                           alignment: Alignment.center,
                           child: Text(
