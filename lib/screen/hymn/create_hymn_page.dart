@@ -183,8 +183,12 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
               ),
               if (_verseControllers.length > 1)
                 CircleAvatar(
+                  backgroundColor: Colors.transparent,
                   child: IconButton(
-                    icon: const Icon(Icons.remove),
+                    icon: const Icon(
+                      Icons.delete,
+                      color: Colors.red,
+                    ),
                     onPressed: () {
                       setState(() {
                         _verseControllers.removeAt(i);
