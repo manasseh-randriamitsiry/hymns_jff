@@ -1,5 +1,6 @@
 import 'package:fihirana/utility/screen_util.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
@@ -7,7 +8,7 @@ import '../../services/hymn_service.dart';
 class EditHymnScreen extends StatefulWidget {
   final Hymn hymn;
 
-  const EditHymnScreen({Key? key, required this.hymn}) : super(key: key);
+  const EditHymnScreen({super.key, required this.hymn});
 
   @override
   _EditHymnScreenState createState() => _EditHymnScreenState();
@@ -17,6 +18,7 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _hymnNumberController = TextEditingController();
   final TextEditingController _bridgeController = TextEditingController();
+  final TextEditingController _hymnHintController = TextEditingController();
   List<TextEditingController> _verseControllers = [];
 
   final HymnService _hymnService = HymnService();
@@ -27,6 +29,7 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
     _hymnNumberController.text = widget.hymn.hymnNumber.toString();
     _titleController.text = widget.hymn.title;
     _bridgeController.text = widget.hymn.bridge ?? "";
+    _hymnHintController.text = widget.hymn.hymnHint ?? "";
 
     // Initialize verse controllers and populate them with existing verses
     _verseControllers = widget.hymn.verses
@@ -39,13 +42,29 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
     _hymnNumberController.dispose();
     _titleController.dispose();
     _bridgeController.dispose();
+    _hymnHintController.dispose();
     for (var controller in _verseControllers) {
       controller.dispose();
     }
     super.dispose();
   }
 
-  void _saveChanges() {
+  Future<void> _saveChanges() async {
+    // Check if the hymn number is unique
+    bool isUnique = await _hymnService.isHymnNumberUnique(
+        _hymnNumberController.text, widget.hymn.id);
+
+    if (!isUnique) {
+      Get.snackbar(
+        'Nisy olana',
+        'Antony : efa misy hira faha: ${_hymnNumberController.text} ',
+        backgroundColor: Colors.yellowAccent.withOpacity(0.2),
+        colorText: Colors.black,
+        icon: const Icon(Icons.warning_amber, color: Colors.black),
+      );
+      return;
+    }
+
     // Update the hymn object with new values
     Hymn updatedHymn = Hymn(
       id: widget.hymn.id,
@@ -53,16 +72,38 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
       title: _titleController.text,
       verses: _verseControllers.map((controller) => controller.text).toList(),
       bridge: _bridgeController.text,
+      hymnHint: _hymnHintController.text,
     );
 
     // Call your Firestore update method from the service
-    _hymnService
-        .updateHymn(updatedHymn.id, updatedHymn) // Pass the id and updatedHymn
-        .then((_) {
+    try {
+      await _hymnService.updateHymn(updatedHymn.id, updatedHymn);
       Navigator.pop(context); // Navigate back after update
-    }).catchError((error) {
+    } catch (error) {
       print('Error updating hymn: $error');
-      // Handle error as needed
+      Get.snackbar(
+        'Nisy olana',
+        'Tsy tafiditra ny fanavaozana.',
+        backgroundColor: Colors.red.withOpacity(0.2),
+        colorText: Colors.black,
+        icon: const Icon(Icons.error, color: Colors.black),
+      );
+    }
+  }
+
+  void _addVerse() {
+    setState(() {
+      _verseControllers.add(TextEditingController());
+    });
+  }
+
+  void _reorderVerse(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    setState(() {
+      final controller = _verseControllers.removeAt(oldIndex);
+      _verseControllers.insert(newIndex, controller);
     });
   }
 
@@ -77,9 +118,7 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
         actions: [
           IconButton(
             icon: const Icon(Icons.save),
-            onPressed: () {
-              _saveChanges();
-            },
+            onPressed: _saveChanges,
           ),
         ],
       ),
@@ -119,10 +158,20 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                   color: getTextTheme(context),
                 ),
               ),
-              SizedBox(
-                height: 10,
+              const SizedBox(height: 10),
+              ReorderableListView(
+                shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                onReorder: _reorderVerse,
+                children: _buildVerseInputs(),
               ),
-              ..._buildVerseInputs(),
+              const SizedBox(height: 16.0),
+              Center(
+                child: ElevatedButton(
+                  onPressed: _addVerse,
+                  child: const Icon(Icons.add),
+                ),
+              ),
               const SizedBox(height: 16.0),
               TextField(
                 controller: _bridgeController,
@@ -137,15 +186,26 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                 ),
               ),
               const SizedBox(height: 16.0),
+              TextField(
+                controller: _hymnHintController,
+                minLines: 2,
+                maxLines: null,
+                decoration: InputDecoration(
+                  labelText: 'Hymn Hint (Info, Tempo, Style, etc)',
+                  prefixIcon: const Icon(Icons.info_outline),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              const SizedBox(height: 16.0),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    _saveChanges();
-                  },
-                  child: Padding(
-                    padding: const EdgeInsets.only(
+                  onPressed: _saveChanges,
+                  child: const Padding(
+                    padding: EdgeInsets.only(
                         left: 40.0, right: 40, top: 20, bottom: 20),
-                    child: const Text(
+                    child: Text(
                       "Apidiro",
                       style: TextStyle(fontSize: 20),
                     ),
@@ -164,8 +224,10 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
     for (int i = 0; i < _verseControllers.length; i++) {
       verseInputs.add(
         Padding(
+          key: ValueKey('verse_$i'),
           padding: const EdgeInsets.only(bottom: 5.0),
           child: Row(
+            key: ValueKey(i),
             children: [
               Expanded(
                 child: TextField(
@@ -179,20 +241,32 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                   ),
                 ),
               ),
-              SizedBox(
-                width: 5,
-              ),
-              if (_verseControllers.length > 1)
-                CircleAvatar(
-                  child: IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        _verseControllers.removeAt(i);
-                      });
-                    },
+              const SizedBox(width: 5),
+              ReorderableDragStartListener(
+                index: i,
+                child: const CircleAvatar(
+                  backgroundColor: Colors.transparent,
+                  child: Icon(
+                    Icons.move_up_rounded,
+                    color: Colors.blue,
                   ),
                 ),
+              ),
+              const SizedBox(width: 5),
+              CircleAvatar(
+                backgroundColor: Colors.transparent,
+                child: IconButton(
+                  icon: const Icon(
+                    Icons.delete,
+                    color: Colors.red,
+                  ),
+                  onPressed: () {
+                    setState(() {
+                      _verseControllers.removeAt(i);
+                    });
+                  },
+                ),
+              ),
             ],
           ),
         ),

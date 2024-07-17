@@ -40,6 +40,26 @@ android {
     namespace = "com.manasseh.fihirana_jff"
     compileSdk = 34
     ndkVersion = flutter.ndkVersion
+    splits {
+        abi {
+            enable true
+            reset()
+            include 'armeabi-v7a', 'arm64-v8a', 'x86', 'x86_64'
+            universalApk true  // If true, also generate a universal APK
+        }
+    }
+    buildTypes {
+        release {
+            // Enables code shrinking, obfuscation, and optimization for release builds.
+            minifyEnabled true
+            // Enables resource shrinking, which further reduces your APK size.
+            shrinkResources true
+            // Includes the default ProGuard rules files that are packaged with
+            // the Android Gradle plugin. To learn more, go to the section about
+            // R8 in the Android Gradle plugin user guide.
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
     kotlinOptions {
         jvmTarget = '1.8'
     }

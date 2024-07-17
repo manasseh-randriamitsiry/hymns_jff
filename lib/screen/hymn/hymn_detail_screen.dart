@@ -21,6 +21,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
   double _scale = 1.0;
   double _previousScale = 1.0;
   final double _minFontSize = 10.0;
+  bool _showHymnHint = false;
 
   List<Color> verseColors = [
     Colors.blue,
@@ -39,13 +40,10 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
     Colors.grey,
   ];
 
-  bool _isFavorited = false;
-
   @override
   void initState() {
     super.initState();
     _loadFontSize();
-    _loadFavoriteStatus();
   }
 
   Future<void> _loadFontSize() async {
@@ -62,21 +60,6 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
     await prefs.setDouble('fontSize', _fontSize);
   }
 
-  Future<void> _loadFavoriteStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isFavorited = prefs.getBool('favorite_${widget.hymn.id}') ?? false;
-    });
-  }
-
-  Future<void> _toggleFavoriteStatus() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isFavorited = !_isFavorited;
-    });
-    await prefs.setBool('favorite_${widget.hymn.id}', _isFavorited);
-  }
-
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
   }
@@ -86,39 +69,6 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
     var theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Colors.transparent,
-        title: Text(
-          widget.hymn.title,
-          style: TextStyle(
-            color: theme.textTheme.bodyLarge?.color,
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-        actions: [
-          IconButton(
-            icon: Icon(
-              _isFavorited ? Icons.favorite : Icons.favorite_border,
-              color: _isFavorited ? Colors.red : Colors.white,
-            ),
-            onPressed: _toggleFavoriteStatus,
-          ),
-          if (isUserAuthenticated())
-            IconButton(
-              icon: Icon(Icons.edit),
-              onPressed: () {
-                // Add edit logic here
-              },
-            ),
-          if (isUserAuthenticated())
-            IconButton(
-              icon: Icon(Icons.delete),
-              onPressed: () {
-                // Add delete logic here
-              },
-            ),
-        ],
-      ),
       body: GestureDetector(
         onScaleStart: (ScaleStartDetails details) {
           _previousScale = _scale;
@@ -143,10 +93,58 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                if (widget.hymn.bridge != null) ...[
+                const SizedBox(
+                  height: 40,
+                ),
+                Center(
+                  child: Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: [
+                      Flexible(
+                        child: Container(
+                          child: Text(
+                            '${widget.hymn.hymnNumber} - ${widget.hymn.title}',
+                            maxLines: null,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                              color: theme.textTheme.bodyLarge?.color,
+                              fontWeight: FontWeight.bold,
+                              fontSize: _fontSize,
+                            ),
+                          ),
+                        ),
+                      ),
+                      if (widget.hymn.hymnHint != null)
+                        IconButton(
+                          icon: Icon(_showHymnHint
+                              ? Icons.music_note_outlined
+                              : Icons.music_off),
+                          onPressed: () {
+                            setState(() {
+                              _showHymnHint = !_showHymnHint;
+                            });
+                          },
+                        ),
+                    ],
+                  ),
+                ),
+                if (_showHymnHint && widget.hymn.hymnHint != null)
                   Padding(
                     padding: const EdgeInsets.symmetric(
-                        vertical: 5.0, horizontal: 15),
+                        vertical: 8.0, horizontal: 15),
+                    child: Text(
+                      widget.hymn.hymnHint!,
+                      style: TextStyle(
+                          fontSize: _fontSize,
+                          color: theme.textTheme.bodyLarge?.color),
+                    ),
+                  ),
+                if (widget.hymn.bridge != null &&
+                    widget.hymn.bridge!.isNotEmpty)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 10.0, horizontal: 15),
                     child: Text(
                       'Isan\'andininy:',
                       style: TextStyle(
@@ -156,17 +154,29 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                       ),
                     ),
                   ),
+                Padding(
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                  child: Text(
+                    widget.hymn.bridge!,
+                    style: TextStyle(
+                        fontSize: _fontSize,
+                        color: theme.textTheme.bodyLarge?.color),
+                  ),
+                ),
+                if (widget.hymn.bridge != null &&
+                    widget.hymn.bridge!.isNotEmpty)
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 15),
+                    padding: const EdgeInsets.only(left: 60),
                     child: Text(
-                      widget.hymn.bridge!,
+                      'Andininy',
                       style: TextStyle(
-                          fontSize: _fontSize,
-                          color: theme.textTheme.bodyLarge?.color),
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: theme.textTheme.bodyLarge?.color,
+                      ),
                     ),
                   ),
-                ],
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(

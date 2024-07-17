@@ -5,8 +5,12 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      body: Padding(
+    return Scaffold(
+      appBar: AppBar(
+        centerTitle: true,
+        title: const Text('?'),
+      ),
+      body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Center(
@@ -63,6 +67,10 @@ class AboutScreen extends StatelessWidget {
                 SizedBox(height: 5),
                 Text(
                   'GitHub: https://github.com/manassehrandriamitsiry',
+                ),
+                SizedBox(height: 5),
+                Text(
+                  'App version : 1.0',
                 ),
               ],
             ),

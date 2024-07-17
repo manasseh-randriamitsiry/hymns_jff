@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const AboutScreen(),
   ];
 
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
 
   @override
   void initState() {

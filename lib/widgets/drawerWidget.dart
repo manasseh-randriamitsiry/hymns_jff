@@ -1,4 +1,4 @@
-import 'package:fihirana/utility/screen_util.dart';
+import 'package:fihirana/screen/about/about_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -8,10 +8,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 import '../controller/theme_controller.dart';
 import '../screen/favorite/favorites_screen.dart';
 import '../screen/hymn/create_hymn_page.dart';
-import '../services/google_auth_service.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({Key? key}) : super(key: key);
+  const DrawerScreen({super.key});
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -19,26 +18,37 @@ class DrawerScreen extends StatefulWidget {
 
 class _DrawerScreenState extends State<DrawerScreen> {
   final ThemeController _themeController = Get.put(ThemeController());
-  final String _username = "Anonymous";
   bool _isAuthenticated = false;
-  bool _isSigning = false;
-  final FirebaseAuthService _auth = FirebaseAuthService();
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
-
-  @override
-  void initState() {
-    super.initState();
-    _checkAuthStatus();
-    _themeController.isDarkMode.listen((isDarkMode) {
-      _setSystemUiOverlayStyle(isDarkMode);
-    });
-  }
+  final GoogleSignIn _googleSignIn = GoogleSignIn(
+    scopes: [
+      'email',
+      'https://www.googleapis.com/auth/contacts.readonly',
+    ],
+  );
+  GoogleSignInAccount? _currentUser;
 
   void _checkAuthStatus() {
     FirebaseAuth.instance.authStateChanges().listen((user) {
-      setState(() {
-        _isAuthenticated = user != null;
-      });
+      if (user != null) {
+        _updateCurrentUser();
+      } else {
+        setState(() {
+          _isAuthenticated = false;
+          _currentUser = null;
+        });
+      }
+    });
+  }
+
+  void _updateCurrentUser() async {
+    GoogleSignInAccount? account = _googleSignIn.currentUser;
+    if (account == null && _firebaseAuth.currentUser != null) {
+      account = await _googleSignIn.signInSilently();
+    }
+    setState(() {
+      _isAuthenticated = _firebaseAuth.currentUser != null;
+      _currentUser = account;
     });
   }
 
@@ -50,9 +60,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
     ));
   }
 
-  _signInWithGoogle() async {
-    final GoogleSignIn _googleSignIn = GoogleSignIn();
+  Future<void> _signInWithGoogle() async {
     try {
+      await _googleSignIn
+          .signOut(); // Ensure any existing session is signed out first
+
       final GoogleSignInAccount? googleSignInAccount =
           await _googleSignIn.signIn();
 
@@ -66,17 +78,69 @@ class _DrawerScreenState extends State<DrawerScreen> {
         );
 
         await _firebaseAuth.signInWithCredential(credential);
-        Get.snackbar('Success', 'You are logged in.',
-            backgroundColor: Colors.green.withOpacity(0.2),
-            colorText: Colors.black,
-            icon: const Icon(Icons.check, color: Colors.black));
+        _updateCurrentUser();
+        Get.appUpdate();
+
+        Get.snackbar(
+          'Tongasoa',
+          'Tafiditra ianao.',
+          backgroundColor: Colors.green.withOpacity(0.2),
+          colorText: Colors.black,
+          icon: const Icon(Icons.check, color: Colors.black),
+        );
       }
     } catch (e) {
-      Get.snackbar('An error occurred: ${e}', 'Try again.',
-          backgroundColor: Colors.red.withOpacity(0.2),
-          colorText: Colors.black,
-          icon: const Icon(Icons.warning_amber, color: Colors.black));
+      Get.snackbar(
+        'Nisy olana: $e',
+        'fa avereno atao.',
+        backgroundColor: Colors.red.withOpacity(0.2),
+        colorText: Colors.black,
+        icon: const Icon(Icons.warning_amber, color: Colors.black),
+      );
     }
+  }
+
+  void _signOut() async {
+    try {
+      await _googleSignIn.signOut();
+      await _firebaseAuth.signOut();
+      _updateCurrentUser();
+
+      setState(() {
+        _isAuthenticated = false;
+        _currentUser = null;
+      });
+      Get.appUpdate();
+      Get.snackbar(
+        'Mivoaka',
+        'Midira ho pikambana mba hahafahana mahazo alalana.',
+        backgroundColor: Colors.green.withOpacity(0.2),
+        colorText: Colors.black,
+        icon: const Icon(Icons.check, color: Colors.black),
+      );
+    } catch (e) {
+      Get.snackbar(
+        'Nisy olana: $e',
+        'Avereno atao.',
+        backgroundColor: Colors.red.withOpacity(0.2),
+        colorText: Colors.black,
+        icon: const Icon(Icons.warning_amber, color: Colors.black),
+      );
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _checkAuthStatus();
+    _themeController.isDarkMode.listen((isDarkMode) {
+      _setSystemUiOverlayStyle(isDarkMode);
+    });
+    _googleSignIn.onCurrentUserChanged.listen((GoogleSignInAccount? account) {
+      setState(() {
+        _currentUser = account;
+      });
+    });
   }
 
   @override
@@ -91,22 +155,30 @@ class _DrawerScreenState extends State<DrawerScreen> {
       child: ListView(
         padding: EdgeInsets.zero,
         children: [
-          UserAccountsDrawerHeader(
-            accountName: Text(
-              'Fihirana JFF',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, color: getTextTheme(context)),
+          if (_currentUser == null)
+            const SizedBox(
+              height: 50,
             ),
-            accountEmail: Text(
-              'manassehrandriamitsiry@gmail.com',
-              style: TextStyle(
-                  fontWeight: FontWeight.bold, color: getTextTheme(context)),
+          if (_currentUser != null)
+            UserAccountsDrawerHeader(
+              accountName: Text(_currentUser!.displayName ?? ''),
+              accountEmail: Text(_currentUser!.email),
+              currentAccountPicture: GoogleUserCircleAvatar(
+                identity: _currentUser!,
+              ),
             ),
-            decoration: const BoxDecoration(color: Colors.transparent),
-            currentAccountPicture: const CircleAvatar(
-              backgroundImage: AssetImage('assets/images/avatar-5.jpg'),
-            ),
-          ),
+          // if (_currentUser?.email == 'manassehrandriamitsiry@gmail.com')
+          //   ListTile(
+          //     leading: Icon(Icons.perm_identity_outlined,
+          //         color: getTextTheme(context)),
+          //     title: Text(
+          //       'Users',
+          //       style: TextStyle(color: getTextTheme(context)),
+          //     ),
+          //     onTap: () {
+          //       Get.to(const UserManagementScreen());
+          //     },
+          //   ),
           ListTile(
             leading: Icon(Icons.brightness_6, color: getTextTheme(context)),
             title: Text(
@@ -127,7 +199,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ),
               ),
               onTap: () {
-                FirebaseAuth.instance.signOut();
+                _signOut();
               },
             ),
           if (!_isAuthenticated)
@@ -143,17 +215,10 @@ class _DrawerScreenState extends State<DrawerScreen> {
             ),
           if (_isAuthenticated)
             ListTile(
-              leading: Icon(
-                Icons.add,
-                color: Colors
-                    .black, // Assuming getTextTheme(context) returns color
-              ),
+              leading: Icon(Icons.add, color: getTextTheme(context)),
               title: Text(
                 'Hapiditra hira',
-                style: TextStyle(
-                  color: Colors
-                      .black, // Assuming getTextTheme(context) returns color
-                ),
+                style: TextStyle(color: getTextTheme(context)),
               ),
               onTap: () {
                 Get.to(const CreateHymnPage());
@@ -169,8 +234,22 @@ class _DrawerScreenState extends State<DrawerScreen> {
               Get.to(FavoritesPage());
             },
           ),
+          ListTile(
+            leading: Icon(Icons.info_outline, color: getTextTheme(context)),
+            title: Text(
+              '?',
+              style: TextStyle(color: getTextTheme(context)),
+            ),
+            onTap: () {
+              Get.to(const AboutScreen());
+            },
+          ),
         ],
       ),
     );
   }
+}
+
+Color getTextTheme(BuildContext context) {
+  return Theme.of(context).textTheme.bodyLarge?.color ?? Colors.black;
 }
