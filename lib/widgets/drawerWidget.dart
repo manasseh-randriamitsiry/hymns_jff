@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:fihirana/screen/about/about_screen.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -10,7 +11,7 @@ import '../screen/favorite/favorites_screen.dart';
 import '../screen/hymn/create_hymn_page.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({super.key});
+  const DrawerScreen({Key? key}) : super(key: key);
 
   @override
   _DrawerScreenState createState() => _DrawerScreenState();
@@ -62,9 +63,6 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
   Future<void> _signInWithGoogle() async {
     try {
-      await _googleSignIn
-          .signOut(); // Ensure any existing session is signed out first
-
       final GoogleSignInAccount? googleSignInAccount =
           await _googleSignIn.signIn();
 
@@ -79,53 +77,16 @@ class _DrawerScreenState extends State<DrawerScreen> {
 
         await _firebaseAuth.signInWithCredential(credential);
         _updateCurrentUser();
-        Get.appUpdate();
-
-        Get.snackbar(
-          'Tongasoa',
-          'Tafiditra ianao.',
-          backgroundColor: Colors.green.withOpacity(0.2),
-          colorText: Colors.black,
-          icon: const Icon(Icons.check, color: Colors.black),
-        );
+        Get.snackbar('Tongasoa', 'Tafiditra ianao.',
+            backgroundColor: Colors.green.withOpacity(0.2),
+            colorText: Colors.black,
+            icon: const Icon(Icons.check, color: Colors.black));
       }
     } catch (e) {
-      Get.snackbar(
-        'Nisy olana: $e',
-        'fa avereno atao.',
-        backgroundColor: Colors.red.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.warning_amber, color: Colors.black),
-      );
-    }
-  }
-
-  void _signOut() async {
-    try {
-      await _googleSignIn.signOut();
-      await _firebaseAuth.signOut();
-      _updateCurrentUser();
-
-      setState(() {
-        _isAuthenticated = false;
-        _currentUser = null;
-      });
-      Get.appUpdate();
-      Get.snackbar(
-        'Mivoaka',
-        'Midira ho pikambana mba hahafahana mahazo alalana.',
-        backgroundColor: Colors.green.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.check, color: Colors.black),
-      );
-    } catch (e) {
-      Get.snackbar(
-        'Nisy olana: $e',
-        'Avereno atao.',
-        backgroundColor: Colors.red.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.warning_amber, color: Colors.black),
-      );
+      Get.snackbar('Nisy olana: $e', 'fa avereno atao.',
+          backgroundColor: Colors.red.withOpacity(0.2),
+          colorText: Colors.black,
+          icon: const Icon(Icons.warning_amber, color: Colors.black));
     }
   }
 
@@ -156,29 +117,23 @@ class _DrawerScreenState extends State<DrawerScreen> {
         padding: EdgeInsets.zero,
         children: [
           if (_currentUser == null)
-            const SizedBox(
+            SizedBox(
               height: 50,
             ),
           if (_currentUser != null)
             UserAccountsDrawerHeader(
               accountName: Text(_currentUser!.displayName ?? ''),
               accountEmail: Text(_currentUser!.email),
-              currentAccountPicture: GoogleUserCircleAvatar(
-                identity: _currentUser!,
+              currentAccountPicture: CachedNetworkImage(
+                imageUrl: _currentUser!.photoUrl ?? '',
+                // Assuming _currentUser has a photoUrl property
+                imageBuilder: (context, imageProvider) => CircleAvatar(
+                  backgroundImage: imageProvider,
+                ),
+                placeholder: (context, url) => CircularProgressIndicator(),
+                errorWidget: (context, url, error) => Icon(Icons.error),
               ),
             ),
-          // if (_currentUser?.email == 'manassehrandriamitsiry@gmail.com')
-          //   ListTile(
-          //     leading: Icon(Icons.perm_identity_outlined,
-          //         color: getTextTheme(context)),
-          //     title: Text(
-          //       'Users',
-          //       style: TextStyle(color: getTextTheme(context)),
-          //     ),
-          //     onTap: () {
-          //       Get.to(const UserManagementScreen());
-          //     },
-          //   ),
           ListTile(
             leading: Icon(Icons.brightness_6, color: getTextTheme(context)),
             title: Text(
@@ -199,7 +154,11 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 ),
               ),
               onTap: () {
-                _signOut();
+                FirebaseAuth.instance.signOut();
+                setState(() {
+                  _isAuthenticated = false;
+                  _currentUser = null;
+                });
               },
             ),
           if (!_isAuthenticated)

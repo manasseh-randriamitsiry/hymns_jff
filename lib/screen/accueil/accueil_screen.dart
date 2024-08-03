@@ -1,14 +1,14 @@
 import 'dart:math';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:fihirana/utility/screen_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
-import '../../utility/screen_util.dart';
 import '../favorite/favorites_screen.dart';
-import '../hymn/edit_hymn_screen.dart';
+import '../hymn/edit_hymn_screen.dart'; // Import your edit screen
 import '../hymn/hymn_detail_screen.dart';
 
 class AccueilScreen extends StatefulWidget {
@@ -24,7 +24,6 @@ class _AccueilScreenState extends State<AccueilScreen> {
   List<Hymn> _hymns = [];
   List<Hymn> _filteredHymns = [];
   final Random _random = Random();
-  List<String> _favoriteHymnIds = [];
 
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
@@ -39,7 +38,6 @@ class _AccueilScreenState extends State<AccueilScreen> {
   void initState() {
     super.initState();
     _fetchHymns();
-    _fetchFavorites();
     _searchController.addListener(_filterHymns);
   }
 
@@ -66,14 +64,6 @@ class _AccueilScreenState extends State<AccueilScreen> {
     });
   }
 
-  void _fetchFavorites() {
-    _hymnService.getFavoriteHymnIds().then((favoriteIds) {
-      setState(() {
-        _favoriteHymnIds = favoriteIds;
-      });
-    });
-  }
-
   void _filterHymns() {
     String query = _searchController.text.toLowerCase();
     setState(() {
@@ -95,11 +85,11 @@ class _AccueilScreenState extends State<AccueilScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Filazana'),
-            content: const Text('Tsy manana fahefana ianao.'),
+            title: Text('Filazana'),
+            content: Text('Tsy manana fahefana ianao.'),
             actions: [
               TextButton(
-                child: const Text('Voaray'),
+                child: Text('Voaray'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },
@@ -113,7 +103,9 @@ class _AccueilScreenState extends State<AccueilScreen> {
 
   Future<void> _toggleFavorite(Hymn hymn) async {
     await _hymnService.toggleFavorite(hymn);
-    _fetchFavorites(); // Fetch updated favorites after toggling
+    setState(() {
+      _filteredHymns = List.from(_filteredHymns);
+    });
   }
 
   Color _getRandomColor() {
@@ -149,7 +141,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
         ),
         actions: [
           IconButton(
-            icon: const Icon(Icons.favorite),
+            icon: Icon(Icons.favorite),
             onPressed: () {
               Navigator.push(
                 context,
@@ -190,8 +182,6 @@ class _AccueilScreenState extends State<AccueilScreen> {
                         ? '${hymn.verses.first.substring(0, 30)}...'
                         : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
 
-                bool isFavorite = _favoriteHymnIds.contains(hymn.id);
-
                 return Padding(
                   padding:
                       const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
@@ -201,8 +191,8 @@ class _AccueilScreenState extends State<AccueilScreen> {
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(Icons.delete, color: Colors.white),
+                      padding: EdgeInsets.only(right: 20.0),
+                      child: Icon(Icons.delete, color: Colors.white),
                     ),
                     confirmDismiss: (direction) async {
                       if (isUserAuthenticated()) {
@@ -249,11 +239,11 @@ class _AccueilScreenState extends State<AccueilScreen> {
                           context: context,
                           builder: (BuildContext context) {
                             return AlertDialog(
-                              title: const Text('Filazana'),
-                              content: const Text('Tsy manana fahefana ianao'),
+                              title: Text('Filazana'),
+                              content: Text('Tsy manana fahefana ianao'),
                               actions: [
                                 TextButton(
-                                  child: const Text('OK'),
+                                  child: Text('OK'),
                                   onPressed: () {
                                     Navigator.of(context).pop();
                                   },
@@ -285,7 +275,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
                         ),
                         title: Text(
                           hymn.title,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
+                          style: TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(firstVersePreview),
                         trailing: Row(
@@ -293,10 +283,10 @@ class _AccueilScreenState extends State<AccueilScreen> {
                           children: [
                             IconButton(
                               icon: Icon(
-                                isFavorite
+                                hymn.isFavorite
                                     ? Icons.favorite
                                     : Icons.favorite_border,
-                                color: isFavorite ? Colors.red : null,
+                                color: hymn.isFavorite ? Colors.red : null,
                               ),
                               onPressed: () {
                                 _toggleFavorite(hymn);
@@ -349,11 +339,11 @@ class _AccueilScreenState extends State<AccueilScreen> {
         context: context,
         builder: (BuildContext context) {
           return AlertDialog(
-            title: const Text('Miala tsiny'),
-            content: const Text('Tsy manana fahefana ianao'),
+            title: Text('Miala tsiny'),
+            content: Text('Tsy manana fahefana ianao'),
             actions: [
               TextButton(
-                child: const Text('Voaray'),
+                child: Text('Voaray'),
                 onPressed: () {
                   Navigator.of(context).pop();
                 },

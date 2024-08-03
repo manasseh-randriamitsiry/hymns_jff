@@ -17,7 +17,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
   final TextEditingController _versesController = TextEditingController();
   final TextEditingController _bridgeController = TextEditingController();
   final TextEditingController _hymnNumberController = TextEditingController();
-  final TextEditingController _hymnHintController = TextEditingController();
 
   List<TextEditingController> _verseControllers = [];
 
@@ -35,7 +34,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
     _titleController.dispose();
     _versesController.dispose();
     _bridgeController.dispose();
-    _hymnHintController.dispose();
     for (var controller in _verseControllers) {
       controller.dispose();
     }
@@ -97,7 +95,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     color: getTextTheme(context),
                   ),
                 ),
-                const SizedBox(
+                SizedBox(
                   height: 10,
                 ),
                 ..._buildVerseInputs(),
@@ -122,17 +120,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                       borderRadius: BorderRadius.circular(10.0),
                     ),
                     labelText: 'Isan\'andininy (Raha misy)',
-                  ),
-                ),
-                const SizedBox(height: 16.0),
-                TextFormField(
-                  controller: _hymnHintController,
-                  maxLines: null, // Allow multiple lines for hymnHint
-                  decoration: InputDecoration(
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                    labelText: 'Hoan\'ny pitendry (Tempo, Style, sns)',
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -178,17 +165,13 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                   },
                 ),
               ),
-              const SizedBox(
+              SizedBox(
                 width: 5,
               ),
               if (_verseControllers.length > 1)
                 CircleAvatar(
-                  backgroundColor: Colors.transparent,
                   child: IconButton(
-                    icon: const Icon(
-                      Icons.delete,
-                      color: Colors.red,
-                    ),
+                    icon: const Icon(Icons.remove),
                     onPressed: () {
                       setState(() {
                         _verseControllers.removeAt(i);
@@ -212,9 +195,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
     String? bridge = _bridgeController.text.isNotEmpty
         ? _bridgeController.text.trim()
         : null;
-    String? hymnHint = _hymnHintController.text.isNotEmpty
-        ? _hymnHintController.text.trim()
-        : null;
 
     Hymn newHymn = Hymn(
       id: '',
@@ -222,7 +202,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
       verses: verses,
       bridge: bridge,
       hymnNumber: hymnNumber,
-      hymnHint: hymnHint,
     );
 
     _hymnService.addHymn(newHymn).then((_) {
@@ -232,7 +211,6 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
         controller.clear();
       }
       _bridgeController.clear();
-      _hymnHintController.clear();
       setState(() {
         _verseControllers = [TextEditingController()]; // Reset to initial state
       });

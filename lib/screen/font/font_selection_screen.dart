@@ -9,8 +9,6 @@ const googleFontsAPI =
     'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC-ak88TTqiGpT7hyZV9hOnSQhu0n9A7hU';
 
 class FontSelectionPage extends StatefulWidget {
-  const FontSelectionPage({super.key});
-
   @override
   _FontSelectionPageState createState() => _FontSelectionPageState();
 }
@@ -45,7 +43,7 @@ class _FontSelectionPageState extends State<FontSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose a Font'),
+        title: Text('Choose a Font'),
       ),
       body: ListView.builder(
         itemCount: fonts.length,

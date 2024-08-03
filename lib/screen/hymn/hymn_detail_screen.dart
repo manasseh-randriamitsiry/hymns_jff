@@ -21,7 +21,6 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
   double _scale = 1.0;
   double _previousScale = 1.0;
   final double _minFontSize = 10.0;
-  bool _showHymnHint = false;
 
   List<Color> verseColors = [
     Colors.blue,
@@ -93,7 +92,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const SizedBox(
+                SizedBox(
                   height: 40,
                 ),
                 Center(
@@ -104,7 +103,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                       Flexible(
                         child: Container(
                           child: Text(
-                            '${widget.hymn.hymnNumber} - ${widget.hymn.title}',
+                            widget.hymn.hymnNumber + ' - ' + widget.hymn.title,
                             maxLines: null,
                             textAlign: TextAlign.center,
                             style: TextStyle(
@@ -115,36 +114,12 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                           ),
                         ),
                       ),
-                      if (widget.hymn.hymnHint != null)
-                        IconButton(
-                          icon: Icon(_showHymnHint
-                              ? Icons.music_note_outlined
-                              : Icons.music_off),
-                          onPressed: () {
-                            setState(() {
-                              _showHymnHint = !_showHymnHint;
-                            });
-                          },
-                        ),
                     ],
                   ),
                 ),
-                if (_showHymnHint && widget.hymn.hymnHint != null)
+                if (widget.hymn.bridge != null) ...[
                   Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 15),
-                    child: Text(
-                      widget.hymn.hymnHint!,
-                      style: TextStyle(
-                          fontSize: _fontSize,
-                          color: theme.textTheme.bodyLarge?.color),
-                    ),
-                  ),
-                if (widget.hymn.bridge != null &&
-                    widget.hymn.bridge!.isNotEmpty)
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 10.0, horizontal: 15),
+                    padding: const EdgeInsets.only(top: 20, left: 15),
                     child: Text(
                       'Isan\'andininy:',
                       style: TextStyle(
@@ -154,18 +129,16 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                       ),
                     ),
                   ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
-                  child: Text(
-                    widget.hymn.bridge!,
-                    style: TextStyle(
-                        fontSize: _fontSize,
-                        color: theme.textTheme.bodyLarge?.color),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 15),
+                    child: Text(
+                      widget.hymn.bridge!,
+                      style: TextStyle(
+                          fontSize: _fontSize,
+                          color: theme.textTheme.bodyLarge?.color),
+                    ),
                   ),
-                ),
-                if (widget.hymn.bridge != null &&
-                    widget.hymn.bridge!.isNotEmpty)
                   Padding(
                     padding: const EdgeInsets.only(left: 60),
                     child: Text(
@@ -177,6 +150,7 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
                       ),
                     ),
                   ),
+                ],
                 Expanded(
                   child: SingleChildScrollView(
                     child: Column(
