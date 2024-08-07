@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../models/hymn.dart';
+import '../utility/screen_util.dart';
 
 class HymnService {
   final CollectionReference hymnsCollection =

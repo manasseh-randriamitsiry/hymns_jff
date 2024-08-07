@@ -1,5 +1,5 @@
 import 'dart:math';
-
+import 'package:get/get.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
@@ -87,4 +87,43 @@ void openDrawer(BuildContext context) {
 
 void closeDrawer(BuildContext context) {
   ZoomDrawer.of(context)!.close();
+}
+
+void showDialogWidget(BuildContext context,{required String title, required String content, required String buttonText}) {
+  showDialog(
+    context: context,
+    builder: (BuildContext context) {
+      return AlertDialog(
+        title: Text(title),
+        content: Text(content),
+        actions: [
+          TextButton(
+            child: Text(buttonText),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      );
+    },
+  );
+}
+
+void showSnackbarSuccessMessage({required String title, required String message}){
+  Get.snackbar(
+  title,
+    message,
+    backgroundColor: Colors.green.withOpacity(0.2),
+    colorText: Colors.black,
+    icon: const Icon(Icons.check, color: Colors.black),
+  );
+}
+void showSnackbarErrorMessage({required String title, required String message}){
+  Get.snackbar(
+  title,
+    message,
+    backgroundColor: Colors.red.withOpacity(0.2),
+    colorText: Colors.black,
+    icon: const Icon(Icons.error_outline, color: Colors.red),
+  );
 }

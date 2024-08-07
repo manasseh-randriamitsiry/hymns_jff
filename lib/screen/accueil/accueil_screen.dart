@@ -1,15 +1,15 @@
 import 'dart:math';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fihirana/utility/screen_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-
+import 'package:flutter/services.dart';
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
 import '../favorite/favorites_screen.dart';
-import '../hymn/edit_hymn_screen.dart'; // Import your edit screen
+import '../hymn/edit_hymn_screen.dart';
 import '../hymn/hymn_detail_screen.dart';
+import 'package:local_auth/local_auth.dart';
 
 class AccueilScreen extends StatefulWidget {
   const AccueilScreen({super.key});
@@ -21,6 +21,7 @@ class AccueilScreen extends StatefulWidget {
 class _AccueilScreenState extends State<AccueilScreen> {
   final TextEditingController _searchController = TextEditingController();
   final HymnService _hymnService = HymnService();
+  final LocalAuthentication auth = LocalAuthentication();
   List<Hymn> _hymns = [];
   List<Hymn> _filteredHymns = [];
   final Random _random = Random();
@@ -30,8 +31,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
   }
 
   String getUsername() {
-    return FirebaseAuth.instance.currentUser?.displayName ??
-        'Jesosy no pamonjy';
+    return FirebaseAuth.instance.currentUser?.displayName ?? 'Jesosy no pamonjy';
   }
 
   @override
@@ -45,8 +45,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
     _hymnService.getHymnsStream().listen((QuerySnapshot snapshot) {
       setState(() {
         _hymns = snapshot.docs
-            .map((doc) => Hymn.fromFirestore(
-                doc as DocumentSnapshot<Map<String, dynamic>>))
+            .map((doc) => Hymn.fromFirestore(doc as DocumentSnapshot<Map<String, dynamic>>))
             .toList();
 
         _hymns.sort((a, b) {
@@ -69,34 +68,50 @@ class _AccueilScreenState extends State<AccueilScreen> {
     setState(() {
       _filteredHymns = _hymns
           .where((hymn) =>
-              hymn.hymnNumber.toLowerCase().contains(query) ||
-              hymn.title.toLowerCase().contains(query) ||
-              hymn.verses.any((verse) => verse.toLowerCase().contains(query)))
+      hymn.hymnNumber.toLowerCase().contains(query) ||
+          hymn.title.toLowerCase().contains(query) ||
+          hymn.verses.any((verse) => verse.toLowerCase().contains(query)))
           .toList();
     });
   }
 
   Future<void> _deleteHymn(Hymn hymn) async {
-    if (isUserAuthenticated()) {
+    bool authenticated = false;
+
+    try {
+      bool canCheckBiometrics = await auth.canCheckBiometrics;
+      bool isBiometricSupported = await auth.isDeviceSupported();
+
+      if (canCheckBiometrics && isBiometricSupported) {
+        authenticated = await auth.authenticate(
+          localizedReason: 'Ampidiro ny rantsan-tànanao hanamafisana ny famafana.',
+          options: const AuthenticationOptions(
+            stickyAuth: true,
+            biometricOnly: true,
+          ),
+        );
+      } else {
+        authenticated = await auth.authenticate(
+          localizedReason: 'Ampidiro ny rantsan-tànanao, endrikao, na tenimiafinao hanamafisana ny famafana.',
+          options: const AuthenticationOptions(
+            stickyAuth: true,
+            biometricOnly: false,
+          ),
+        );
+      }
+    } on PlatformException catch (e) {
+      print('Authentication error: $e');
+    }
+
+    if (authenticated) {
       await _hymnService.deleteHymn(hymn.id);
+      showSnackbarSuccessMessage(title: "Voafafa", message: "soamantsara");
     } else {
-      // Show a dialog to inform the user they must be logged in
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Filazana'),
-            content: Text('Tsy manana fahefana ianao.'),
-            actions: [
-              TextButton(
-                child: Text('Voaray'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+      showDialogWidget(
+        context,
+        title: 'Filazana',
+        content: 'Tsy manana fahefana ianao.',
+        buttonText: 'Voaray',
       );
     }
   }
@@ -116,6 +131,8 @@ class _AccueilScreenState extends State<AccueilScreen> {
       _random.nextInt(256),
     );
   }
+
+
 
   @override
   void dispose() {
@@ -178,85 +195,50 @@ class _AccueilScreenState extends State<AccueilScreen> {
               itemBuilder: (context, index) {
                 final hymn = _filteredHymns[index];
                 String firstVersePreview =
-                    hymn.verses.isNotEmpty && hymn.verses.first.length > 30
-                        ? '${hymn.verses.first.substring(0, 30)}...'
-                        : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
+                hymn.verses.isNotEmpty && hymn.verses.first.length > 30
+                    ? '${hymn.verses.first.substring(0, 30)}...'
+                    : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
 
                 return Padding(
                   padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
+                  const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
                   child: Dismissible(
                     key: Key(hymn.id),
                     direction: DismissDirection.endToStart,
                     background: Container(
                       color: Colors.red,
                       alignment: Alignment.centerRight,
-                      padding: EdgeInsets.only(right: 20.0),
-                      child: Icon(Icons.delete, color: Colors.white),
+                      padding: const EdgeInsets.only(right: 20.0),
+                      child: const Icon(Icons.delete, color: Colors.white),
                     ),
                     confirmDismiss: (direction) async {
-                      if (isUserAuthenticated()) {
-                        return await showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text(
-                                'Hamafa',
-                                style: TextStyle(
-                                  color: getTextTheme(context),
-                                ),
+                      bool confirm = await showDialog(
+                        context: context,
+                        builder: (BuildContext context) {
+                          return AlertDialog(
+                            title: Text('Hamafa'),
+                            content: Text('Manamafy fa hamafa ?'),
+                            actions: <Widget>[
+                              TextButton(
+                                child: Text('Tsia'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(false);
+                                },
                               ),
-                              content: Text('Manamafy fa hamafa ?',
-                                  style: TextStyle(
-                                    color: getTextTheme(context),
-                                  )),
-                              actions: <Widget>[
-                                TextButton(
-                                  child: Text('Tsia',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        color: getTextTheme(context),
-                                      )),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(false);
-                                  },
-                                ),
-                                TextButton(
-                                  child: Text('Eny',
-                                      style: TextStyle(
-                                        color: getTextTheme(context),
-                                      )),
-                                  onPressed: () {
-                                    Navigator.of(context).pop(true);
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                      } else {
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text('Filazana'),
-                              content: Text('Tsy manana fahefana ianao'),
-                              actions: [
-                                TextButton(
-                                  child: Text('OK'),
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                ),
-                              ],
-                            );
-                          },
-                        );
-                        return false;
+                              TextButton(
+                                child: Text('Eny'),
+                                onPressed: () {
+                                  Navigator.of(context).pop(true);
+                                },
+                              ),
+                            ],
+                          );
+                        },
+                      );
+                      if (confirm) {
+                        await _deleteHymn(hymn);
                       }
-                    },
-                    onDismissed: (direction) {
-                      _deleteHymn(hymn);
+                      return false; // Prevent auto-dismissal
                     },
                     child: DecoratedBox(
                       decoration: BoxDecoration(
@@ -334,23 +316,11 @@ class _AccueilScreenState extends State<AccueilScreen> {
         ),
       );
     } else {
-      // Show a dialog to inform the user they must be logged in
-      showDialog(
-        context: context,
-        builder: (BuildContext context) {
-          return AlertDialog(
-            title: Text('Miala tsiny'),
-            content: Text('Tsy manana fahefana ianao'),
-            actions: [
-              TextButton(
-                child: Text('Voaray'),
-                onPressed: () {
-                  Navigator.of(context).pop();
-                },
-              ),
-            ],
-          );
-        },
+      showDialogWidget(
+        context,
+        title: 'Miala tsiny',
+        content: 'Tsy manana fahefana ianao.',
+        buttonText: 'Voaray',
       );
     }
   }
