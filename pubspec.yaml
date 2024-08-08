@@ -39,6 +39,7 @@ dependencies:
 
 
   path_provider: any
+  turn_page_transition: ^0.3.0
 dev_dependencies:
   flutter_test:
     sdk: flutter

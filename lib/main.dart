@@ -1,3 +1,5 @@
+import 'package:fihirana/screen/accueil/accueil_screen.dart';
+import 'package:fihirana/screen/hymn/hymn_detail_screen.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -30,6 +32,9 @@ class MyApp extends StatelessWidget {
       theme: ThemeData.light(),
       darkTheme: ThemeData.dark(),
       home: const HomeScreen(),
+      getPages: [
+        GetPage(name: '/accueil', page: () => const AccueilScreen()),
+      ],
     );
   }
 }

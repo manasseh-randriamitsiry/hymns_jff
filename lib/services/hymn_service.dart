@@ -20,32 +20,26 @@ class HymnService {
     try {
       bool isUnique = await _isHymnNumberUnique(hymn.hymnNumber, '');
       if (!isUnique) {
-        Get.snackbar(
-          'Nisy olana',
-          'Antony : efa misy hira faha: ${hymn.hymnNumber} ',
-          backgroundColor: Colors.yellowAccent.withOpacity(0.2),
-          colorText: Colors.black,
-          icon: const Icon(Icons.warning_amber, color: Colors.black),
+        _showErrorSnackbar(
+          title: 'Nisy olana',
+          message: 'Antony : efa misy hira faha: ${hymn.hymnNumber} ',
         );
         return;
       }
       // Perform addition
       await hymnsCollection.add(hymn.toFirestore());
-      Get.snackbar(
-        'Tafiditra soamantsara',
-        'Deraina ny Tompo',
-        backgroundColor: Colors.green.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.check, color: Colors.black),
+      _showSuccessSnackbar(
+        title: 'Tafiditra soamantsara',
+        message: 'Deraina ny Tompo',
       );
     } catch (e) {
-      Get.snackbar(
-        'Nisy olana',
-        'Antony : efa misy hira faha : ${hymn.hymnNumber} ',
-        backgroundColor: Colors.yellowAccent.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.warning_amber, color: Colors.black),
+      _showErrorSnackbar(
+        title: 'Nisy olana',
+        message: 'Antony : efa misy hira faha: ${hymn.hymnNumber} ',
       );
+      if (kDebugMode) {
+        print('Error adding hymn: $e');
+      }
     }
   }
 
@@ -54,34 +48,66 @@ class HymnService {
       // Check if hymnNumber already exists
       bool isUnique = await _isHymnNumberUnique(hymn.hymnNumber, hymnId);
       if (!isUnique) {
-        Get.snackbar(
-          'Nisy olana',
-          'Antony : efa misy hira faha : ${hymn.hymnNumber} ',
-          backgroundColor: Colors.yellowAccent.withOpacity(0.2),
-          colorText: Colors.black,
-          icon: const Icon(Icons.warning_amber, color: Colors.black),
+        _showErrorSnackbar(
+          title: 'Nisy olana',
+          message: 'Antony : efa misy hira faha: ${hymn.hymnNumber} ',
         );
         return;
       }
 
       // Perform update
       await hymnsCollection.doc(hymnId).update(hymn.toFirestore());
-      Get.snackbar(
-        'Vita fanavaozana',
-        'Deraina ny Tompo',
-        backgroundColor: Colors.green.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.check, color: Colors.black),
+      _showSuccessSnackbar(
+        title: 'Vita fanavaozana',
+        message: 'Deraina ny Tompo',
       );
     } catch (e) {
-      Get.snackbar(
-        'Nisy olana',
-        'Antony : efa misy hira ${hymn.hymnNumber} ',
-        backgroundColor: Colors.yellowAccent.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.warning_amber, color: Colors.black),
+      _showErrorSnackbar(
+        title: 'Nisy olana',
+        message: 'Antony : efa misy hira ${hymn.hymnNumber} ',
+      );
+      if (kDebugMode) {
+        print('Error updating hymn: $e');
+      }
+    }
+  }
+
+  Future<void> deleteHymn(String hymnId) async {
+    try {
+      await hymnsCollection.doc(hymnId).delete();
+    } catch (e) {
+      if (kDebugMode) {
+        print('Error deleting hymn: $e');
+      }
+      _showErrorSnackbar(
+        title: 'Nisy olana',
+        message: 'Tsy afaka namafa hira',
       );
     }
+  }
+
+  Future<void> toggleFavorite(Hymn hymn) async {
+    try {
+      hymn.isFavorite = !hymn.isFavorite;
+      hymn.favoriteAddedDate = hymn.isFavorite ? DateTime.now() : null;
+      await hymnsCollection.doc(hymn.id).update(hymn.toFirestore());
+    } catch (e) {
+      _showErrorSnackbar(
+        title: 'Nisy olana',
+        message: 'Tsy afaka nanova ny tiana',
+      );
+      if (kDebugMode) {
+        print('Error toggling favorite: $e');
+      }
+    }
+  }
+
+  Stream<List<Hymn>> getFavoriteHymnsStream() {
+    return hymnsCollection.where('isFavorite', isEqualTo: true).snapshots().map(
+        (snapshot) => snapshot.docs
+            .map((doc) => Hymn.fromFirestore(
+                doc as DocumentSnapshot<Map<String, dynamic>>))
+            .toList());
   }
 
   Future<bool> _isHymnNumberUnique(
@@ -101,45 +127,27 @@ class HymnService {
       if (kDebugMode) {
         print('Error checking hymn number uniqueness: $e');
       }
-      return false; // Handle error as needed
+      return false;
     }
   }
 
-  Future<void> deleteHymn(String hymnId) async {
-    try {
-      await hymnsCollection.doc(hymnId).delete();
-    } catch (e) {
-      if (kDebugMode) {
-        print('Error deleting hymn: $e');
-      }
-    }
+  void _showSuccessSnackbar({required String title, required String message}) {
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: Colors.green.withOpacity(0.2),
+      colorText: Colors.black,
+      icon: const Icon(Icons.check, color: Colors.black),
+    );
   }
 
-  // New methods to handle favorites
-  Future<void> toggleFavorite(Hymn hymn) async {
-    try {
-      hymn.isFavorite = !hymn.isFavorite;
-      hymn.favoriteAddedDate = hymn.isFavorite ? DateTime.now() : null;
-      await hymnsCollection.doc(hymn.id).update(hymn.toFirestore());
-    } catch (e) {
-      Get.snackbar(
-        'Nisy olana',
-        'Tsy afaka nanova ny tiana',
-        backgroundColor: Colors.yellowAccent.withOpacity(0.2),
-        colorText: Colors.black,
-        icon: const Icon(Icons.warning_amber, color: Colors.black),
-      );
-      if (kDebugMode) {
-        print('Error toggling favorite: $e');
-      }
-    }
-  }
-
-  Stream<List<Hymn>> getFavoriteHymnsStream() {
-    return hymnsCollection.where('isFavorite', isEqualTo: true).snapshots().map(
-        (snapshot) => snapshot.docs
-            .map((doc) => Hymn.fromFirestore(
-                doc as DocumentSnapshot<Map<String, dynamic>>))
-            .toList());
+  void _showErrorSnackbar({required String title, required String message}) {
+    Get.snackbar(
+      title,
+      message,
+      backgroundColor: Colors.yellowAccent.withOpacity(0.2),
+      colorText: Colors.black,
+      icon: const Icon(Icons.warning_amber, color: Colors.black),
+    );
   }
 }

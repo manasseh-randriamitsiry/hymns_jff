@@ -6,6 +6,7 @@ class Hymn {
   String title;
   List<String> verses;
   String? bridge;
+  String? hymnHint;
   bool isFavorite;
   DateTime? favoriteAddedDate;
 
@@ -15,6 +16,7 @@ class Hymn {
     required this.title,
     required this.verses,
     this.bridge,
+    this.hymnHint,
     this.isFavorite = false,
     this.favoriteAddedDate,
   });
@@ -27,6 +29,7 @@ class Hymn {
       title: data['title'] as String,
       verses: List<String>.from(data['verses'] as List<dynamic>),
       bridge: data['bridge'] as String?,
+      hymnHint: data['hymnHint'] as String?,
       isFavorite: data['isFavorite'] ?? false,
       favoriteAddedDate: (data['favoriteAddedDate'] as Timestamp?)?.toDate(),
     );
@@ -38,6 +41,7 @@ class Hymn {
       'title': title,
       'verses': verses,
       'bridge': bridge,
+      'hymnHint': hymnHint,
       'isFavorite': isFavorite,
       'favoriteAddedDate': favoriteAddedDate,
     };

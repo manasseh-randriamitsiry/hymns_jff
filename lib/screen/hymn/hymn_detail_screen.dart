@@ -68,7 +68,49 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
     var theme = Theme.of(context);
 
     return Scaffold(
-      appBar: AppBar(),
+      appBar: AppBar(
+        title: Text(
+          widget.hymn.hymnNumber,
+          maxLines: null,
+          textAlign: TextAlign.center,
+          style: TextStyle(
+            color: theme.textTheme.bodyLarge?.color,
+            fontWeight: FontWeight.bold,
+            fontSize: _fontSize,
+          ),
+        ),
+        centerTitle: true,
+        actions: [
+          IconButton(
+              onPressed: () {
+                setState(
+                  () {
+                    _scale = _scale * 1.2;
+                    _fontSize = _baseFontSize * _scale;
+                  
+                    _countFontSize = _baseCountFontSize * _scale;
+                  },
+                );
+              },
+              icon: Icon(Icons.add),),
+              IconButton(
+            onPressed: () {
+              setState(
+                () {
+                  _scale = _scale / 1.2;
+                  _fontSize = _baseFontSize * _scale;
+                  if (_fontSize < _minFontSize) {
+                    _fontSize = _minFontSize;
+                    _scale = _fontSize / _baseFontSize;
+                  }
+                  _countFontSize = _baseCountFontSize * _scale;
+                },
+              );
+            },
+            icon: Icon(Icons.minimize),
+          ),
+        ],
+      ),
       body: GestureDetector(
         onScaleStart: (ScaleStartDetails details) {
           _previousScale = _scale;
@@ -92,30 +134,17 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(
-                height: 40,
-              ),
-              Center(
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    Flexible(
-                      child: Text(
-                        '${widget.hymn.hymnNumber} - ${widget.hymn.title}',
-                        maxLines: null,
-                        textAlign: TextAlign.center,
-                        style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
-                          fontWeight: FontWeight.bold,
-                          fontSize: _fontSize,
-                        ),
-                      ),
-                    ),
-                  ],
+              Text(
+                widget.hymn.title,
+                maxLines: null,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: theme.textTheme.bodyLarge?.color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: _fontSize,
                 ),
               ),
-              if (widget.hymn.bridge != null) ...[
+              if (widget.hymn.bridge != null && widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 15),
                   child: Text(
@@ -128,8 +157,8 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                   ),
                 ),
                 Padding(
-                  padding: const EdgeInsets.symmetric(
-                      vertical: 8.0, horizontal: 15),
+                  padding:
+                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
                   child: Text(
                     widget.hymn.bridge!,
                     style: TextStyle(
@@ -183,8 +212,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                                   '${i + 1}. ${widget.hymn.verses[i]}',
                                   style: TextStyle(
                                     fontSize: _fontSize,
-                                    color:
-                                        verseColors[i % verseColors.length],
+                                    color: verseColors[i % verseColors.length],
                                   ),
                                 ),
                               ),
