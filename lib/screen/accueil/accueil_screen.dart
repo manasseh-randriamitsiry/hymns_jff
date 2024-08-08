@@ -31,7 +31,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
   }
 
   String getUsername() {
-    return FirebaseAuth.instance.currentUser?.displayName ?? 'Jesosy no pamonjy';
+    return FirebaseAuth.instance.currentUser?.displayName ?? 'Jesosy Famonjena Fahamarinantsika';
   }
 
   @override
@@ -44,6 +44,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
   void _fetchHymns() {
     _hymnService.getHymnsStream().listen((QuerySnapshot snapshot) {
       setState(() {
+
         _hymns = snapshot.docs
             .map((doc) => Hymn.fromFirestore(doc as DocumentSnapshot<Map<String, dynamic>>))
             .toList();
@@ -92,7 +93,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
         );
       } else {
         authenticated = await auth.authenticate(
-          localizedReason: 'Ampidiro ny rantsan-tànanao, endrikao, na tenimiafinao hanamafisana ny famafana.',
+          localizedReason: 'Ilaina ny rantsan-tànanao, endrikao, na tenimiafinao hanamafisana ny famafana.',
           options: const AuthenticationOptions(
             stickyAuth: true,
             biometricOnly: false,
@@ -216,8 +217,8 @@ class _AccueilScreenState extends State<AccueilScreen> {
                         context: context,
                         builder: (BuildContext context) {
                           return AlertDialog(
-                            title: Text('Hamafa'),
-                            content: Text('Manamafy fa hamafa ?'),
+                            title: const Text('Hamafa'),
+                            content: const Text('Manamafy fa hamafa ?'),
                             actions: <Widget>[
                               TextButton(
                                 child: Text('Tsia'),
