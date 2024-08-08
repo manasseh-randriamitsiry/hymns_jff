@@ -8,10 +8,10 @@ class CreateHymnPage extends StatefulWidget {
   const CreateHymnPage({super.key});
 
   @override
-  _CreateHymnPageState createState() => _CreateHymnPageState();
+  CreateHymnPageState createState() => CreateHymnPageState();
 }
 
-class _CreateHymnPageState extends State<CreateHymnPage> {
+class CreateHymnPageState extends State<CreateHymnPage> {
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _versesController = TextEditingController();
@@ -95,7 +95,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                     color: getTextTheme(context),
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 10,
                 ),
                 ..._buildVerseInputs(),
@@ -165,7 +165,7 @@ class _CreateHymnPageState extends State<CreateHymnPage> {
                   },
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               if (_verseControllers.length > 1)

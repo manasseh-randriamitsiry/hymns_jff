@@ -11,13 +11,13 @@ import '../screen/favorite/favorites_screen.dart';
 import '../screen/hymn/create_hymn_page.dart';
 
 class DrawerScreen extends StatefulWidget {
-  const DrawerScreen({Key? key}) : super(key: key);
+  const DrawerScreen({super.key});
 
   @override
-  _DrawerScreenState createState() => _DrawerScreenState();
+  DrawerScreenState createState() => DrawerScreenState();
 }
 
-class _DrawerScreenState extends State<DrawerScreen> {
+class DrawerScreenState extends State<DrawerScreen> {
   final ThemeController _themeController = Get.put(ThemeController());
   bool _isAuthenticated = false;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
@@ -117,7 +117,7 @@ class _DrawerScreenState extends State<DrawerScreen> {
         padding: EdgeInsets.zero,
         children: [
           if (_currentUser == null)
-            SizedBox(
+            const SizedBox(
               height: 50,
             ),
           if (_currentUser != null)
@@ -130,8 +130,8 @@ class _DrawerScreenState extends State<DrawerScreen> {
                 imageBuilder: (context, imageProvider) => CircleAvatar(
                   backgroundImage: imageProvider,
                 ),
-                placeholder: (context, url) => CircularProgressIndicator(),
-                errorWidget: (context, url, error) => Icon(Icons.error),
+                placeholder: (context, url) => const CircularProgressIndicator(),
+                errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
           ListTile(

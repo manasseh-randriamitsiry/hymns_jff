@@ -1,3 +1,5 @@
+// ignore_for_file: dangling_library_doc_comments
+
 /**
     import 'dart:io';
 

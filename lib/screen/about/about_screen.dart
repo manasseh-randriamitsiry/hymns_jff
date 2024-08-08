@@ -8,9 +8,9 @@ class AboutScreen extends StatelessWidget {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('?'),
+        title: const Text('?'),
       ),
-      body: Padding(
+      body: const Padding(
         padding: EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Center(

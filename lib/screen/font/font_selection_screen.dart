@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:path_provider/path_provider.dart';
@@ -9,11 +10,13 @@ const googleFontsAPI =
     'https://www.googleapis.com/webfonts/v1/webfonts?key=AIzaSyC-ak88TTqiGpT7hyZV9hOnSQhu0n9A7hU';
 
 class FontSelectionPage extends StatefulWidget {
+  const FontSelectionPage({super.key});
+
   @override
-  _FontSelectionPageState createState() => _FontSelectionPageState();
+  FontSelectionPageState createState() => FontSelectionPageState();
 }
 
-class _FontSelectionPageState extends State<FontSelectionPage> {
+class FontSelectionPageState extends State<FontSelectionPage> {
   List<String> fonts = [];
 
   @override
@@ -35,7 +38,9 @@ class _FontSelectionPageState extends State<FontSelectionPage> {
         throw Exception('Failed to load fonts');
       }
     } catch (e) {
-      print('Error fetching fonts: $e');
+      if (kDebugMode) {
+        print('Error fetching fonts: $e');
+      }
     }
   }
 
@@ -43,7 +48,7 @@ class _FontSelectionPageState extends State<FontSelectionPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Choose a Font'),
+        title: const Text('Choose a Font'),
       ),
       body: ListView.builder(
         itemCount: fonts.length,
@@ -71,12 +76,16 @@ class _FontSelectionPageState extends State<FontSelectionPage> {
         await downloadAndSaveFont(files['regular'], '$fontName-Regular.ttf');
         await downloadAndSaveFont(files['italic'], '$fontName-Italic.ttf');
         // Add more variants as needed
-        print('Fonts downloaded and cached for $fontName');
+        if (kDebugMode) {
+          print('Fonts downloaded and cached for $fontName');
+        }
       } else {
         throw Exception('Failed to fetch font details for $fontName');
       }
     } catch (e) {
-      print('Error downloading fonts: $e');
+      if (kDebugMode) {
+        print('Error downloading fonts: $e');
+      }
     }
   }
 

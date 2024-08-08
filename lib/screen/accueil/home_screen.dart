@@ -1,10 +1,10 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:fihirana/screen/about/about_screen.dart';
+import 'package:fihirana/widgets/drawer_wiidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:get/get.dart';
 
-import '../../widgets/drawerWidget.dart';
 import 'accueil_screen.dart';
 
 class HomeScreen extends StatefulWidget {
@@ -20,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
     const AboutScreen(),
   ];
 
-  int _selectedIndex = 0;
+  final int _selectedIndex = 0;
 
   @override
   void initState() {
@@ -34,7 +34,7 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
+    Theme.of(context);
     return ZoomDrawer(
       style: DrawerStyle.style4,
       mainScreenTapClose: true,

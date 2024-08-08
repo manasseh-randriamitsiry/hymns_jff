@@ -1,4 +1,5 @@
 import 'package:fihirana/utility/screen_util.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../models/hymn.dart';
@@ -7,13 +8,13 @@ import '../../services/hymn_service.dart';
 class EditHymnScreen extends StatefulWidget {
   final Hymn hymn;
 
-  const EditHymnScreen({Key? key, required this.hymn}) : super(key: key);
+  const EditHymnScreen({super.key, required this.hymn});
 
   @override
-  _EditHymnScreenState createState() => _EditHymnScreenState();
+  EditHymnScreenState createState() => EditHymnScreenState();
 }
 
-class _EditHymnScreenState extends State<EditHymnScreen> {
+class EditHymnScreenState extends State<EditHymnScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _hymnNumberController = TextEditingController();
   final TextEditingController _bridgeController = TextEditingController();
@@ -61,7 +62,9 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
         .then((_) {
       Navigator.pop(context); // Navigate back after update
     }).catchError((error) {
-      print('Error updating hymn: $error');
+      if (kDebugMode) {
+        print('Error updating hymn: $error');
+      }
       // Handle error as needed
     });
   }
@@ -119,7 +122,7 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                   color: getTextTheme(context),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               ..._buildVerseInputs(),
@@ -142,10 +145,10 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                   onPressed: () {
                     _saveChanges();
                   },
-                  child: Padding(
-                    padding: const EdgeInsets.only(
+                  child: const Padding(
+                    padding: EdgeInsets.only(
                         left: 40.0, right: 40, top: 20, bottom: 20),
-                    child: const Text(
+                    child: Text(
                       "Apidiro",
                       style: TextStyle(fontSize: 20),
                     ),
@@ -179,7 +182,7 @@ class _EditHymnScreenState extends State<EditHymnScreen> {
                   ),
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 width: 5,
               ),
               if (_verseControllers.length > 1)

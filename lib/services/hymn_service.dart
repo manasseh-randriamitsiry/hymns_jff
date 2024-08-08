@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 
 import '../models/hymn.dart';
-import '../utility/screen_util.dart';
 
 class HymnService {
   final CollectionReference hymnsCollection =
@@ -98,7 +98,9 @@ class HymnService {
 
       return querySnapshot.docs.isEmpty;
     } catch (e) {
-      print('Error checking hymn number uniqueness: $e');
+      if (kDebugMode) {
+        print('Error checking hymn number uniqueness: $e');
+      }
       return false; // Handle error as needed
     }
   }
@@ -107,7 +109,9 @@ class HymnService {
     try {
       await hymnsCollection.doc(hymnId).delete();
     } catch (e) {
-      print('Error deleting hymn: $e');
+      if (kDebugMode) {
+        print('Error deleting hymn: $e');
+      }
     }
   }
 
@@ -125,7 +129,9 @@ class HymnService {
         colorText: Colors.black,
         icon: const Icon(Icons.warning_amber, color: Colors.black),
       );
-      print('Error toggling favorite: $e');
+      if (kDebugMode) {
+        print('Error toggling favorite: $e');
+      }
     }
   }
 

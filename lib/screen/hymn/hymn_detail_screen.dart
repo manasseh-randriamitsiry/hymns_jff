@@ -10,10 +10,10 @@ class HymnDetailScreen extends StatefulWidget {
   const HymnDetailScreen({super.key, required this.hymn});
 
   @override
-  _HymnDetailScreenState createState() => _HymnDetailScreenState();
+  HymnDetailScreenState createState() => HymnDetailScreenState();
 }
 
-class _HymnDetailScreenState extends State<HymnDetailScreen> {
+class HymnDetailScreenState extends State<HymnDetailScreen> {
   final double _baseFontSize = 16.0;
   final double _baseCountFontSize = 50.0;
   double _fontSize = 16.0;
@@ -88,129 +88,125 @@ class _HymnDetailScreenState extends State<HymnDetailScreen> {
           _saveFontSize();
         },
         child: Center(
-          child: Container(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SizedBox(
-                  height: 40,
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              const SizedBox(
+                height: 40,
+              ),
+              Center(
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                  children: [
+                    Flexible(
+                      child: Text(
+                        '${widget.hymn.hymnNumber} - ${widget.hymn.title}',
+                        maxLines: null,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                          fontWeight: FontWeight.bold,
+                          fontSize: _fontSize,
+                        ),
+                      ),
+                    ),
+                  ],
                 ),
-                Center(
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              ),
+              if (widget.hymn.bridge != null) ...[
+                Padding(
+                  padding: const EdgeInsets.only(top: 20, left: 15),
+                  child: Text(
+                    'Isan\'andininy:',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.symmetric(
+                      vertical: 8.0, horizontal: 15),
+                  child: Text(
+                    widget.hymn.bridge!,
+                    style: TextStyle(
+                        fontSize: _fontSize,
+                        color: theme.textTheme.bodyLarge?.color),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(left: 60),
+                  child: Text(
+                    'Andininy',
+                    style: TextStyle(
+                      fontSize: 18.0,
+                      fontWeight: FontWeight.bold,
+                      color: theme.textTheme.bodyLarge?.color,
+                    ),
+                  ),
+                ),
+              ],
+              Expanded(
+                child: SingleChildScrollView(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Flexible(
-                        child: Container(
-                          child: Text(
-                            widget.hymn.hymnNumber + ' - ' + widget.hymn.title,
-                            maxLines: null,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                              color: theme.textTheme.bodyLarge?.color,
-                              fontWeight: FontWeight.bold,
-                              fontSize: _fontSize,
-                            ),
+                      for (int i = 0; i < widget.hymn.verses.length; i++) ...[
+                        Padding(
+                          padding: const EdgeInsets.symmetric(
+                              vertical: 10.0, horizontal: 30.0),
+                          child: Stack(
+                            alignment: Alignment.center,
+                            children: [
+                              Positioned.fill(
+                                child: Opacity(
+                                  opacity: 0.15,
+                                  child: Align(
+                                    alignment: Alignment.center,
+                                    child: Text(
+                                      '${i + 1}',
+                                      style: TextStyle(
+                                        fontSize: _countFontSize,
+                                        fontWeight: FontWeight.bold,
+                                        color: theme.primaryColor,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.only(left: 30.0),
+                                child: Text(
+                                  '${i + 1}. ${widget.hymn.verses[i]}',
+                                  style: TextStyle(
+                                    fontSize: _fontSize,
+                                    color:
+                                        verseColors[i % verseColors.length],
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                      const SizedBox(height: 100), // Adjust as needed
+                      Container(
+                        alignment: Alignment.center,
+                        child: Text(
+                          "-- tapitra --",
+                          style: TextStyle(
+                            color: theme.textTheme.bodyLarge?.color,
+                            fontSize: _fontSize,
                           ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                if (widget.hymn.bridge != null) ...[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 15),
-                    child: Text(
-                      'Isan\'andininy:',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 15),
-                    child: Text(
-                      widget.hymn.bridge!,
-                      style: TextStyle(
-                          fontSize: _fontSize,
-                          color: theme.textTheme.bodyLarge?.color),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(left: 60),
-                    child: Text(
-                      'Andininy',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
-                    ),
-                  ),
-                ],
-                Expanded(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        for (int i = 0; i < widget.hymn.verses.length; i++) ...[
-                          Padding(
-                            padding: const EdgeInsets.symmetric(
-                                vertical: 10.0, horizontal: 30.0),
-                            child: Stack(
-                              alignment: Alignment.center,
-                              children: [
-                                Positioned.fill(
-                                  child: Opacity(
-                                    opacity: 0.15,
-                                    child: Align(
-                                      alignment: Alignment.center,
-                                      child: Text(
-                                        '${i + 1}',
-                                        style: TextStyle(
-                                          fontSize: _countFontSize,
-                                          fontWeight: FontWeight.bold,
-                                          color: theme.primaryColor,
-                                        ),
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                                Padding(
-                                  padding: const EdgeInsets.only(left: 30.0),
-                                  child: Text(
-                                    '${i + 1}. ${widget.hymn.verses[i]}',
-                                    style: TextStyle(
-                                      fontSize: _fontSize,
-                                      color:
-                                          verseColors[i % verseColors.length],
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                        const SizedBox(height: 100), // Adjust as needed
-                        Container(
-                          alignment: Alignment.center,
-                          child: Text(
-                            "-- tapitra --",
-                            style: TextStyle(
-                              color: theme.textTheme.bodyLarge?.color,
-                              fontSize: _fontSize,
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),

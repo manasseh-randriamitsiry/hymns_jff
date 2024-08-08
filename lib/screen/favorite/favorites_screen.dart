@@ -8,22 +8,24 @@ import '../hymn/hymn_detail_screen.dart';
 class FavoritesPage extends StatelessWidget {
   final HymnService _hymnService = HymnService();
 
+  FavoritesPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: Text('Tiana'),
+        title: const Text('Tiana'),
       ),
       body: StreamBuilder<List<Hymn>>(
         stream: _hymnService.getFavoriteHymnsStream(),
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return Center(child: CircularProgressIndicator());
+            return const Center(child: CircularProgressIndicator());
           } else if (snapshot.hasError) {
             return Center(child: Text('Olana: ${snapshot.error}'));
           } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-            return Center(child: Text('Mbola tsy misy hira tiana'));
+            return const Center(child: Text('Mbola tsy misy hira tiana'));
           } else {
             final favoriteHymns = snapshot.data!;
             return ListView.builder(
@@ -49,7 +51,7 @@ class FavoritesPage extends StatelessWidget {
                       ),
                       title: Text(
                         hymn.title,
-                        style: TextStyle(fontWeight: FontWeight.bold),
+                        style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
                           'Napidirina tamin\'ny: ${hymn.favoriteAddedDate}'),

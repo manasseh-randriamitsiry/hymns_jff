@@ -2,6 +2,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fihirana/utility/screen_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../models/hymn.dart';
@@ -15,10 +16,10 @@ class AccueilScreen extends StatefulWidget {
   const AccueilScreen({super.key});
 
   @override
-  _AccueilScreenState createState() => _AccueilScreenState();
+  AccueilScreenState createState() => AccueilScreenState();
 }
 
-class _AccueilScreenState extends State<AccueilScreen> {
+class AccueilScreenState extends State<AccueilScreen> {
   final TextEditingController _searchController = TextEditingController();
   final HymnService _hymnService = HymnService();
   final LocalAuthentication auth = LocalAuthentication();
@@ -101,18 +102,18 @@ class _AccueilScreenState extends State<AccueilScreen> {
         );
       }
     } on PlatformException catch (e) {
-      print('Authentication error: $e');
+      if (kDebugMode) {
+        print('Authentication error: $e');
+      }
     }
 
     if (authenticated) {
       await _hymnService.deleteHymn(hymn.id);
       showSnackbarSuccessMessage(title: "Voafafa", message: "soamantsara");
     } else {
-      showDialogWidget(
-        context,
+      showSnackbarErrorMessage(
         title: 'Filazana',
-        content: 'Tsy manana fahefana ianao.',
-        buttonText: 'Voaray',
+       message: 'Tsy manana fahefana ianao.'
       );
     }
   }
@@ -159,7 +160,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
         ),
         actions: [
           IconButton(
-            icon: Icon(Icons.favorite),
+            icon: const Icon(Icons.favorite),
             onPressed: () {
               Navigator.push(
                 context,
@@ -221,13 +222,13 @@ class _AccueilScreenState extends State<AccueilScreen> {
                             content: const Text('Manamafy fa hamafa ?'),
                             actions: <Widget>[
                               TextButton(
-                                child: Text('Tsia'),
+                                child: const Text('Tsia'),
                                 onPressed: () {
                                   Navigator.of(context).pop(false);
                                 },
                               ),
                               TextButton(
-                                child: Text('Eny'),
+                                child: const Text('Eny'),
                                 onPressed: () {
                                   Navigator.of(context).pop(true);
                                 },
@@ -258,7 +259,7 @@ class _AccueilScreenState extends State<AccueilScreen> {
                         ),
                         title: Text(
                           hymn.title,
-                          style: TextStyle(fontWeight: FontWeight.bold),
+                          style: const TextStyle(fontWeight: FontWeight.bold),
                         ),
                         subtitle: Text(firstVersePreview),
                         trailing: Row(
