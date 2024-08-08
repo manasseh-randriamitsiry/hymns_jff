@@ -68,6 +68,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
     var theme = Theme.of(context);
 
     return Scaffold(
+      appBar: AppBar(),
       body: GestureDetector(
         onScaleStart: (ScaleStartDetails details) {
           _previousScale = _scale;

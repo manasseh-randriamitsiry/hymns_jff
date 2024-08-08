@@ -352,7 +352,8 @@ class AccueilScreenState extends State<AccueilScreen> {
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hiran\'ny fihirana'),
+        centerTitle: true,
+        title: const Text('FIHIRANA JFF'),
       ),
       body: Column(
         children: [
@@ -470,7 +471,7 @@ class AccueilScreenState extends State<AccueilScreen> {
                           ],
                         ),
                         onTap: () {
-                          Navigator.push(
+                         Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) =>
