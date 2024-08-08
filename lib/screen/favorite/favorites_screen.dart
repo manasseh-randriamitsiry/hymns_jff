@@ -54,7 +54,7 @@ class FavoritesPage extends StatelessWidget {
                         style: const TextStyle(fontWeight: FontWeight.bold),
                       ),
                       subtitle: Text(
-                          'Napidirina tamin\'ny: ${hymn.favoriteAddedDate}'),
+                          'Tiana tamin\'ny: ${hymn.favoriteAddedDate}'),
                       trailing: IconButton(
                         icon: Icon(
                           hymn.isFavorite

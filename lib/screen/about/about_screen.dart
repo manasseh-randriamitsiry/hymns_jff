@@ -62,6 +62,11 @@ class AboutScreen extends StatelessWidget {
                 ),
                 SizedBox(height: 5),
                 Text(
+                  'Adiresy: Ambalavao tsienimparihy',
+                  textAlign: TextAlign.center,
+                ),
+                SizedBox(height: 5),
+                Text(
                   'Email: manassehrandriamitsiry@gmail.com',
                 ),
                 SizedBox(height: 5),
