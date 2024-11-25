@@ -1,7 +1,9 @@
-import 'package:fihirana/utility/screen_util.dart';
+import 'dart:async';
+
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../models/hymn.dart';
 
@@ -20,8 +22,6 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
   double _fontSize = 16.0;
   double _countFontSize = 50.0;
   double _scale = 1.0;
-  double _previousScale = 1.0;
-  final double _minFontSize = 10.0;
 
   List<Color> verseColors = [
     Colors.blue,
@@ -55,6 +55,14 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
     });
   }
 
+  bool _showSlider = false; // Initially hidden
+  Timer? _timer;
+  void _showFontSizeDialog(BuildContext context) {
+    setState(() {
+      _showSlider = !_showSlider;
+    });
+  }
+
   Future<void> _saveFontSize() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setDouble('fontSize', _fontSize);
@@ -62,6 +70,12 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
 
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel(); // Cancel the timer when the widget is disposed
+    super.dispose();
   }
 
   @override
@@ -84,73 +98,70 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
         actions: [
           IconButton(
             onPressed: () {
-              setState(
-                () {
-                  _scale = _scale * 1.2;
-                  _fontSize = _baseFontSize * _scale;
-                  _countFontSize = _baseCountFontSize * _scale;
-                },
-              );
+              _showFontSizeDialog(context);
             },
-            icon: Icon(Icons.add),
-          ),
-          IconButton(
-            onPressed: () {
-              setState(
-                () {
-                  _scale = _scale / 1.2;
-                  _fontSize = _baseFontSize * _scale;
-                  if (_fontSize < _minFontSize) {
-                    _fontSize = _minFontSize;
-                    _scale = _fontSize / _baseFontSize;
-                  }
-                  _countFontSize = _baseCountFontSize * _scale;
-                },
-              );
-            },
-            icon: const Icon(Icons.minimize),
+            icon: const Icon(Icons
+                .text_fields), // New icon for opening font size adjustment dialog
           ),
         ],
       ),
-      body: GestureDetector(
-        onScaleStart: (ScaleStartDetails details) {
-          _previousScale = _scale;
-        },
-        onScaleUpdate: (ScaleUpdateDetails details) {
-          setState(() {
-            _scale = _previousScale * details.scale;
-            _fontSize = _baseFontSize * _scale;
-            if (_fontSize < _minFontSize) {
-              _fontSize = _minFontSize;
-              _scale = _fontSize / _baseFontSize;
-            }
-            _countFontSize = _baseCountFontSize * _scale;
-          });
-        },
-        onScaleEnd: (ScaleEndDetails details) {
-          _previousScale = 1.0;
-          _saveFontSize();
-        },
-        child: Center(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.hymn.title,
-                maxLines: 3,
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: theme.textTheme.bodyLarge?.color,
-                  fontWeight: FontWeight.bold,
-                  fontSize: _fontSize,
+      body: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              widget.hymn.title,
+              maxLines: 3,
+              textAlign: TextAlign.center,
+              style: TextStyle(
+                color: theme.textTheme.bodyLarge?.color,
+                fontWeight: FontWeight.bold,
+                fontSize: _fontSize,
+              ),
+            ),
+            if (_showSlider)
+              Container(
+                child: SfSlider(
+                  min: 0.0,
+                  max: 100.0,
+                  interval: 20,
+                  showTicks: true,
+                  showLabels: true,
+                  enableTooltip: true,
+                  minorTicksPerInterval: 1,
+                  onChanged: (dynamic value) {
+                    _saveFontSize();
+                    setState(() {
+                      _fontSize = value;
+                    });
+                  },
+                  onChangeEnd: (dynamic value) {
+                    setState(() {
+                      _showSlider = false; // Hide the slider on release
+                    });
+                  },
+                  value: _fontSize,
                 ),
               ),
-              if (widget.hymn.bridge != null &&
-                  widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
+            if (widget.hymn.bridge != null &&
+                widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 20, left: 15),
+                child: Text(
+                  'Isan\'andininy:',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
+                  ),
+                ),
+              ),
+              if (widget.hymn.hymnHint?.trim().toLowerCase().isNotEmpty ??
+                  false) ...[
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 15),
                   child: Text(
-                    'Isan\'andininy:',
+                    'Naoty:',
                     style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
@@ -158,112 +169,98 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                     ),
                   ),
                 ),
-                if (widget.hymn.hymnHint?.trim().toLowerCase().isNotEmpty ??
-                    false) ...[
-                  Padding(
-                    padding: const EdgeInsets.only(top: 20, left: 15),
-                    child: Text(
-                      'Naoty:',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(
-                        vertical: 8.0, horizontal: 15),
-                    child: Text(
-                      widget.hymn.hymnHint ?? '', // safely use hymnHint
-                      style: TextStyle(
-                        fontSize: _fontSize,
-                        color: theme.textTheme.bodyLarge?.color,
-                      ),
-                    ),
-                  ),
-                ],
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
                   child: Text(
-                    widget.hymn.bridge!,
+                    widget.hymn.hymnHint ?? '', // safely use hymnHint
                     style: TextStyle(
-                        fontSize: _fontSize,
-                        color: theme.textTheme.bodyLarge?.color),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.only(left: 60),
-                  child: Text(
-                    'Andininy',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
+                      fontSize: _fontSize,
                       color: theme.textTheme.bodyLarge?.color,
                     ),
                   ),
                 ),
               ],
-              Expanded(
-                child: SingleChildScrollView(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      for (int i = 0; i < widget.hymn.verses.length; i++) ...[
-                        Padding(
-                          padding: const EdgeInsets.symmetric(
-                              vertical: 10.0, horizontal: 30.0),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              Positioned.fill(
-                                child: Opacity(
-                                  opacity: 0.15,
-                                  child: Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      '${i + 1}',
-                                      style: TextStyle(
-                                        fontSize: _countFontSize,
-                                        fontWeight: FontWeight.bold,
-                                        color: theme.primaryColor,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 30.0),
-                                child: Text(
-                                  '${i + 1}. ${widget.hymn.verses[i]}',
-                                  style: TextStyle(
-                                    fontSize: _fontSize,
-                                    color: verseColors[i % verseColors.length],
-                                  ),
-                                ),
-                              ),
-                            ],
-                          ),
-                        ),
-                      ],
-                      const SizedBox(height: 100), // Adjust as needed
-                      Container(
-                        alignment: Alignment.center,
-                        child: Text(
-                          "-- tapitra --",
-                          style: TextStyle(
-                            color: theme.textTheme.bodyLarge?.color,
-                            fontSize: _fontSize,
-                          ),
-                        ),
-                      ),
-                    ],
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
+                child: Text(
+                  widget.hymn.bridge!,
+                  style: TextStyle(
+                      fontSize: _fontSize,
+                      color: theme.textTheme.bodyLarge?.color),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 60),
+                child: Text(
+                  'Andininy',
+                  style: TextStyle(
+                    fontSize: 18.0,
+                    fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
               ),
             ],
-          ),
+            Expanded(
+              child: SingleChildScrollView(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    for (int i = 0; i < widget.hymn.verses.length; i++) ...[
+                      Padding(
+                        padding: const EdgeInsets.symmetric(
+                            vertical: 10.0, horizontal: 30.0),
+                        child: Stack(
+                          alignment: Alignment.center,
+                          children: [
+                            Positioned.fill(
+                              child: Opacity(
+                                opacity: 0.15,
+                                child: Align(
+                                  alignment: Alignment.center,
+                                  child: Text(
+                                    '${i + 1}',
+                                    style: TextStyle(
+                                      fontSize: _countFontSize,
+                                      fontWeight: FontWeight.bold,
+                                      color: theme.primaryColor,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ),
+                            Padding(
+                              padding: const EdgeInsets.only(left: 30.0),
+                              child: Text(
+                                '${i + 1}. ${widget.hymn.verses[i]}',
+                                style: TextStyle(
+                                  fontSize: _fontSize,
+                                  color: verseColors[i % verseColors.length],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                    const SizedBox(height: 100), // Adjust as needed
+                    Container(
+                      alignment: Alignment.center,
+                      child: Text(
+                        "-- tapitra --",
+                        style: TextStyle(
+                          color: theme.textTheme.bodyLarge?.color,
+                          fontSize: _fontSize,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
         ),
       ),
     );

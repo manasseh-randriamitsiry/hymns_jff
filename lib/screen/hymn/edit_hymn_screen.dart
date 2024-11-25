@@ -128,7 +128,57 @@ class EditHymnScreenState extends State<EditHymnScreen> {
               const SizedBox(
                 height: 10,
               ),
-              ..._buildVerseInputs(),
+              // Use ReorderableListView for verses
+              ReorderableListView(
+                shrinkWrap: true, // Shrink to fit its content
+                physics:
+                    NeverScrollableScrollPhysics(), // Disable scroll on the list
+                onReorder: (oldIndex, newIndex) {
+                  setState(() {
+                    if (newIndex > oldIndex) {
+                      newIndex -= 1;
+                    }
+                    final item = _verseControllers.removeAt(oldIndex);
+                    _verseControllers.insert(newIndex, item);
+                  });
+                },
+                children: List.generate(_verseControllers.length, (index) {
+                  return Padding(
+                    key: Key('$index'),
+                    padding: const EdgeInsets.only(bottom: 5.0),
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: TextField(
+                            controller: _verseControllers[index],
+                            maxLines: null,
+                            decoration: InputDecoration(
+                              labelText: 'Andininy: ${index + 1}',
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                              ),
+                            ),
+                          ),
+                        ),
+                        const SizedBox(
+                          width: 5,
+                        ),
+                        if (_verseControllers.length > 1)
+                          CircleAvatar(
+                            child: IconButton(
+                              icon: const Icon(Icons.remove),
+                              onPressed: () {
+                                setState(() {
+                                  _verseControllers.removeAt(index);
+                                });
+                              },
+                            ),
+                          ),
+                      ],
+                    ),
+                  );
+                }),
+              ),
               const SizedBox(height: 16.0),
               TextField(
                 controller: _bridgeController,
@@ -175,47 +225,5 @@ class EditHymnScreenState extends State<EditHymnScreen> {
         ),
       ),
     );
-  }
-
-  List<Widget> _buildVerseInputs() {
-    List<Widget> verseInputs = [];
-    for (int i = 0; i < _verseControllers.length; i++) {
-      verseInputs.add(
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextField(
-                  controller: _verseControllers[i],
-                  maxLines: null,
-                  decoration: InputDecoration(
-                    labelText: 'Andininy: ${i + 1}',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                ),
-              ),
-              const SizedBox(
-                width: 5,
-              ),
-              if (_verseControllers.length > 1)
-                CircleAvatar(
-                  child: IconButton(
-                    icon: const Icon(Icons.remove),
-                    onPressed: () {
-                      setState(() {
-                        _verseControllers.removeAt(i);
-                      });
-                    },
-                  ),
-                ),
-            ],
-          ),
-        ),
-      );
-    }
-    return verseInputs;
   }
 }

@@ -100,7 +100,12 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                 const SizedBox(
                   height: 10,
                 ),
-                ..._buildVerseInputs(),
+                // Make verses draggable with ReorderableListView
+                ReorderableListView(
+                  shrinkWrap: true,
+                  onReorder: _onReorder,
+                  children: _buildVerseInputs(),
+                ),
                 Row(
                   children: [
                     IconButton(
@@ -156,33 +161,31 @@ class CreateHymnPageState extends State<CreateHymnPage> {
     List<Widget> verseInputs = [];
     for (int i = 0; i < _verseControllers.length; i++) {
       verseInputs.add(
-        Padding(
-          padding: const EdgeInsets.only(bottom: 5.0),
-          child: Row(
-            children: [
-              Expanded(
-                child: TextFormField(
-                  controller: _verseControllers[i],
-                  maxLines: null, // Allow multiple lines for verses
-                  decoration: InputDecoration(
-                    labelText: 'Andininy: ${i + 1}',
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10.0),
-                    ),
-                  ),
-                  validator: (value) {
-                    if (value == null || value.isEmpty) {
-                      return 'Soraty eto ny andininy ${i + 1}';
-                    }
-                    return null;
-                  },
+        ListTile(
+          key: ValueKey(i), // Unique key for reordering
+          contentPadding: EdgeInsets.zero,
+          leading: const Icon(Icons.drag_handle),
+          title: Padding(
+            padding: const EdgeInsets.only(bottom: 5.0),
+            child: TextFormField(
+              controller: _verseControllers[i],
+              maxLines: null, // Allow multiple lines for verses
+              decoration: InputDecoration(
+                labelText: 'Andininy: ${i + 1}',
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
                 ),
               ),
-              const SizedBox(
-                width: 5,
-              ),
-              if (_verseControllers.length > 1)
-                CircleAvatar(
+              validator: (value) {
+                if (value == null || value.isEmpty) {
+                  return 'Soraty eto ny andininy ${i + 1}';
+                }
+                return null;
+              },
+            ),
+          ),
+          trailing: _verseControllers.length > 1
+              ? CircleAvatar(
                   child: IconButton(
                     icon: const Icon(Icons.remove),
                     onPressed: () {
@@ -191,13 +194,22 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                       });
                     },
                   ),
-                ),
-            ],
-          ),
+                )
+              : null,
         ),
       );
     }
     return verseInputs;
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    setState(() {
+      if (oldIndex < newIndex) {
+        newIndex -= 1;
+      }
+      final controller = _verseControllers.removeAt(oldIndex);
+      _verseControllers.insert(newIndex, controller);
+    });
   }
 
   void _createHymn() {
