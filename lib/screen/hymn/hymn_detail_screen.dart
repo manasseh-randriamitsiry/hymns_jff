@@ -1,3 +1,4 @@
+import 'package:fihirana/utility/screen_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -82,18 +83,18 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
         centerTitle: true,
         actions: [
           IconButton(
-              onPressed: () {
-                setState(
-                  () {
-                    _scale = _scale * 1.2;
-                    _fontSize = _baseFontSize * _scale;
-                  
-                    _countFontSize = _baseCountFontSize * _scale;
-                  },
-                );
-              },
-              icon: Icon(Icons.add),),
-              IconButton(
+            onPressed: () {
+              setState(
+                () {
+                  _scale = _scale * 1.2;
+                  _fontSize = _baseFontSize * _scale;
+                  _countFontSize = _baseCountFontSize * _scale;
+                },
+              );
+            },
+            icon: Icon(Icons.add),
+          ),
+          IconButton(
             onPressed: () {
               setState(
                 () {
@@ -107,7 +108,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                 },
               );
             },
-            icon: Icon(Icons.minimize),
+            icon: const Icon(Icons.minimize),
           ),
         ],
       ),
@@ -136,7 +137,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
             children: [
               Text(
                 widget.hymn.title,
-                maxLines: null,
+                maxLines: 3,
                 textAlign: TextAlign.center,
                 style: TextStyle(
                   color: theme.textTheme.bodyLarge?.color,
@@ -144,7 +145,8 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                   fontSize: _fontSize,
                 ),
               ),
-              if (widget.hymn.bridge != null && widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
+              if (widget.hymn.bridge != null &&
+                  widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
                 Padding(
                   padding: const EdgeInsets.only(top: 20, left: 15),
                   child: Text(
@@ -156,6 +158,29 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                     ),
                   ),
                 ),
+                if (widget.hymn.hymnHint!.trim().toLowerCase().isNotEmpty) ...[
+                  Padding(
+                    padding: const EdgeInsets.only(top: 20, left: 15),
+                    child: Text(
+                      'Naoty:',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                        color: theme.textTheme.bodyLarge?.color,
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        vertical: 8.0, horizontal: 15),
+                    child: Text(
+                      widget.hymn.hymnHint!,
+                      style: TextStyle(
+                          fontSize: _fontSize,
+                          color: theme.textTheme.bodyLarge?.color),
+                    ),
+                  ),
+                ],
                 Padding(
                   padding:
                       const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),

@@ -17,6 +17,7 @@ class CreateHymnPageState extends State<CreateHymnPage> {
   final TextEditingController _versesController = TextEditingController();
   final TextEditingController _bridgeController = TextEditingController();
   final TextEditingController _hymnNumberController = TextEditingController();
+  final TextEditingController _hymnHintController = TextEditingController();
 
   List<TextEditingController> _verseControllers = [];
 
@@ -34,6 +35,7 @@ class CreateHymnPageState extends State<CreateHymnPage> {
     _titleController.dispose();
     _versesController.dispose();
     _bridgeController.dispose();
+    _hymnHintController.dispose();
     for (var controller in _verseControllers) {
       controller.dispose();
     }
@@ -123,6 +125,17 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                   ),
                 ),
                 const SizedBox(height: 16.0),
+                TextFormField(
+                  controller: _hymnHintController,
+                  maxLines: null, // Allow multiple lines for bridge
+                  decoration: InputDecoration(
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                    ),
+                    labelText: "Naoty",
+                  ),
+                ),
+                const SizedBox(height: 16.0),
                 ElevatedButton(
                   onPressed: () {
                     if (_formKey.currentState!.validate()) {
@@ -195,6 +208,9 @@ class CreateHymnPageState extends State<CreateHymnPage> {
     String? bridge = _bridgeController.text.isNotEmpty
         ? _bridgeController.text.trim()
         : null;
+    String? hymnHint = _hymnHintController.text.isNotEmpty
+        ? _bridgeController.text.trim()
+        : null;
 
     Hymn newHymn = Hymn(
       id: '',
@@ -202,6 +218,7 @@ class CreateHymnPageState extends State<CreateHymnPage> {
       verses: verses,
       bridge: bridge,
       hymnNumber: hymnNumber,
+      hymnHint: hymnHint,
     );
 
     _hymnService.addHymn(newHymn).then((_) {
