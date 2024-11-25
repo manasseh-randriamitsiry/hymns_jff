@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
 import '../favorite/favorites_screen.dart';
@@ -27,6 +28,7 @@ class AccueilScreenState extends State<AccueilScreen> {
   List<Hymn> _filteredHymns = [];
   final Random _random = Random();
   Hymn? _selectedHymn;
+  bool _isTabletMode = false; //
 
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
@@ -143,10 +145,23 @@ class AccueilScreenState extends State<AccueilScreen> {
     super.dispose();
   }
 
+  final double _baseFontSize = 16.0;
+  final double _baseCountFontSize = 50.0;
+  double _fontSize = 16.0;
+  double _scale = 1.0;
+
+  Future<void> _loadFontSize() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _fontSize = prefs.getDouble('fontSize') ?? _baseFontSize;
+      _countFontSize = _fontSize * (_baseCountFontSize / _baseFontSize);
+      _scale = _fontSize / _baseFontSize;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    bool tablet = isTablet(context);
-    if (tablet) {
+    if (_isTabletMode) {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -156,9 +171,9 @@ class AccueilScreenState extends State<AccueilScreen> {
             },
           ),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Fihirana JFF',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: _fontSize),
           ),
           actions: [
             IconButton(
@@ -168,6 +183,15 @@ class AccueilScreenState extends State<AccueilScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => FavoritesPage()),
                 );
+              },
+            ),
+            IconButton(
+              icon:
+                  Icon(_isTabletMode ? Icons.tablet_android : Icons.smartphone),
+              onPressed: () {
+                setState(() {
+                  _isTabletMode = !_isTabletMode;
+                });
               },
             ),
           ],
@@ -185,7 +209,7 @@ class AccueilScreenState extends State<AccueilScreen> {
                 borderRadius: BorderRadius.all(
                   Radius.circular(30),
                 ),
-                color: getTheme(context).primaryColor.withOpacity(0.1),
+                color: getTheme(context).cardColor.withOpacity(0.1),
               ),
               child: Column(
                 children: [
@@ -277,11 +301,12 @@ class AccueilScreenState extends State<AccueilScreen> {
                                 ),
                                 title: Text(
                                   hymn.title,
-                                  style: const TextStyle(
+                                  style: TextStyle(
+                                      fontSize: _fontSize / 2,
                                       fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Text(firstVersePreview),
-                                trailing: Row(
+                                trailing: Column(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
@@ -327,19 +352,19 @@ class AccueilScreenState extends State<AccueilScreen> {
               SizedBox(
                 height: getScreenHeight(context),
                 width: (2 * getScreenWidth(context) / 3) - 10,
-                child: const Column(
+                child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Salamo 118:29",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: _fontSize, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Miderà an'i Jehovah, fa tsara Izy; Eny, mandrakizay ny famindram-pony.",
                       style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.normal),
+                          fontSize: _fontSize, fontWeight: FontWeight.normal),
                     ),
                   ],
                 ),
@@ -357,6 +382,22 @@ class AccueilScreenState extends State<AccueilScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Hiran\'ny fihirana'),
+        leading: IconButton(
+          icon: const Icon(Icons.ac_unit),
+          onPressed: () {
+            openDrawer(context);
+          },
+        ),
+        actions: [
+          IconButton(
+            icon: Icon(_isTabletMode ? Icons.tablet_android : Icons.smartphone),
+            onPressed: () {
+              setState(() {
+                _isTabletMode = !_isTabletMode;
+              });
+            },
+          ),
+        ],
       ),
       body: Column(
         children: [

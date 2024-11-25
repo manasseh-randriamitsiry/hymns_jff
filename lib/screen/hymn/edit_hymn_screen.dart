@@ -1,4 +1,5 @@
 import 'package:fihirana/utility/screen_util.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
@@ -49,6 +50,10 @@ class EditHymnScreenState extends State<EditHymnScreen> {
     super.dispose();
   }
 
+  bool isUserAuthenticated() {
+    return FirebaseAuth.instance.currentUser != null;
+  }
+
   void _saveChanges() {
     // Update the hymn object with new values
     Hymn updatedHymn = Hymn(
@@ -81,12 +86,13 @@ class EditHymnScreenState extends State<EditHymnScreen> {
           style: const TextStyle(fontWeight: FontWeight.bold),
         ),
         actions: [
-          IconButton(
-            icon: const Icon(Icons.save),
-            onPressed: () {
-              _saveChanges();
-            },
-          ),
+          if (isUserAuthenticated())
+            IconButton(
+              icon: const Icon(Icons.save),
+              onPressed: () {
+                _saveChanges();
+              },
+            ),
         ],
       ),
       body: SingleChildScrollView(
@@ -192,6 +198,9 @@ class EditHymnScreenState extends State<EditHymnScreen> {
                   ),
                 ),
               ),
+              SizedBox(
+                height: 16,
+              ),
               TextField(
                 controller: _hymnHintController,
                 minLines: 5,
@@ -205,21 +214,22 @@ class EditHymnScreenState extends State<EditHymnScreen> {
                 ),
               ),
               const SizedBox(height: 16.0),
-              Center(
-                child: ElevatedButton(
-                  onPressed: () {
-                    _saveChanges();
-                  },
-                  child: const Padding(
-                    padding: EdgeInsets.only(
-                        left: 40.0, right: 40, top: 20, bottom: 20),
-                    child: Text(
-                      "Apidiro",
-                      style: TextStyle(fontSize: 20),
+              if (isUserAuthenticated())
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () {
+                      _saveChanges();
+                    },
+                    child: const Padding(
+                      padding: EdgeInsets.only(
+                          left: 40.0, right: 40, top: 20, bottom: 20),
+                      child: Text(
+                        "Apidiro",
+                        style: TextStyle(fontSize: 20),
+                      ),
                     ),
                   ),
                 ),
-              ),
             ],
           ),
         ),

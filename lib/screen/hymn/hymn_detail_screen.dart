@@ -136,23 +136,24 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
             },
             itemBuilder: (BuildContext context) {
               return [
-                const PopupMenuItem<String>(
-                  value: 'edit',
-                  child: Row(
-                    children: [
-                      Icon(Icons.edit),
-                      SizedBox(width: 8),
-                      Text('Hanova'),
-                    ],
+                if (isUserAuthenticated())
+                  const PopupMenuItem<String>(
+                    value: 'edit',
+                    child: Row(
+                      children: [
+                        Icon(Icons.edit),
+                        SizedBox(width: 8),
+                        Text('Hanova'),
+                      ],
+                    ),
                   ),
-                ),
                 const PopupMenuItem<String>(
                   value: 'switch_value',
                   child: Row(
                     children: [
                       Icon(Icons.remove_red_eye),
                       SizedBox(width: 8),
-                      Text('Haneho naoty'),
+                      Text('Naoty'),
                     ],
                   ),
                 ),
@@ -209,20 +210,12 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                 ),
               ),
             ),
+            const SizedBox(
+              height: 10,
+            ),
             if (_show &&
                 (widget.hymn.hymnHint?.trim().toLowerCase().isNotEmpty ??
                     false)) ...[
-              Padding(
-                padding: const EdgeInsets.only(top: 20, left: 15),
-                child: Text(
-                  'Naoty:',
-                  style: TextStyle(
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold,
-                    color: theme.textTheme.bodyLarge?.color, //Null-aware access
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
