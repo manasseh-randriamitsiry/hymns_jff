@@ -5,7 +5,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
 import '../favorite/favorites_screen.dart';
@@ -28,7 +27,6 @@ class AccueilScreenState extends State<AccueilScreen> {
   List<Hymn> _filteredHymns = [];
   final Random _random = Random();
   Hymn? _selectedHymn;
-  bool _isTabletMode = false; //
 
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
@@ -145,24 +143,10 @@ class AccueilScreenState extends State<AccueilScreen> {
     super.dispose();
   }
 
-  final double _baseFontSize = 16.0;
-  final double _baseCountFontSize = 50.0;
-  double _fontSize = 16.0;
-  double _countFontSize = 50.0;
-  double _scale = 1.0;
-
-  Future<void> _loadFontSize() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _fontSize = prefs.getDouble('fontSize') ?? _baseFontSize;
-      _countFontSize = _fontSize * (_baseCountFontSize / _baseFontSize);
-      _scale = _fontSize / _baseFontSize;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
-    if (_isTabletMode) {
+    bool tablet = isTablet(context);
+    if (tablet) {
       return Scaffold(
         appBar: AppBar(
           leading: IconButton(
@@ -172,9 +156,9 @@ class AccueilScreenState extends State<AccueilScreen> {
             },
           ),
           centerTitle: true,
-          title: Text(
+          title: const Text(
             'Fihirana JFF',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: _fontSize),
+            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
           ),
           actions: [
             IconButton(
@@ -184,15 +168,6 @@ class AccueilScreenState extends State<AccueilScreen> {
                   context,
                   MaterialPageRoute(builder: (context) => FavoritesPage()),
                 );
-              },
-            ),
-            IconButton(
-              icon:
-                  Icon(_isTabletMode ? Icons.tablet_android : Icons.smartphone),
-              onPressed: () {
-                setState(() {
-                  _isTabletMode = !_isTabletMode;
-                });
               },
             ),
           ],
@@ -302,12 +277,11 @@ class AccueilScreenState extends State<AccueilScreen> {
                                 ),
                                 title: Text(
                                   hymn.title,
-                                  style: TextStyle(
-                                      fontSize: _fontSize / 2,
+                                  style: const TextStyle(
                                       fontWeight: FontWeight.bold),
                                 ),
                                 subtitle: Text(firstVersePreview),
-                                trailing: Column(
+                                trailing: Row(
                                   mainAxisSize: MainAxisSize.min,
                                   children: [
                                     IconButton(
@@ -353,19 +327,19 @@ class AccueilScreenState extends State<AccueilScreen> {
               SizedBox(
                 height: getScreenHeight(context),
                 width: (2 * getScreenWidth(context) / 3) - 10,
-                child: Column(
+                child: const Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
                       "Salamo 118:29",
-                      style: TextStyle(
-                          fontSize: _fontSize, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                     Text(
                       "Miderà an'i Jehovah, fa tsara Izy; Eny, mandrakizay ny famindram-pony.",
                       style: TextStyle(
-                          fontSize: _fontSize, fontWeight: FontWeight.normal),
+                          fontSize: 20, fontWeight: FontWeight.normal),
                     ),
                   ],
                 ),
@@ -389,16 +363,6 @@ class AccueilScreenState extends State<AccueilScreen> {
             openDrawer(context);
           },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(_isTabletMode ? Icons.tablet_android : Icons.smartphone),
-            onPressed: () {
-              setState(() {
-                _isTabletMode = !_isTabletMode;
-              });
-            },
-          ),
-        ],
       ),
       body: Column(
         children: [
