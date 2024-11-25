@@ -56,10 +56,16 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
   }
 
   bool _showSlider = false; // Initially hidden
-  Timer? _timer;
+  bool _show = false;
   void _showFontSizeDialog(BuildContext context) {
     setState(() {
       _showSlider = !_showSlider;
+    });
+  }
+
+  void _switchValue(BuildContext context) {
+    setState(() {
+      _show = !_show;
     });
   }
 
@@ -74,7 +80,6 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
 
   @override
   void dispose() {
-    _timer?.cancel(); // Cancel the timer when the widget is disposed
     super.dispose();
   }
 
@@ -96,6 +101,16 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
         ),
         centerTitle: true,
         actions: [
+          if (widget.hymn.hymnHint!.trim().toLowerCase().isNotEmpty ??
+              false) ...[
+            IconButton(
+              onPressed: () {
+                _switchValue(context);
+              },
+              icon: const Icon(Icons
+                  .remove_red_eye), // New icon for opening font size adjustment dialog
+            ),
+          ],
           IconButton(
             onPressed: () {
               _showFontSizeDialog(context);
@@ -109,25 +124,13 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              widget.hymn.title,
-              maxLines: 3,
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: theme.textTheme.bodyLarge?.color,
-                fontWeight: FontWeight.bold,
-                fontSize: _fontSize,
-              ),
-            ),
             if (_showSlider)
               Container(
                 child: SfSlider(
-                  min: 0.0,
+                  min: 10.0,
                   max: 100.0,
-                  interval: 20,
+                  interval: 5,
                   showTicks: true,
-                  showLabels: true,
-                  enableTooltip: true,
                   minorTicksPerInterval: 1,
                   onChanged: (dynamic value) {
                     _saveFontSize();
@@ -143,12 +146,25 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                   value: _fontSize,
                 ),
               ),
-            if (widget.hymn.bridge != null &&
-                widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
+            Center(
+              child: Text(
+                widget.hymn.title,
+                maxLines: 3,
+                textAlign: TextAlign.center,
+                style: TextStyle(
+                  color: theme.textTheme.bodyLarge?.color,
+                  fontWeight: FontWeight.bold,
+                  fontSize: _fontSize,
+                ),
+              ),
+            ),
+            if (_show == true &&
+                    widget.hymn.hymnHint!.trim().toLowerCase().isNotEmpty ??
+                false) ...[
               Padding(
                 padding: const EdgeInsets.only(top: 20, left: 15),
                 child: Text(
-                  'Isan\'andininy:',
+                  'Naoty:',
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
@@ -156,31 +172,30 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                   ),
                 ),
               ),
-              if (widget.hymn.hymnHint?.trim().toLowerCase().isNotEmpty ??
-                  false) ...[
-                Padding(
-                  padding: const EdgeInsets.only(top: 20, left: 15),
-                  child: Text(
-                    'Naoty:',
-                    style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: theme.textTheme.bodyLarge?.color,
-                    ),
+              Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 15),
+                child: Text(
+                  widget.hymn.hymnHint ?? '', // safely use hymnHint
+                  style: TextStyle(
+                    fontSize: 2 * _fontSize / 3,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
-                Padding(
-                  padding:
-                      const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
-                  child: Text(
-                    widget.hymn.hymnHint ?? '', // safely use hymnHint
-                    style: TextStyle(
-                      fontSize: _fontSize,
-                      color: theme.textTheme.bodyLarge?.color,
-                    ),
+              ),
+            ],
+            if (widget.hymn.bridge != null &&
+                widget.hymn.bridge!.trim().toLowerCase().isNotEmpty) ...[
+              Padding(
+                padding: const EdgeInsets.only(top: 10, left: 15),
+                child: Text(
+                  'Isan\'andininy:',
+                  style: TextStyle(
+                    fontSize: _fontSize + 2,
+                    fontWeight: FontWeight.bold,
+                    color: theme.textTheme.bodyLarge?.color,
                   ),
                 ),
-              ],
+              ),
               Padding(
                 padding:
                     const EdgeInsets.symmetric(vertical: 8.0, horizontal: 15),
@@ -196,7 +211,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                 child: Text(
                   'Andininy',
                   style: TextStyle(
-                    fontSize: 18.0,
+                    fontSize: _fontSize + 2,
                     fontWeight: FontWeight.bold,
                     color: theme.textTheme.bodyLarge?.color,
                   ),
