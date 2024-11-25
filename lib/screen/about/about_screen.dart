@@ -38,11 +38,6 @@ class AboutScreen extends StatelessWidget {
                   'Antsororokavo Fianarantsoa 301',
                   style: TextStyle(fontSize: 18),
                 ),
-                SizedBox(height: 5),
-                Text(
-                  'Contact: +123 456 7890',
-                  style: TextStyle(fontSize: 18),
-                ),
                 SizedBox(height: 20),
                 Text(
                   'Mpamorona rindrambaiko',

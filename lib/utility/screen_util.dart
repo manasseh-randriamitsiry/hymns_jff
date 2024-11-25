@@ -89,7 +89,10 @@ void closeDrawer(BuildContext context) {
   ZoomDrawer.of(context)!.close();
 }
 
-void showDialogWidget(BuildContext context,{required String title, required String content, required String buttonText}) {
+void showDialogWidget(BuildContext context,
+    {required String title,
+    required String content,
+    required String buttonText}) {
   showDialog(
     context: context,
     builder: (BuildContext context) {
@@ -109,21 +112,24 @@ void showDialogWidget(BuildContext context,{required String title, required Stri
   );
 }
 
-void showSnackbarSuccessMessage({required String title, required String message}){
+void showSnackbarSuccessMessage(
+    {required String title, required String message}) {
   Get.snackbar(
-  title,
+    title,
     message,
     backgroundColor: Colors.green.withOpacity(0.2),
-    colorText: Colors.black,
-    icon: const Icon(Icons.check, color: Colors.black),
+    colorText: Colors.white,
+    icon: const Icon(Icons.check, color: Colors.green),
   );
 }
-void showSnackbarErrorMessage({required String title, required String message}){
+
+void showSnackbarErrorMessage(
+    {required String title, required String message}) {
   Get.snackbar(
-  title,
+    title,
     message,
     backgroundColor: Colors.red.withOpacity(0.2),
-    colorText: Colors.black,
+    colorText: Colors.white,
     icon: const Icon(Icons.error_outline, color: Colors.red),
   );
 }

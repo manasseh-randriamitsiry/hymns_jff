@@ -175,12 +175,16 @@ class AccueilScreenState extends State<AccueilScreen> {
         body: Row(
           mainAxisAlignment: MainAxisAlignment.spaceAround,
           children: [
-            Container(width: 10,),
             Container(
-              height: getScreenHeight(context) - getScreenHeight(context)/12,
+              width: 10,
+            ),
+            Container(
+              height: getScreenHeight(context) - getScreenHeight(context) / 12,
               width: (getScreenWidth(context) / 3) - 10,
               decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(Radius.circular(30),),
+                borderRadius: BorderRadius.all(
+                  Radius.circular(30),
+                ),
                 color: getTheme(context).primaryColor.withOpacity(0.1),
               ),
               child: Column(
