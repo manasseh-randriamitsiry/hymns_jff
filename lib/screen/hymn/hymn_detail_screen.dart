@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:syncfusion_flutter_sliders/sliders.dart';
 
 import '../../models/hymn.dart';
+import 'edit_hymn_screen.dart';
 
 class HymnDetailScreen extends StatefulWidget {
   final Hymn hymn;
@@ -83,6 +84,15 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
     super.dispose();
   }
 
+  void _navigateToEditScreen(BuildContext context, Hymn hymn) {
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => EditHymnScreen(hymn: hymn),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     var theme = Theme.of(context);
@@ -101,22 +111,63 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
         ),
         centerTitle: true,
         actions: [
-          if (widget.hymn.hymnHint!.trim().toLowerCase().isNotEmpty ??
-              false) ...[
-            IconButton(
-              onPressed: () {
-                _switchValue(context);
-              },
-              icon: const Icon(Icons
-                  .remove_red_eye), // New icon for opening font size adjustment dialog
-            ),
-          ],
-          IconButton(
-            onPressed: () {
-              _showFontSizeDialog(context);
+          PopupMenuButton<String>(
+            onSelected: (String item) {
+              switch (item) {
+                case 'edit':
+                  _navigateToEditScreen(
+                    context,
+                    Hymn(
+                      id: widget.hymn.id,
+                      hymnNumber: widget.hymn.hymnNumber,
+                      title: widget.hymn.title,
+                      verses: widget.hymn.verses,
+                      hymnHint: widget.hymn.hymnHint,
+                    ),
+                  );
+                  break;
+                case 'switch_value':
+                  _switchValue(context);
+                  break;
+                case 'font_size':
+                  _showFontSizeDialog(context);
+                  break;
+              }
             },
-            icon: const Icon(Icons
-                .text_fields), // New icon for opening font size adjustment dialog
+            itemBuilder: (BuildContext context) {
+              return [
+                const PopupMenuItem<String>(
+                  value: 'edit',
+                  child: Row(
+                    children: [
+                      Icon(Icons.edit),
+                      SizedBox(width: 8),
+                      Text('Hanova'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'switch_value',
+                  child: Row(
+                    children: [
+                      Icon(Icons.remove_red_eye),
+                      SizedBox(width: 8),
+                      Text('Haneho naoty'),
+                    ],
+                  ),
+                ),
+                const PopupMenuItem<String>(
+                  value: 'font_size',
+                  child: Row(
+                    children: [
+                      Icon(Icons.text_fields),
+                      SizedBox(width: 8),
+                      Text("Haben'ny soratra"),
+                    ],
+                  ),
+                ),
+              ];
+            },
           ),
         ],
       ),
@@ -158,9 +209,9 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                 ),
               ),
             ),
-            if (_show == true &&
-                    widget.hymn.hymnHint!.trim().toLowerCase().isNotEmpty ??
-                false) ...[
+            if (_show &&
+                (widget.hymn.hymnHint?.trim().toLowerCase().isNotEmpty ??
+                    false)) ...[
               Padding(
                 padding: const EdgeInsets.only(top: 20, left: 15),
                 child: Text(
@@ -168,17 +219,18 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
-                    color: theme.textTheme.bodyLarge?.color,
+                    color: theme.textTheme.bodyLarge?.color, //Null-aware access
                   ),
                 ),
               ),
               Padding(
                 padding: const EdgeInsets.symmetric(horizontal: 15),
                 child: Text(
-                  widget.hymn.hymnHint ?? '', // safely use hymnHint
+                  widget.hymn.hymnHint ?? '', // Provide default value if null
                   style: TextStyle(
                     fontSize: 2 * _fontSize / 3,
-                    color: theme.textTheme.bodyLarge?.color,
+                    color:
+                        theme.textTheme.bodyLarge?.color, // Null-aware access
                   ),
                 ),
               ),
