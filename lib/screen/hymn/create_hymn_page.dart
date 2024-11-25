@@ -1,7 +1,6 @@
+import 'package:fihirana/controller/hymnController.dart';
 import 'package:fihirana/utility/screen_util.dart';
 import 'package:flutter/material.dart';
-
-import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
 
 class CreateHymnPage extends StatefulWidget {
@@ -20,8 +19,7 @@ class CreateHymnPageState extends State<CreateHymnPage> {
   final TextEditingController _hymnHintController = TextEditingController();
 
   List<TextEditingController> _verseControllers = [];
-
-  final HymnService _hymnService = HymnService();
+  final HymnController _hymnController = HymnController();
 
   @override
   void initState() {
@@ -212,42 +210,43 @@ class CreateHymnPageState extends State<CreateHymnPage> {
     });
   }
 
-  void _createHymn() {
-    String hymnNumber = _hymnNumberController.text.trim();
-    String title = _titleController.text.trim();
-    List<String> verses =
-        _verseControllers.map((controller) => controller.text.trim()).toList();
-    String? bridge = _bridgeController.text.isNotEmpty
-        ? _bridgeController.text.trim()
-        : null;
-    String? hymnHint = _hymnHintController.text.isNotEmpty
-        ? _bridgeController.text.trim()
-        : null;
+  Future<void> _createHymn() async {
+    try {
+      final hymnNumber = _hymnNumberController.text.trim();
+      final title = _titleController.text.trim();
+      final verses = _verseControllers
+          .map((controller) => controller.text.trim())
+          .toList();
+      final bridge = _bridgeController.text.isNotEmpty
+          ? _bridgeController.text.trim()
+          : null;
+      final hymnHint = _hymnHintController.text.isNotEmpty
+          ? _bridgeController.text.trim()
+          : null;
 
-    Hymn newHymn = Hymn(
-      id: '',
-      title: title,
-      verses: verses,
-      bridge: bridge,
-      hymnNumber: hymnNumber,
-      hymnHint: hymnHint,
-    );
+      if (await _hymnController.createHymn(
+          hymnNumber, title, verses, bridge, hymnHint)) {
+        // Clear controllers and reset state after successful creation
+        _hymnNumberController.clear();
+        _titleController.clear();
+        for (var controller in _verseControllers) {
+          controller.clear();
+        }
+        _bridgeController.clear();
+        _hymnHintController.clear(); // Clear hymn hint controller
 
-    _hymnService.addHymn(newHymn).then((_) {
-      _hymnNumberController.clear();
-      _titleController.clear();
-      for (var controller in _verseControllers) {
-        controller.clear();
+        setState(() {
+          _verseControllers = [TextEditingController()];
+        });
       }
-      _bridgeController.clear();
-      setState(() {
-        _verseControllers = [TextEditingController()]; // Reset to initial state
-      });
-    }).catchError((error) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-        content: Text('Nisy olana fa ialana tsiny: $error'),
-        backgroundColor: Colors.red,
-      ));
-    });
+    } catch (error) {
+      // Handle errors gracefully
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          content: Text('Nisy olana fa ialana tsiny: $error'),
+          backgroundColor: Colors.red,
+        ),
+      );
+    }
   }
 }

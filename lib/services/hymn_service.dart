@@ -16,7 +16,7 @@ class HymnService {
     return _firestore.collection(collectionName).snapshots();
   }
 
-  Future<void> addHymn(Hymn hymn) async {
+  Future<bool> addHymn(Hymn hymn) async {
     try {
       bool isUnique = await _isHymnNumberUnique(hymn.hymnNumber, '');
       if (!isUnique) {
@@ -24,7 +24,7 @@ class HymnService {
           title: 'Nisy olana',
           message: 'Antony : efa misy hira faha: ${hymn.hymnNumber} ',
         );
-        return;
+        return false;
       }
       // Perform addition
       await hymnsCollection.add(hymn.toFirestore());
@@ -32,6 +32,7 @@ class HymnService {
         title: 'Tafiditra soamantsara',
         message: 'Deraina ny Tompo',
       );
+      return true;
     } catch (e) {
       _showErrorSnackbar(
         title: 'Nisy olana',
@@ -40,6 +41,7 @@ class HymnService {
       if (kDebugMode) {
         print('Error adding hymn: $e');
       }
+      return false;
     }
   }
 
