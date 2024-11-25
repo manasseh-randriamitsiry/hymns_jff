@@ -130,7 +130,8 @@ class DrawerScreenState extends State<DrawerScreen> {
                 imageBuilder: (context, imageProvider) => CircleAvatar(
                   backgroundImage: imageProvider,
                 ),
-                placeholder: (context, url) => const CircularProgressIndicator(),
+                placeholder: (context, url) =>
+                    const CircularProgressIndicator(),
                 errorWidget: (context, url, error) => const Icon(Icons.error),
               ),
             ),
@@ -144,23 +145,6 @@ class DrawerScreenState extends State<DrawerScreen> {
               _themeController.toggleTheme();
             },
           ),
-          if (_isAuthenticated)
-            ListTile(
-              leading: Icon(Icons.logout, color: getTextTheme(context)),
-              title: Text(
-                'Mivoaka',
-                style: TextStyle(
-                  color: getTextTheme(context),
-                ),
-              ),
-              onTap: () {
-                FirebaseAuth.instance.signOut();
-                setState(() {
-                  _isAuthenticated = false;
-                  _currentUser = null;
-                });
-              },
-            ),
           if (!_isAuthenticated)
             ListTile(
               leading: Icon(Icons.login, color: getTextTheme(context)),
@@ -193,6 +177,23 @@ class DrawerScreenState extends State<DrawerScreen> {
               Get.to(FavoritesPage());
             },
           ),
+          if (_isAuthenticated)
+            ListTile(
+              leading: Icon(Icons.logout, color: getTextTheme(context)),
+              title: Text(
+                'Mivoaka',
+                style: TextStyle(
+                  color: getTextTheme(context),
+                ),
+              ),
+              onTap: () {
+                FirebaseAuth.instance.signOut();
+                setState(() {
+                  _isAuthenticated = false;
+                  _currentUser = null;
+                });
+              },
+            ),
           ListTile(
             leading: Icon(Icons.info_outline, color: getTextTheme(context)),
             title: Text(
