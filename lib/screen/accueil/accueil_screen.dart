@@ -148,6 +148,7 @@ class AccueilScreenState extends State<AccueilScreen> {
   final double _baseFontSize = 16.0;
   final double _baseCountFontSize = 50.0;
   double _fontSize = 16.0;
+  double _countFontSize = 50.0;
   double _scale = 1.0;
 
   Future<void> _loadFontSize() async {
