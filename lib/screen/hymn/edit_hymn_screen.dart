@@ -18,6 +18,7 @@ class EditHymnScreenState extends State<EditHymnScreen> {
   final TextEditingController _titleController = TextEditingController();
   final TextEditingController _hymnNumberController = TextEditingController();
   final TextEditingController _bridgeController = TextEditingController();
+  final TextEditingController _hymnHintController = TextEditingController();
   List<TextEditingController> _verseControllers = [];
 
   final HymnService _hymnService = HymnService();
@@ -27,6 +28,7 @@ class EditHymnScreenState extends State<EditHymnScreen> {
     super.initState();
     _hymnNumberController.text = widget.hymn.hymnNumber.toString();
     _titleController.text = widget.hymn.title;
+    _hymnHintController.text = widget.hymn.hymnHint ?? "";
     _bridgeController.text = widget.hymn.bridge ?? "";
 
     // Initialize verse controllers and populate them with existing verses
@@ -40,6 +42,7 @@ class EditHymnScreenState extends State<EditHymnScreen> {
     _hymnNumberController.dispose();
     _titleController.dispose();
     _bridgeController.dispose();
+    _hymnHintController.dispose();
     for (var controller in _verseControllers) {
       controller.dispose();
     }
@@ -49,12 +52,12 @@ class EditHymnScreenState extends State<EditHymnScreen> {
   void _saveChanges() {
     // Update the hymn object with new values
     Hymn updatedHymn = Hymn(
-      id: widget.hymn.id,
-      hymnNumber: _hymnNumberController.text,
-      title: _titleController.text,
-      verses: _verseControllers.map((controller) => controller.text).toList(),
-      bridge: _bridgeController.text,
-    );
+        id: widget.hymn.id,
+        hymnNumber: _hymnNumberController.text,
+        title: _titleController.text,
+        verses: _verseControllers.map((controller) => controller.text).toList(),
+        bridge: _bridgeController.text,
+        hymnHint: _hymnHintController.text);
 
     // Call your Firestore update method from the service
     _hymnService
@@ -129,11 +132,23 @@ class EditHymnScreenState extends State<EditHymnScreen> {
               const SizedBox(height: 16.0),
               TextField(
                 controller: _bridgeController,
-                minLines: 2,
+                minLines: 10,
                 maxLines: null,
                 decoration: InputDecoration(
                   labelText: 'Fiverenana (Tsy voatery)',
                   prefixIcon: const Icon(Icons.refresh),
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                  ),
+                ),
+              ),
+              TextField(
+                controller: _hymnHintController,
+                minLines: 5,
+                maxLines: null,
+                decoration: InputDecoration(
+                  labelText: 'Naoty',
+                  prefixIcon: const Icon(Icons.note_alt_outlined),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
                   ),

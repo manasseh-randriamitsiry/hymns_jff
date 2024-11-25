@@ -158,7 +158,8 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                     ),
                   ),
                 ),
-                if (widget.hymn.hymnHint!.trim().toLowerCase().isNotEmpty) ...[
+                if (widget.hymn.hymnHint?.trim().toLowerCase().isNotEmpty ??
+                    false) ...[
                   Padding(
                     padding: const EdgeInsets.only(top: 20, left: 15),
                     child: Text(
@@ -174,10 +175,11 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                     padding: const EdgeInsets.symmetric(
                         vertical: 8.0, horizontal: 15),
                     child: Text(
-                      widget.hymn.hymnHint!,
+                      widget.hymn.hymnHint ?? '', // safely use hymnHint
                       style: TextStyle(
-                          fontSize: _fontSize,
-                          color: theme.textTheme.bodyLarge?.color),
+                        fontSize: _fontSize,
+                        color: theme.textTheme.bodyLarge?.color,
+                      ),
                     ),
                   ),
                 ],

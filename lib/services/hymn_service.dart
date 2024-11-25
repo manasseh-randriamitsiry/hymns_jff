@@ -45,27 +45,32 @@ class HymnService {
 
   Future<void> updateHymn(String hymnId, Hymn hymn) async {
     try {
-      // Check if hymnNumber already exists
+      // Check if hymnNumber is unique (excluding the current hymn being updated)
       bool isUnique = await _isHymnNumberUnique(hymn.hymnNumber, hymnId);
+
       if (!isUnique) {
         _showErrorSnackbar(
           title: 'Nisy olana',
-          message: 'Antony : efa misy hira faha: ${hymn.hymnNumber} ',
+          message: 'Antony: Efa misy hira faha: ${hymn.hymnNumber}',
         );
         return;
       }
 
-      // Perform update
+      // Perform the update operation
       await hymnsCollection.doc(hymnId).update(hymn.toFirestore());
+
+      // Show success message
       _showSuccessSnackbar(
         title: 'Vita fanavaozana',
         message: 'Deraina ny Tompo',
       );
     } catch (e) {
+      // Handle errors
       _showErrorSnackbar(
         title: 'Nisy olana',
-        message: 'Antony : efa misy hira ${hymn.hymnNumber} ',
+        message: 'Antony: Tsy nahomby ny fanavaozana hira ${hymn.hymnNumber}',
       );
+
       if (kDebugMode) {
         print('Error updating hymn: $e');
       }
@@ -110,24 +115,24 @@ class HymnService {
             .toList());
   }
 
-  Future<bool> _isHymnNumberUnique(
-      String hymnNumber, String excludeHymnId) async {
+  Future<bool> _isHymnNumberUnique(String hymnNumber, String hymnId) async {
     try {
-      QuerySnapshot<Object?> querySnapshot = await hymnsCollection
+      // Query Firestore for hymns with the same hymnNumber
+      final querySnapshot = await FirebaseFirestore.instance
+          .collection('hymns')
           .where('hymnNumber', isEqualTo: hymnNumber)
           .get();
 
-      // Exclude the current hymnId from the query if updating
-      if (excludeHymnId.isNotEmpty) {
-        querySnapshot.docs.removeWhere((doc) => doc.id == excludeHymnId);
-      }
+      // Count documents with the same hymnNumber but a different id
+      int count = querySnapshot.docs.where((doc) => doc.id != hymnId).length;
 
-      return querySnapshot.docs.isEmpty;
+      // If count > 0, there's a duplicate
+      return count == 0;
     } catch (e) {
       if (kDebugMode) {
-        print('Error checking hymn number uniqueness: $e');
+        print('Error checking hymn uniqueness: $e');
       }
-      return false;
+      return false; // Assume not unique if an error occurs
     }
   }
 
