@@ -108,10 +108,13 @@ class DrawerScreenState extends State<DrawerScreen> {
   Widget build(BuildContext context) {
     bool isDarkMode = _themeController.isDarkMode.value;
     _setSystemUiOverlayStyle(isDarkMode);
-
     double screenWidth = MediaQuery.of(context).size.width;
     bool isDesktop = screenWidth >= 1200;
+    final theme = Theme.of(context);
+    final drawerColor = theme.dividerColor;
+    final textColor = theme.hintColor;
     return Drawer(
+      backgroundColor: drawerColor,
       width: isDesktop ? 300 : (4 * screenWidth / 5),
       child: ListView(
         padding: EdgeInsets.zero,
@@ -122,8 +125,14 @@ class DrawerScreenState extends State<DrawerScreen> {
             ),
           if (_currentUser != null)
             UserAccountsDrawerHeader(
-              accountName: Text(_currentUser!.displayName ?? ''),
-              accountEmail: Text(_currentUser!.email),
+              accountName: Text(
+                _currentUser!.displayName ?? '',
+                style: TextStyle(color: textColor),
+              ),
+              accountEmail: Text(
+                _currentUser!.email,
+                style: TextStyle(color: textColor),
+              ),
               currentAccountPicture: CachedNetworkImage(
                 imageUrl: _currentUser!.photoUrl ?? '',
                 // Assuming _currentUser has a photoUrl property
@@ -132,14 +141,17 @@ class DrawerScreenState extends State<DrawerScreen> {
                 ),
                 placeholder: (context, url) =>
                     const CircularProgressIndicator(),
-                errorWidget: (context, url, error) => const Icon(Icons.error),
+                errorWidget: (context, url, error) => Icon(
+                  Icons.error,
+                  color: textColor,
+                ),
               ),
             ),
           ListTile(
-            leading: Icon(Icons.brightness_6, color: getTextTheme(context)),
+            leading: Icon(Icons.brightness_6, color: textColor),
             title: Text(
               'Hanova loko',
-              style: TextStyle(color: getTextTheme(context)),
+              style: TextStyle(color: textColor),
             ),
             onTap: () {
               _themeController.toggleTheme();
@@ -147,10 +159,10 @@ class DrawerScreenState extends State<DrawerScreen> {
           ),
           if (!_isAuthenticated)
             ListTile(
-              leading: Icon(Icons.login, color: getTextTheme(context)),
+              leading: Icon(Icons.login, color: textColor),
               title: Text(
                 'Miditra',
-                style: TextStyle(color: getTextTheme(context)),
+                style: TextStyle(color: textColor),
               ),
               onTap: () {
                 _signInWithGoogle();
@@ -158,20 +170,20 @@ class DrawerScreenState extends State<DrawerScreen> {
             ),
           if (_isAuthenticated)
             ListTile(
-              leading: Icon(Icons.add, color: getTextTheme(context)),
+              leading: Icon(Icons.add, color: textColor),
               title: Text(
                 'Hapiditra hira',
-                style: TextStyle(color: getTextTheme(context)),
+                style: TextStyle(color: textColor),
               ),
               onTap: () {
                 Get.to(const CreateHymnPage());
               },
             ),
           ListTile(
-            leading: Icon(Icons.favorite, color: getTextTheme(context)),
+            leading: Icon(Icons.favorite, color: textColor),
             title: Text(
               'Tiana',
-              style: TextStyle(color: getTextTheme(context)),
+              style: TextStyle(color: textColor),
             ),
             onTap: () {
               Get.to(FavoritesPage());
@@ -179,11 +191,11 @@ class DrawerScreenState extends State<DrawerScreen> {
           ),
           if (_isAuthenticated)
             ListTile(
-              leading: Icon(Icons.logout, color: getTextTheme(context)),
+              leading: Icon(Icons.logout, color: textColor),
               title: Text(
                 'Mivoaka',
                 style: TextStyle(
-                  color: getTextTheme(context),
+                  color: textColor,
                 ),
               ),
               onTap: () {
@@ -195,10 +207,10 @@ class DrawerScreenState extends State<DrawerScreen> {
               },
             ),
           ListTile(
-            leading: Icon(Icons.info_outline, color: getTextTheme(context)),
+            leading: Icon(Icons.info_outline, color: textColor),
             title: Text(
               '?',
-              style: TextStyle(color: getTextTheme(context)),
+              style: TextStyle(color: textColor),
             ),
             onTap: () {
               Get.to(const AboutScreen());

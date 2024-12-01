@@ -5,20 +5,22 @@ class AboutScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.hintColor;
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
         title: const Text('?'),
       ),
-      body: const Padding(
-        padding: EdgeInsets.all(16.0),
+      body: Padding(
+        padding: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
           child: Center(
             child: Column(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                SizedBox(
+                const SizedBox(
                   height: 20,
                 ),
                 Text(
@@ -26,51 +28,58 @@ class AboutScreen extends StatelessWidget {
                   style: TextStyle(
                     fontSize: 24,
                     fontWeight: FontWeight.bold,
+                    color: textColor,
                   ),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Jesosy Famonjena Fahamarinantsika',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: textColor),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   'Antsororokavo Fianarantsoa 301',
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: textColor),
                 ),
-                SizedBox(height: 20),
+                const SizedBox(height: 20),
                 Text(
                   'Mpamorona rindrambaiko',
                   style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                  ),
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: textColor),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 Text(
                   'Randriamitsiry Valimbavaka Nandrasana Manassé',
+                  style: TextStyle(color: textColor),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   'Contact: +261 34 29 439 71',
+                  style: TextStyle(color: textColor),
                   textAlign: TextAlign.center,
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   'Adiresy: Ambalavao tsienimparihy',
                   textAlign: TextAlign.center,
+                  style: TextStyle(color: textColor),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   'Email: manassehrandriamitsiry@gmail.com',
+                  style: TextStyle(color: textColor),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
                   'GitHub: https://github.com/manassehrandriamitsiry',
+                  style: TextStyle(color: textColor),
                 ),
-                SizedBox(height: 5),
+                const SizedBox(height: 5),
                 Text(
-                  'App version : 1.0',
+                  'App version : 0.1',
+                  style: TextStyle(color: textColor),
                 ),
               ],
             ),

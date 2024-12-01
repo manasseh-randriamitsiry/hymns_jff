@@ -95,8 +95,8 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
 
   @override
   Widget build(BuildContext context) {
-    var theme = Theme.of(context);
-
+    final theme = Theme.of(context);
+    final textColor = theme.hintColor;
     return Scaffold(
       appBar: AppBar(
         title: Text(
@@ -104,7 +104,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
           maxLines: null,
           textAlign: TextAlign.center,
           style: TextStyle(
-            color: theme.textTheme.bodyLarge?.color,
+            color: textColor,
             fontWeight: FontWeight.bold,
             fontSize: _fontSize,
           ),
@@ -137,33 +137,51 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
             itemBuilder: (BuildContext context) {
               return [
                 if (isUserAuthenticated())
-                  const PopupMenuItem<String>(
+                  PopupMenuItem<String>(
                     value: 'edit',
                     child: Row(
                       children: [
-                        Icon(Icons.edit),
-                        SizedBox(width: 8),
-                        Text('Hanova'),
+                        Icon(
+                          Icons.edit,
+                          color: textColor,
+                        ),
+                        const SizedBox(width: 8),
+                        Text(
+                          'Hanova',
+                          style: TextStyle(color: textColor),
+                        ),
                       ],
                     ),
                   ),
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'switch_value',
                   child: Row(
                     children: [
-                      Icon(Icons.remove_red_eye),
-                      SizedBox(width: 8),
-                      Text('Naoty'),
+                      Icon(
+                        Icons.remove_red_eye,
+                        color: textColor,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        'Naoty',
+                        style: TextStyle(color: textColor),
+                      ),
                     ],
                   ),
                 ),
-                const PopupMenuItem<String>(
+                PopupMenuItem<String>(
                   value: 'font_size',
                   child: Row(
                     children: [
-                      Icon(Icons.text_fields),
-                      SizedBox(width: 8),
-                      Text("Haben'ny soratra"),
+                      Icon(
+                        Icons.text_fields,
+                        color: textColor,
+                      ),
+                      const SizedBox(width: 8),
+                      Text(
+                        "Haben'ny soratra",
+                        style: TextStyle(color: textColor),
+                      ),
                     ],
                   ),
                 ),
@@ -311,7 +329,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                       child: Text(
                         "-- tapitra --",
                         style: TextStyle(
-                          color: theme.textTheme.bodyLarge?.color,
+                          color: textColor,
                           fontSize: _fontSize,
                         ),
                       ),

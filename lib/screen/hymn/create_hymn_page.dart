@@ -1,7 +1,5 @@
 import 'package:fihirana/controller/hymnController.dart';
-import 'package:fihirana/utility/screen_util.dart';
 import 'package:flutter/material.dart';
-import '../../services/hymn_service.dart';
 
 class CreateHymnPage extends StatefulWidget {
   const CreateHymnPage({super.key});
@@ -42,9 +40,12 @@ class CreateHymnPageState extends State<CreateHymnPage> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.hintColor;
+
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Mampiditra hira'),
+        title: Text('Mampiditra hira', style: TextStyle(color: textColor)),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -57,10 +58,21 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                 TextFormField(
                   controller: _hymnNumberController,
                   keyboardType: TextInputType.number,
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
                     labelText: 'Laharana',
+                    labelStyle: TextStyle(color: textColor),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
                     ),
                   ),
                   validator: (value) {
@@ -73,10 +85,21 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _titleController,
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
                     labelText: 'Lohateny',
+                    labelStyle: TextStyle(color: textColor),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
                     ),
                   ),
                   validator: (value) {
@@ -92,7 +115,7 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                   style: TextStyle(
                     fontSize: 18.0,
                     fontWeight: FontWeight.bold,
-                    color: getTextTheme(context),
+                    color: textColor,
                   ),
                 ),
                 const SizedBox(
@@ -104,38 +127,58 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                   onReorder: _onReorder,
                   children: _buildVerseInputs(),
                 ),
-                Row(
-                  children: [
-                    IconButton(
-                      icon: const Icon(Icons.add),
-                      onPressed: () {
-                        setState(() {
-                          _verseControllers.add(TextEditingController());
-                        });
-                      },
-                    ),
-                  ],
+
+                IconButton(
+                  icon: const Icon(Icons.add),
+                  onPressed: () {
+                    setState(() {
+                      _verseControllers.add(TextEditingController());
+                    });
+                  },
                 ),
+
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _bridgeController,
                   maxLines: null, // Allow multiple lines for bridge
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
+                    labelText: 'Isan\'andininy (Raha misy)',
+                    labelStyle: TextStyle(color: textColor),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
                     ),
-                    labelText: 'Isan\'andininy (Raha misy)',
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16.0),
                 TextFormField(
                   controller: _hymnHintController,
                   maxLines: null, // Allow multiple lines for bridge
+                  style: TextStyle(color: textColor),
                   decoration: InputDecoration(
+                    labelText: "Naoty",
+                    labelStyle: TextStyle(color: textColor),
                     border: OutlineInputBorder(
                       borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
                     ),
-                    labelText: "Naoty",
+                    enabledBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
+                    focusedBorder: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10.0),
+                      borderSide: BorderSide(color: textColor),
+                    ),
                   ),
                 ),
                 const SizedBox(height: 16.0),
@@ -145,6 +188,10 @@ class CreateHymnPageState extends State<CreateHymnPage> {
                       _createHymn();
                     }
                   },
+                  style: ElevatedButton.styleFrom(
+                    foregroundColor: textColor,
+                    backgroundColor: theme.primaryColor.withOpacity(0.1),
+                  ),
                   child: const Text('Apidiro'),
                 ),
               ],
@@ -156,6 +203,8 @@ class CreateHymnPageState extends State<CreateHymnPage> {
   }
 
   List<Widget> _buildVerseInputs() {
+    final theme = Theme.of(context);
+    final textColor = theme.hintColor;
     List<Widget> verseInputs = [];
     for (int i = 0; i < _verseControllers.length; i++) {
       verseInputs.add(
@@ -168,10 +217,21 @@ class CreateHymnPageState extends State<CreateHymnPage> {
             child: TextFormField(
               controller: _verseControllers[i],
               maxLines: null, // Allow multiple lines for verses
+              style: TextStyle(color: textColor),
               decoration: InputDecoration(
                 labelText: 'Andininy: ${i + 1}',
+                labelStyle: TextStyle(color: textColor),
                 border: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(color: textColor),
+                ),
+                enabledBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(color: textColor),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10.0),
+                  borderSide: BorderSide(color: textColor),
                 ),
               ),
               validator: (value) {

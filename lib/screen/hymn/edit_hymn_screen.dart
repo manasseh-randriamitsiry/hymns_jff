@@ -1,4 +1,3 @@
-import 'package:fihirana/utility/screen_util.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -79,16 +78,18 @@ class EditHymnScreenState extends State<EditHymnScreen> {
 
   @override
   Widget build(BuildContext context) {
+    final theme = Theme.of(context);
+    final textColor = theme.hintColor;
     return Scaffold(
       appBar: AppBar(
         title: Text(
           'Hanova ny hira faha: ${widget.hymn.hymnNumber}',
-          style: const TextStyle(fontWeight: FontWeight.bold),
+          style: TextStyle(fontWeight: FontWeight.bold, color: textColor),
         ),
         actions: [
           if (isUserAuthenticated())
             IconButton(
-              icon: const Icon(Icons.save),
+              icon: Icon(Icons.save, color: textColor),
               onPressed: () {
                 _saveChanges();
               },
@@ -103,22 +104,45 @@ class EditHymnScreenState extends State<EditHymnScreen> {
             children: [
               TextField(
                 controller: _hymnNumberController,
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   labelText: 'Laharan\'ny hira',
-                  prefixIcon: const Icon(Icons.onetwothree_outlined),
+                  labelStyle: TextStyle(color: textColor),
+                  prefixIcon:
+                      Icon(Icons.onetwothree_outlined, color: textColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
                   ),
                 ),
               ),
               const SizedBox(height: 16.0),
               TextField(
                 controller: _titleController,
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   labelText: 'Lohateny',
-                  prefixIcon: const Icon(Icons.title),
+                  labelStyle: TextStyle(color: textColor),
+                  prefixIcon: Icon(Icons.title, color: textColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
                   ),
                 ),
               ),
@@ -128,7 +152,7 @@ class EditHymnScreenState extends State<EditHymnScreen> {
                 style: TextStyle(
                   fontSize: 18.0,
                   fontWeight: FontWeight.bold,
-                  color: getTextTheme(context),
+                  color: textColor,
                 ),
               ),
               const SizedBox(
@@ -136,9 +160,8 @@ class EditHymnScreenState extends State<EditHymnScreen> {
               ),
               // Use ReorderableListView for verses
               ReorderableListView(
-                shrinkWrap: true, // Shrink to fit its content
-                physics:
-                    NeverScrollableScrollPhysics(), // Disable scroll on the list
+                shrinkWrap: true,
+                physics: const NeverScrollableScrollPhysics(),
                 onReorder: (oldIndex, newIndex) {
                   setState(() {
                     if (newIndex > oldIndex) {
@@ -158,10 +181,21 @@ class EditHymnScreenState extends State<EditHymnScreen> {
                           child: TextField(
                             controller: _verseControllers[index],
                             maxLines: null,
+                            style: TextStyle(color: textColor),
                             decoration: InputDecoration(
                               labelText: 'Andininy: ${index + 1}',
+                              labelStyle: TextStyle(color: textColor),
                               border: OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(color: textColor),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(color: textColor),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10.0),
+                                borderSide: BorderSide(color: textColor),
                               ),
                             ),
                           ),
@@ -180,6 +214,14 @@ class EditHymnScreenState extends State<EditHymnScreen> {
                               },
                             ),
                           ),
+                        IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            setState(() {
+                              _verseControllers.add(TextEditingController());
+                            });
+                          },
+                        ),
                       ],
                     ),
                   );
@@ -188,28 +230,46 @@ class EditHymnScreenState extends State<EditHymnScreen> {
               const SizedBox(height: 16.0),
               TextField(
                 controller: _bridgeController,
-                minLines: 10,
                 maxLines: null,
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   labelText: 'Fiverenana (Tsy voatery)',
-                  prefixIcon: const Icon(Icons.refresh),
+                  labelStyle: TextStyle(color: textColor),
+                  prefixIcon: Icon(Icons.refresh, color: textColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
                   ),
                 ),
               ),
-              SizedBox(
-                height: 16,
-              ),
+              const SizedBox(height: 16.0),
               TextField(
                 controller: _hymnHintController,
-                minLines: 5,
                 maxLines: null,
+                style: TextStyle(color: textColor),
                 decoration: InputDecoration(
                   labelText: 'Naoty',
-                  prefixIcon: const Icon(Icons.note_alt_outlined),
+                  labelStyle: TextStyle(color: textColor),
+                  prefixIcon: Icon(Icons.note_alt_outlined, color: textColor),
                   border: OutlineInputBorder(
                     borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  enabledBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
+                  ),
+                  focusedBorder: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(10.0),
+                    borderSide: BorderSide(color: textColor),
                   ),
                 ),
               ),
@@ -220,6 +280,10 @@ class EditHymnScreenState extends State<EditHymnScreen> {
                     onPressed: () {
                       _saveChanges();
                     },
+                    style: ElevatedButton.styleFrom(
+                      foregroundColor: textColor,
+                      backgroundColor: theme.primaryColor.withOpacity(0.2),
+                    ),
                     child: const Padding(
                       padding: EdgeInsets.only(
                           left: 40.0, right: 40, top: 20, bottom: 20),

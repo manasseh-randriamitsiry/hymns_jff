@@ -36,8 +36,6 @@ dependencies:
   file_picker: ^8.0.6
   cached_network_image: ^3.4.0
   local_auth: ^2.3.0
-
-
   path_provider: any
   turn_page_transition: ^0.3.0
   syncfusion_flutter_sliders: ^27.2.3

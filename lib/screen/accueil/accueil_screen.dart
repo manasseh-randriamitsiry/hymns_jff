@@ -27,6 +27,7 @@ class AccueilScreenState extends State<AccueilScreen> {
   List<Hymn> _filteredHymns = [];
   final Random _random = Random();
   Hymn? _selectedHymn;
+  bool _isLoading = true;
 
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
@@ -51,18 +52,19 @@ class AccueilScreenState extends State<AccueilScreen> {
             .map((doc) => Hymn.fromFirestore(
                 doc as DocumentSnapshot<Map<String, dynamic>>))
             .toList();
-
+        _isLoading = false;
         _hymns.sort((a, b) {
           int numA = int.tryParse(a.hymnNumber) ?? 0;
           int numB = int.tryParse(b.hymnNumber) ?? 0;
           if (numA != numB) {
             return numA.compareTo(numB);
           } else {
+            _isLoading = false;
             return a.title.compareTo(b.title);
           }
         });
-
         _filteredHymns = _hymns;
+        _isLoading = false;
       });
     });
   }
@@ -81,7 +83,6 @@ class AccueilScreenState extends State<AccueilScreen> {
 
   Future<void> _deleteHymn(Hymn hymn) async {
     bool authenticated = false;
-
     try {
       bool canCheckBiometrics = await auth.canCheckBiometrics;
       bool isBiometricSupported = await auth.isDeviceSupported();
@@ -127,15 +128,6 @@ class AccueilScreenState extends State<AccueilScreen> {
     });
   }
 
-  Color _getRandomColor() {
-    return Color.fromARGB(
-      0,
-      _random.nextInt(1),
-      _random.nextInt(1),
-      _random.nextInt(1),
-    );
-  }
-
   @override
   void dispose() {
     _searchController.removeListener(_filterHymns);
@@ -146,23 +138,40 @@ class AccueilScreenState extends State<AccueilScreen> {
   @override
   Widget build(BuildContext context) {
     bool tablet = isTablet(context);
+    final theme = Theme.of(context);
+    final appBarColor = theme.dividerColor;
+    final textColor = theme.hintColor;
     if (tablet) {
       return Scaffold(
         appBar: AppBar(
-          leading: IconButton(
-            icon: const Icon(Icons.add_circle),
-            onPressed: () {
-              openDrawer(context);
-            },
+          backgroundColor: appBarColor,
+          elevation: 0, // Remove elevation
+          scrolledUnderElevation: 0,
+          leading: Row(
+            children: [
+              IconButton(
+                icon: Icon(
+                  Icons.add_circle,
+                  color: textColor,
+                ),
+                onPressed: () {
+                  openDrawer(context);
+                },
+              ),
+            ],
           ),
           centerTitle: true,
-          title: const Text(
+          title: Text(
             'Fihirana JFF',
-            style: TextStyle(fontWeight: FontWeight.bold, fontSize: 26),
+            style: TextStyle(
+                fontWeight: FontWeight.bold, fontSize: 26, color: textColor),
           ),
           actions: [
             IconButton(
-              icon: const Icon(Icons.favorite),
+              icon: Icon(
+                Icons.favorite,
+                color: textColor,
+              ),
               onPressed: () {
                 Navigator.push(
                   context,
@@ -170,336 +179,452 @@ class AccueilScreenState extends State<AccueilScreen> {
                 );
               },
             ),
+            // IconButton(
+            //   icon:
+            //       Icon(_isTabletMode ? Icons.tablet_android : Icons.smartphone),
+            //   onPressed: () {
+            //     setState(() {
+            //       _isTabletMode = !_isTabletMode;
+            //     });
+            //   },
+            // ),
           ],
         ),
-        body: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceAround,
-          children: [
-            Container(
-              width: 10,
-            ),
-            Container(
-              height: getScreenHeight(context) - getScreenHeight(context) / 12,
-              width: (getScreenWidth(context) / 3) - 10,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.all(
-                  Radius.circular(30),
-                ),
-                color: getTheme(context).cardColor.withOpacity(0.1),
-              ),
-              child: Column(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(8.0),
-                    child: TextField(
-                      controller: _searchController,
-                      decoration: InputDecoration(
-                        labelText: 'Hitady hira',
-                        prefixIcon: const Icon(Icons.search),
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(30.0),
-                        ),
-                      ),
-                      onChanged: (value) {
-                        _filterHymns();
-                      },
+        body: _isLoading
+            ? Center(
+                child: Column(
+                  children: [
+                    CircularProgressIndicator(),
+                    Text(
+                      'mahandrasa kely azafady',
+                      style: TextStyle(color: textColor),
                     ),
+                  ],
+                ), // Show loading indicator
+              )
+            : Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Container(
+                    width: 10,
                   ),
-                  const SizedBox(
-                    height: 10,
-                  ),
-                  Expanded(
-                    child: ListView.builder(
-                      itemCount: _filteredHymns.length,
-                      itemBuilder: (context, index) {
-                        final hymn = _filteredHymns[index];
-                        String firstVersePreview = hymn.verses.isNotEmpty &&
-                                hymn.verses.first.length > 30
-                            ? '${hymn.verses.first.substring(0, 30)}...'
-                            : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
-
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8.0, vertical: 5),
-                          child: Dismissible(
-                            key: Key(hymn.id),
-                            direction: DismissDirection.endToStart,
-                            background: Container(
-                              color: Colors.red,
-                              alignment: Alignment.centerRight,
-                              padding: const EdgeInsets.only(right: 20.0),
-                              child:
-                                  const Icon(Icons.delete, color: Colors.white),
-                            ),
-                            confirmDismiss: (direction) async {
-                              bool confirm = await showDialog(
-                                context: context,
-                                builder: (BuildContext context) {
-                                  return AlertDialog(
-                                    title: const Text('Hamafa'),
-                                    content: const Text('Manamafy fa hamafa ?'),
-                                    actions: <Widget>[
-                                      TextButton(
-                                        child: const Text('Tsia'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(false);
-                                        },
-                                      ),
-                                      TextButton(
-                                        child: const Text('Eny'),
-                                        onPressed: () {
-                                          Navigator.of(context).pop(true);
-                                        },
-                                      ),
-                                    ],
-                                  );
-                                },
-                              );
-                              if (confirm) {
-                                await _deleteHymn(hymn);
-                              }
-                              return false; // Prevent auto-dismissal
-                            },
-                            child: DecoratedBox(
-                              decoration: BoxDecoration(
-                                color: _getRandomColor().withOpacity(0.1),
-                                borderRadius: BorderRadius.circular(15),
+                  Container(
+                    height: getScreenHeight(context) -
+                        getScreenHeight(context) / 12,
+                    width: (getScreenWidth(context) / 3) - 10,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.all(
+                        Radius.circular(30),
+                      ),
+                      color: textColor.withOpacity(0.1),
+                    ),
+                    child: Column(
+                      children: [
+                        Padding(
+                          padding: const EdgeInsets.all(8.0),
+                          child: TextField(
+                            controller: _searchController,
+                            decoration: InputDecoration(
+                              fillColor: textColor,
+                              labelText: 'Hitady hira',
+                              prefixIcon: Icon(
+                                Icons.search,
+                                color: textColor,
                               ),
-                              child: ListTile(
-                                leading: CircleAvatar(
-                                  child: Text(
-                                    hymn.hymnNumber,
-                                    style: TextStyle(
-                                      color: getTextTheme(context),
-                                      fontWeight: FontWeight.bold,
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30.0),
+                              ),
+                            ),
+                            onChanged: (value) {
+                              _filterHymns();
+                            },
+                          ),
+                        ),
+                        const SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                            itemCount: _filteredHymns.length,
+                            itemBuilder: (context, index) {
+                              final hymn = _filteredHymns[index];
+                              String firstVersePreview = hymn
+                                          .verses.isNotEmpty &&
+                                      hymn.verses.first.length > 30
+                                  ? '${hymn.verses.first.substring(0, 30)}...'
+                                  : (hymn.verses.isNotEmpty
+                                      ? hymn.verses.first
+                                      : '');
+
+                              return Padding(
+                                padding: const EdgeInsets.symmetric(
+                                    horizontal: 8.0, vertical: 5),
+                                child: Dismissible(
+                                  key: Key(hymn.id),
+                                  direction: DismissDirection.endToStart,
+                                  background: Container(
+                                    color: Colors.red,
+                                    alignment: Alignment.centerRight,
+                                    padding: const EdgeInsets.only(right: 20.0),
+                                    child: Icon(Icons.delete, color: textColor),
+                                  ),
+                                  confirmDismiss: (direction) async {
+                                    bool confirm = await showDialog(
+                                      context: context,
+                                      builder: (BuildContext context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                            'Hamafa',
+                                            style: TextStyle(color: textColor),
+                                          ),
+                                          content: Text(
+                                            'Manamafy fa hamafa ?',
+                                            style: TextStyle(color: textColor),
+                                          ),
+                                          actions: <Widget>[
+                                            TextButton(
+                                              child: Text(
+                                                'Tsia',
+                                                style:
+                                                    TextStyle(color: textColor),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context)
+                                                    .pop(false);
+                                              },
+                                            ),
+                                            TextButton(
+                                              child: Text(
+                                                'Eny',
+                                                style:
+                                                    TextStyle(color: textColor),
+                                              ),
+                                              onPressed: () {
+                                                Navigator.of(context).pop(true);
+                                              },
+                                            ),
+                                          ],
+                                        );
+                                      },
+                                    );
+                                    if (confirm) {
+                                      await _deleteHymn(hymn);
+                                    }
+                                    return false; // Prevent auto-dismissal
+                                  },
+                                  child: DecoratedBox(
+                                    decoration: BoxDecoration(
+                                      color: textColor.withOpacity(0.1),
+                                      borderRadius: BorderRadius.circular(15),
+                                    ),
+                                    child: ListTile(
+                                      leading: CircleAvatar(
+                                        child: Text(
+                                          hymn.hymnNumber,
+                                          style: TextStyle(
+                                            color: getTextTheme(context),
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        ),
+                                      ),
+                                      title: Text(
+                                        hymn.title,
+                                        style: TextStyle(
+                                          fontWeight: FontWeight.bold,
+                                          color: textColor,
+                                        ),
+                                      ),
+                                      subtitle: Text(
+                                        firstVersePreview,
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      trailing: Row(
+                                        mainAxisSize: MainAxisSize.min,
+                                        children: [
+                                          IconButton(
+                                            icon: Icon(
+                                              hymn.isFavorite
+                                                  ? Icons.favorite
+                                                  : Icons.favorite_border,
+                                              color: hymn.isFavorite
+                                                  ? Colors.red
+                                                  : null,
+                                            ),
+                                            onPressed: () {
+                                              _toggleFavorite(hymn);
+                                            },
+                                          ),
+                                          if (isUserAuthenticated())
+                                            IconButton(
+                                              icon: Icon(
+                                                Icons.edit,
+                                                color: textColor,
+                                              ),
+                                              onPressed: () {
+                                                _navigateToEditScreen(
+                                                    context, hymn);
+                                              },
+                                            ),
+                                        ],
+                                      ),
+                                      onTap: () {
+                                        setState(() {
+                                          _selectedHymn = hymn;
+                                        });
+                                      },
                                     ),
                                   ),
                                 ),
-                                title: Text(
-                                  hymn.title,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.bold),
-                                ),
-                                subtitle: Text(firstVersePreview),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: Icon(
-                                        hymn.isFavorite
-                                            ? Icons.favorite
-                                            : Icons.favorite_border,
-                                        color:
-                                            hymn.isFavorite ? Colors.red : null,
-                                      ),
-                                      onPressed: () {
-                                        _toggleFavorite(hymn);
-                                      },
-                                    ),
-                                    if (isUserAuthenticated())
-                                      IconButton(
-                                        icon: const Icon(Icons.edit),
-                                        onPressed: () {
-                                          _navigateToEditScreen(context, hymn);
-                                        },
-                                      ),
-                                  ],
-                                ),
-                                onTap: () {
-                                  setState(() {
-                                    _selectedHymn = hymn;
-                                  });
-                                },
-                              ),
+                              );
+                            },
+                          ),
+                        ),
+                        Text(
+                          getUsername(),
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (_selectedHymn == null)
+                    SizedBox(
+                      height: getScreenHeight(context),
+                      width: (2 * getScreenWidth(context) / 3) - 10,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "Salamo 118:29",
+                            style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                                color: textColor),
+                          ),
+                          Text(
+                            "Miderà an'i Jehovah, fa tsara Izy; Eny, mandrakizay ny famindram-pony.",
+                            style: TextStyle(
+                              fontSize: 20,
+                              fontWeight: FontWeight.normal,
+                              color: textColor,
                             ),
                           ),
-                        );
-                      },
+                        ],
+                      ),
                     ),
-                  ),
-                  Text(
-                    getUsername(),
-                  ),
+                  if (_selectedHymn != null)
+                    SizedBox(
+                      height: getScreenHeight(context),
+                      width: (2 * getScreenWidth(context) / 3) - 10,
+                      child: HymnDetailScreen(hymn: _selectedHymn!),
+                    ),
                 ],
               ),
-            ),
-            if (_selectedHymn == null)
-              SizedBox(
-                height: getScreenHeight(context),
-                width: (2 * getScreenWidth(context) / 3) - 10,
-                child: const Column(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Salamo 118:29",
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
-                    ),
-                    Text(
-                      "Miderà an'i Jehovah, fa tsara Izy; Eny, mandrakizay ny famindram-pony.",
-                      style: TextStyle(
-                          fontSize: 20, fontWeight: FontWeight.normal),
-                    ),
-                  ],
-                ),
-              ),
-            if (_selectedHymn != null)
-              SizedBox(
-                height: getScreenHeight(context),
-                width: (2 * getScreenWidth(context) / 3) - 10,
-                child: HymnDetailScreen(hymn: _selectedHymn!),
-              ),
-          ],
-        ),
       );
     }
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Hiran\'ny fihirana'),
+        backgroundColor: appBarColor,
+        elevation: 0, // Remove elevation
+        scrolledUnderElevation: 0,
+        title: Text(
+          'Hiran\'ny fihirana',
+          style: TextStyle(color: textColor),
+        ),
         leading: IconButton(
-          icon: const Icon(Icons.ac_unit),
+          icon: Icon(
+            Icons.ac_unit,
+            color: textColor,
+          ),
           onPressed: () {
             openDrawer(context);
           },
         ),
       ),
-      body: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                labelText: 'Hitady hira',
-                prefixIcon: const Icon(Icons.search),
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30.0),
-                ),
-              ),
-              onChanged: (value) {
-                _filterHymns();
-              },
-            ),
-          ),
-          const SizedBox(
-            height: 10,
-          ),
-          Expanded(
-            child: ListView.builder(
-              itemCount: _filteredHymns.length,
-              itemBuilder: (context, index) {
-                final hymn = _filteredHymns[index];
-                String firstVersePreview =
-                    hymn.verses.isNotEmpty && hymn.verses.first.length > 30
-                        ? '${hymn.verses.first.substring(0, 30)}...'
-                        : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
-
-                return Padding(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 8.0, vertical: 5),
-                  child: Dismissible(
-                    key: Key(hymn.id),
-                    direction: DismissDirection.endToStart,
-                    background: Container(
-                      color: Colors.red,
-                      alignment: Alignment.centerRight,
-                      padding: const EdgeInsets.only(right: 20.0),
-                      child: const Icon(Icons.delete, color: Colors.white),
-                    ),
-                    confirmDismiss: (direction) async {
-                      bool confirm = await showDialog(
-                        context: context,
-                        builder: (BuildContext context) {
-                          return AlertDialog(
-                            title: const Text('Hamafa'),
-                            content: const Text('Manamafy fa hamafa ?'),
-                            actions: <Widget>[
-                              TextButton(
-                                child: const Text('Tsia'),
-                                onPressed: () {
-                                  Navigator.of(context).pop(false);
-                                },
-                              ),
-                              TextButton(
-                                child: const Text('Eny'),
-                                onPressed: () {
-                                  Navigator.of(context).pop(true);
-                                },
-                              ),
-                            ],
-                          );
-                        },
-                      );
-                      if (confirm) {
-                        await _deleteHymn(hymn);
-                      }
-                      return false; // Prevent auto-dismissal
-                    },
-                    child: DecoratedBox(
-                      decoration: BoxDecoration(
-                        color: _getRandomColor().withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(15),
+      body: _isLoading
+          ? Center(
+              child: Column(
+                children: [
+                  CircularProgressIndicator(),
+                  Text(
+                    'mahandrasa kely azafady',
+                    style: TextStyle(color: textColor),
+                  ),
+                ],
+              ), // Show loading indicator
+            )
+          : Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: TextField(
+                    controller: _searchController,
+                    decoration: InputDecoration(
+                      labelText: 'Hitady hira',
+                      labelStyle: TextStyle(color: textColor),
+                      hintStyle: TextStyle(color: textColor),
+                      prefixIcon: Icon(
+                        Icons.search,
+                        color: textColor,
                       ),
-                      child: ListTile(
-                        leading: CircleAvatar(
-                          child: Text(
-                            hymn.hymnNumber,
-                            style: TextStyle(
-                              color: getTextTheme(context),
-                              fontWeight: FontWeight.bold,
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide: BorderSide(
+                            color: textColor), // Add border color here
+                      ),
+                      enabledBorder: OutlineInputBorder(
+                        // Add enabledBorder
+                        borderRadius: BorderRadius.circular(30.0),
+                        borderSide:
+                            BorderSide(color: textColor), // Same border color
+                      ),
+                    ),
+                    onChanged: (value) {
+                      _filterHymns();
+                    },
+                  ),
+                ),
+                const SizedBox(
+                  height: 10,
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    itemCount: _filteredHymns.length,
+                    itemBuilder: (context, index) {
+                      final hymn = _filteredHymns[index];
+                      String firstVersePreview = hymn.verses.isNotEmpty &&
+                              hymn.verses.first.length > 30
+                          ? '${hymn.verses.first.substring(0, 30)}...'
+                          : (hymn.verses.isNotEmpty ? hymn.verses.first : '');
+
+                      return Padding(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 5),
+                        child: Dismissible(
+                          key: Key(hymn.id),
+                          direction: DismissDirection.endToStart,
+                          background: Container(
+                            color: Colors.red,
+                            alignment: Alignment.centerRight,
+                            padding: const EdgeInsets.only(right: 20.0),
+                            child: Icon(
+                              Icons.delete,
+                              color: textColor,
+                            ),
+                          ),
+                          confirmDismiss: (direction) async {
+                            bool confirm = await showDialog(
+                              context: context,
+                              builder: (BuildContext context) {
+                                return AlertDialog(
+                                  title: Text(
+                                    'Hamafa',
+                                    style: TextStyle(color: textColor),
+                                  ),
+                                  content: Text(
+                                    'Manamafy fa hamafa ?',
+                                    style: TextStyle(color: textColor),
+                                  ),
+                                  actions: <Widget>[
+                                    TextButton(
+                                      child: Text(
+                                        'Tsia',
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(false);
+                                      },
+                                    ),
+                                    TextButton(
+                                      child: Text(
+                                        'Eny',
+                                        style: TextStyle(color: textColor),
+                                      ),
+                                      onPressed: () {
+                                        Navigator.of(context).pop(true);
+                                      },
+                                    ),
+                                  ],
+                                );
+                              },
+                            );
+                            if (confirm) {
+                              await _deleteHymn(hymn);
+                            }
+                            return false; // Prevent auto-dismissal
+                          },
+                          child: DecoratedBox(
+                            decoration: BoxDecoration(
+                              color: textColor.withOpacity(0.1),
+                              borderRadius: BorderRadius.circular(15),
+                            ),
+                            child: ListTile(
+                              leading: CircleAvatar(
+                                child: Text(
+                                  hymn.hymnNumber,
+                                  style: TextStyle(
+                                    color: textColor,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                              title: Text(
+                                hymn.title,
+                                style: TextStyle(
+                                    fontWeight: FontWeight.bold,
+                                    color: textColor),
+                              ),
+                              subtitle: Text(
+                                firstVersePreview,
+                                style: TextStyle(color: textColor),
+                              ),
+                              trailing: Row(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  IconButton(
+                                    icon: Icon(
+                                      hymn.isFavorite
+                                          ? Icons.favorite
+                                          : Icons.favorite_border,
+                                      color:
+                                          hymn.isFavorite ? Colors.red : null,
+                                    ),
+                                    onPressed: () {
+                                      _toggleFavorite(hymn);
+                                    },
+                                  ),
+                                  if (isUserAuthenticated())
+                                    IconButton(
+                                      icon: Icon(
+                                        Icons.edit,
+                                        color: textColor,
+                                      ),
+                                      onPressed: () {
+                                        _navigateToEditScreen(context, hymn);
+                                      },
+                                    ),
+                                ],
+                              ),
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        HymnDetailScreen(hymn: hymn),
+                                  ),
+                                );
+                              },
                             ),
                           ),
                         ),
-                        title: Text(
-                          hymn.title,
-                          style: const TextStyle(fontWeight: FontWeight.bold),
-                        ),
-                        subtitle: Text(firstVersePreview),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(
-                                hymn.isFavorite
-                                    ? Icons.favorite
-                                    : Icons.favorite_border,
-                                color: hymn.isFavorite ? Colors.red : null,
-                              ),
-                              onPressed: () {
-                                _toggleFavorite(hymn);
-                              },
-                            ),
-                            if (isUserAuthenticated())
-                              IconButton(
-                                icon: const Icon(Icons.edit),
-                                onPressed: () {
-                                  _navigateToEditScreen(context, hymn);
-                                },
-                              ),
-                          ],
-                        ),
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) =>
-                                  HymnDetailScreen(hymn: hymn),
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                      );
+                    },
                   ),
-                );
-              },
+                ),
+                Text(
+                  getUsername(),
+                ),
+              ],
             ),
-          ),
-          Text(
-            getUsername(),
-          ),
-        ],
-      ),
     );
   }
 
