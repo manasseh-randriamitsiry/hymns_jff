@@ -348,7 +348,7 @@ class AccueilScreenState extends State<AccueilScreen> {
                                                   : Icons.favorite_border,
                                               color: hymn.isFavorite
                                                   ? Colors.red
-                                                  : null,
+                                                  : textColor,
                                             ),
                                             onPressed: () {
                                               _toggleFavorite(hymn);
@@ -585,8 +585,9 @@ class AccueilScreenState extends State<AccueilScreen> {
                                       hymn.isFavorite
                                           ? Icons.favorite
                                           : Icons.favorite_border,
-                                      color:
-                                          hymn.isFavorite ? Colors.red : null,
+                                      color: hymn.isFavorite
+                                          ? Colors.red
+                                          : textColor,
                                     ),
                                     onPressed: () {
                                       _toggleFavorite(hymn);
