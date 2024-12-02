@@ -6,6 +6,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'controller/theme_controller.dart';
 import 'screen/accueil/home_screen.dart';
 import 'package:fihirana/theme.dart';
+import 'package:fihirana/screen/intro/splash_screen1.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -23,15 +24,20 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     final ThemeController themeController = Get.put(ThemeController());
     themeController.isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
+    
+    // Check if it's the first time launching the app
+    final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
+    
     return GetMaterialApp(
       debugShowCheckedModeBanner: false,
       themeMode:
           themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
-      theme: lightTheme, // Use your light theme from theme.dart
-      darkTheme: darkTheme, // Use your dark theme from theme.dart
-      home: const HomeScreen(),
+      theme: lightTheme,
+      darkTheme: darkTheme,
+      home: isFirstTime ? SplashScreen1() : const HomeScreen(),
       getPages: [
         GetPage(name: '/accueil', page: () => const AccueilScreen()),
+        GetPage(name: '/home', page: () => const HomeScreen()),
       ],
     );
   }

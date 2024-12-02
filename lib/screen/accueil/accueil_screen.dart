@@ -5,6 +5,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import '../../models/hymn.dart';
 import '../../services/hymn_service.dart';
 import '../favorite/favorites_screen.dart';
@@ -28,14 +29,28 @@ class AccueilScreenState extends State<AccueilScreen> {
   final Random _random = Random();
   Hymn? _selectedHymn;
   bool _isLoading = true;
+  String _username = 'Jesosy Famonjena Fahamarinantsika'; // Default value
 
   bool isUserAuthenticated() {
     return FirebaseAuth.instance.currentUser != null;
   }
 
-  String getUsername() {
-    return FirebaseAuth.instance.currentUser?.displayName ??
-        'Jesosy Famonjena Fahamarinantsika';
+  Future<String> getUsername() async {
+    final prefs = await SharedPreferences.getInstance();
+    // First check SharedPreferences for manually entered username
+    String? username = prefs.getString('username');
+    if (username != null && username.isNotEmpty) {
+      return username;
+    }
+    
+    // If no username in SharedPreferences, check Firebase
+    final firebaseUser = FirebaseAuth.instance.currentUser;
+    if (firebaseUser?.displayName != null && firebaseUser!.displayName!.isNotEmpty) {
+      return firebaseUser.displayName!;
+    }
+    
+    // Default fallback
+    return 'Jesosy Famonjena Fahamarinantsika';
   }
 
   @override
@@ -43,6 +58,14 @@ class AccueilScreenState extends State<AccueilScreen> {
     super.initState();
     _fetchHymns();
     _searchController.addListener(_filterHymns);
+    _loadUsername(); // Load username when screen initializes
+  }
+
+  Future<void> _loadUsername() async {
+    final username = await getUsername();
+    setState(() {
+      _username = username;
+    });
   }
 
   void _fetchHymns() {
@@ -179,15 +202,6 @@ class AccueilScreenState extends State<AccueilScreen> {
                 );
               },
             ),
-            // IconButton(
-            //   icon:
-            //       Icon(_isTabletMode ? Icons.tablet_android : Icons.smartphone),
-            //   onPressed: () {
-            //     setState(() {
-            //       _isTabletMode = !_isTabletMode;
-            //     });
-            //   },
-            // ),
           ],
         ),
         body: _isLoading
@@ -285,8 +299,7 @@ class AccueilScreenState extends State<AccueilScreen> {
                                             TextButton(
                                               child: Text(
                                                 'Tsia',
-                                                style:
-                                                    TextStyle(color: textColor),
+                                                style: TextStyle(color: textColor),
                                               ),
                                               onPressed: () {
                                                 Navigator.of(context)
@@ -296,8 +309,7 @@ class AccueilScreenState extends State<AccueilScreen> {
                                             TextButton(
                                               child: Text(
                                                 'Eny',
-                                                style:
-                                                    TextStyle(color: textColor),
+                                                style: TextStyle(color: textColor),
                                               ),
                                               onPressed: () {
                                                 Navigator.of(context).pop(true);
@@ -380,7 +392,8 @@ class AccueilScreenState extends State<AccueilScreen> {
                           ),
                         ),
                         Text(
-                          getUsername(),
+                          _username,
+                          style: TextStyle(color: textColor),
                         ),
                       ],
                     ),
@@ -468,14 +481,11 @@ class AccueilScreenState extends State<AccueilScreen> {
                       ),
                       border: OutlineInputBorder(
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide: BorderSide(
-                            color: textColor), // Add border color here
+                        borderSide: BorderSide(color: textColor),
                       ),
                       enabledBorder: OutlineInputBorder(
-                        // Add enabledBorder
                         borderRadius: BorderRadius.circular(30.0),
-                        borderSide:
-                            BorderSide(color: textColor), // Same border color
+                        borderSide: BorderSide(color: textColor),
                       ),
                     ),
                     onChanged: (value) {
@@ -585,8 +595,9 @@ class AccueilScreenState extends State<AccueilScreen> {
                                       hymn.isFavorite
                                           ? Icons.favorite
                                           : Icons.favorite_border,
-                                      color:
-                                          hymn.isFavorite ? Colors.red : textColor,
+                                      color: hymn.isFavorite
+                                          ? Colors.red
+                                          : textColor,
                                     ),
                                     onPressed: () {
                                       _toggleFavorite(hymn);
@@ -621,7 +632,8 @@ class AccueilScreenState extends State<AccueilScreen> {
                   ),
                 ),
                 Text(
-                  getUsername(),
+                  _username,
+                  style: TextStyle(color: textColor),
                 ),
               ],
             ),

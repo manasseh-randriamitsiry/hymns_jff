@@ -4,6 +4,7 @@ import 'package:fihirana/widgets/drawer_wiidget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_zoom_drawer/flutter_zoom_drawer.dart';
 import 'package:get/get.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'accueil_screen.dart';
 
@@ -24,12 +25,21 @@ class _HomeScreenState extends State<HomeScreen> {
 
   @override
   void initState() {
+    super.initState();
+    _initializeApp();
+  }
+
+  Future<void> _initializeApp() async {
+    // Set user as not new
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('isFirstTime', false);
+
+    // Request notification permissions
     AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
       if (!isAllowed) {
         AwesomeNotifications().requestPermissionToSendNotifications();
       }
     });
-    super.initState();
   }
 
   @override
