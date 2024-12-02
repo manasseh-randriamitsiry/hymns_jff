@@ -585,9 +585,8 @@ class AccueilScreenState extends State<AccueilScreen> {
                                       hymn.isFavorite
                                           ? Icons.favorite
                                           : Icons.favorite_border,
-                                      color: hymn.isFavorite
-                                          ? Colors.red
-                                          : textColor,
+                                      color:
+                                          hymn.isFavorite ? Colors.red : textColor,
                                     ),
                                     onPressed: () {
                                       _toggleFavorite(hymn);

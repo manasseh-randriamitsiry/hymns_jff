@@ -112,6 +112,7 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
         centerTitle: true,
         actions: [
           PopupMenuButton<String>(
+            color: theme.primaryColor,
             onSelected: (String item) {
               switch (item) {
                 case 'edit':
@@ -143,12 +144,11 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                       children: [
                         Icon(
                           Icons.edit,
-                          color: textColor,
+                          color: theme.dividerColor,
                         ),
                         const SizedBox(width: 8),
                         Text(
                           'Hanova',
-                          style: TextStyle(color: textColor),
                         ),
                       ],
                     ),
@@ -159,12 +159,10 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                     children: [
                       Icon(
                         Icons.remove_red_eye,
-                        color: textColor,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         'Naoty',
-                        style: TextStyle(color: textColor),
                       ),
                     ],
                   ),
@@ -175,12 +173,10 @@ class HymnDetailScreenState extends State<HymnDetailScreen> {
                     children: [
                       Icon(
                         Icons.text_fields,
-                        color: textColor,
                       ),
                       const SizedBox(width: 8),
                       Text(
                         "Haben'ny soratra",
-                        style: TextStyle(color: textColor),
                       ),
                     ],
                   ),
