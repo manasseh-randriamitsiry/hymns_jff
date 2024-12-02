@@ -7,6 +7,7 @@ import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 import '../controller/theme_controller.dart';
+import '../controller/font_controller.dart';
 import '../screen/favorite/favorites_screen.dart';
 import '../screen/hymn/create_hymn_page.dart';
 
@@ -19,6 +20,7 @@ class DrawerScreen extends StatefulWidget {
 
 class DrawerScreenState extends State<DrawerScreen> {
   final ThemeController _themeController = Get.put(ThemeController());
+  final FontController _fontController = Get.put(FontController());
   bool _isAuthenticated = false;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -215,6 +217,55 @@ class DrawerScreenState extends State<DrawerScreen> {
             onTap: () {
               Get.to(const AboutScreen());
             },
+          ),
+          ExpansionTile(
+            leading: Icon(Icons.font_download, color: textColor),
+            title: Text(
+              'Endrika soratra',
+              style: TextStyle(color: textColor),
+            ),
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: ListView.builder(
+                  itemCount: _fontController.availableFonts.length,
+                  itemBuilder: (context, index) {
+                    final fontName = _fontController.availableFonts[index];
+                    return Obx(() => RadioListTile<String>(
+                          title: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                fontName,
+                                style: TextStyle(
+                                  color: textColor,
+                                  fontSize: 14,
+                                ),
+                              ),
+                              Text(
+                                'Jesosy Famonjena Fahamarinantsika',
+                                style: _fontController.getFontStyle(
+                                  fontName,
+                                  TextStyle(
+                                    color: textColor,
+                                    fontSize: 16,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          value: fontName,
+                          groupValue: _fontController.currentFont.value,
+                          onChanged: (value) {
+                            if (value != null) {
+                              _fontController.changeFont(value);
+                            }
+                          },
+                        ));
+                  },
+                ),
+              ),
+            ],
           ),
         ],
       ),
