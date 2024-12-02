@@ -6,9 +6,9 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'controller/theme_controller.dart';
 import 'controller/font_controller.dart';
+import 'controller/color_controller.dart';
 import 'screen/accueil/home_screen.dart';
 import 'screen/accueil/accueil_screen.dart';
-import 'theme/theme.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,6 +20,7 @@ void main() async {
 class MyApp extends StatelessWidget {
   final SharedPreferences prefs;
   final FontController fontController = Get.put(FontController());
+  final ColorController colorController = Get.put(ColorController());
 
   MyApp({super.key, required this.prefs});
 
@@ -38,22 +39,22 @@ class MyApp extends StatelessWidget {
     final ThemeController themeController = Get.put(ThemeController());
     themeController.isDarkMode.value = prefs.getBool('isDarkMode') ?? false;
     
-    // Check if it's the first time launching the app
     final bool isFirstTime = prefs.getBool('isFirstTime') ?? true;
     
     return Obx(() {
       final currentFont = fontController.currentFont.value;
       
-      // Create theme data with current font
-      final lightThemeWithFont = _getThemeWithFont(lightTheme, currentFont);
-      final darkThemeWithFont = _getThemeWithFont(darkTheme, currentFont);
+      ThemeData baseTheme = themeController.isDarkMode.value 
+          ? colorController.getDarkTheme()
+          : colorController.getLightTheme();
+          
+      final themeWithFont = _getThemeWithFont(baseTheme, currentFont);
 
       return GetMaterialApp(
         debugShowCheckedModeBanner: false,
-        themeMode:
-            themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
-        theme: lightThemeWithFont,
-        darkTheme: darkThemeWithFont,
+        themeMode: themeController.isDarkMode.value ? ThemeMode.dark : ThemeMode.light,
+        theme: themeWithFont,
+        darkTheme: themeWithFont,
         home: isFirstTime ? SplashScreen1() : const HomeScreen(),
         getPages: [
           GetPage(name: '/accueil', page: () => const AccueilScreen()),

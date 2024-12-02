@@ -5,11 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
 import 'package:google_sign_in/google_sign_in.dart';
-
 import '../controller/theme_controller.dart';
 import '../controller/font_controller.dart';
+import '../controller/color_controller.dart';
 import '../screen/favorite/favorites_screen.dart';
 import '../screen/hymn/create_hymn_page.dart';
+import 'color_picker_widget.dart';
 
 class DrawerScreen extends StatefulWidget {
   const DrawerScreen({super.key});
@@ -21,6 +22,7 @@ class DrawerScreen extends StatefulWidget {
 class DrawerScreenState extends State<DrawerScreen> {
   final ThemeController _themeController = Get.put(ThemeController());
   final FontController _fontController = Get.put(FontController());
+  final ColorController _colorController = Get.put(ColorController());
   bool _isAuthenticated = false;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
   final GoogleSignIn _googleSignIn = GoogleSignIn(
@@ -152,7 +154,7 @@ class DrawerScreenState extends State<DrawerScreen> {
           ListTile(
             leading: Icon(Icons.brightness_6, color: textColor),
             title: Text(
-              'Hanova loko',
+              'Maizina/Mazava',
               style: TextStyle(color: textColor),
             ),
             onTap: () {
@@ -208,16 +210,6 @@ class DrawerScreenState extends State<DrawerScreen> {
                 });
               },
             ),
-          ListTile(
-            leading: Icon(Icons.info_outline, color: textColor),
-            title: Text(
-              '?',
-              style: TextStyle(color: textColor),
-            ),
-            onTap: () {
-              Get.to(const AboutScreen());
-            },
-          ),
           ExpansionTile(
             leading: Icon(Icons.font_download, color: textColor),
             title: Text(
@@ -266,6 +258,31 @@ class DrawerScreenState extends State<DrawerScreen> {
                 ),
               ),
             ],
+          ),
+          ExpansionTile(
+            leading: Icon(Icons.color_lens, color: textColor),
+            title: Text(
+              'Loko',
+              style: TextStyle(color: textColor),
+            ),
+            children: [
+              Container(
+                height: MediaQuery.of(context).size.height * 0.6,
+                child: SingleChildScrollView(
+                  child: ColorPickerWidget(),
+                ),
+              ),
+            ],
+          ),
+          ListTile(
+            leading: Icon(Icons.info_outline, color: textColor),
+            title: Text(
+              '?',
+              style: TextStyle(color: textColor),
+            ),
+            onTap: () {
+              Get.to(const AboutScreen());
+            },
           ),
         ],
       ),
