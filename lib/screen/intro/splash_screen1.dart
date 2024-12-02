@@ -209,9 +209,12 @@ class _SplashScreen1State extends State<SplashScreen1>
                   ),
                   Text(
                     "1. Mijery hira\n"
-                    "2. Mapiditra hira vaovao,manova hira\n"
-                    "3. Mapiditra naotyn mapiditra hira ho tiana\n"
-                    "4. Mamafa hira\n",
+                    "2. Mapiditra hira vaovao\n"
+                    "3. Manova hira\n"
+                    "4. Mapiditra hira ho tiana\n"
+                    "5. Mapiditra naoty\n"
+                    "6. Mamafa hira\n"
+                    "7. Mitady hira\n",
                     style: descriptionWhiteStyle,
                   ),
                 ],
