@@ -87,7 +87,7 @@ class DrawerScreenState extends State<DrawerScreen> {
             icon: const Icon(Icons.check, color: Colors.black));
       }
     } catch (e) {
-      Get.snackbar('Nisy olana: $e', 'fa avereno atao.',
+      Get.snackbar('Nisy olana', 'Avereno atao.',
           backgroundColor: Colors.red.withOpacity(0.2),
           colorText: Colors.black,
           icon: const Icon(Icons.warning_amber, color: Colors.black));
